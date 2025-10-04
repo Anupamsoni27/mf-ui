@@ -16,6 +16,9 @@ export class StockListComponent implements OnInit {
   pageSize: number = 10;
   totalStocks: number = 0;
   hasNextPage: boolean = false;
+  searchTerm: string = '';
+  sortBy: string = 'funds_holding_count';
+  sortOrder: string = 'desc';
 
   Math = Math; // Make Math available in template
 
@@ -34,7 +37,7 @@ export class StockListComponent implements OnInit {
     
     const skip = this.currentPage * this.pageSize;
     
-    this.stockService.getAllStocks(skip, this.pageSize).subscribe({
+    this.stockService.getAllStocks(skip, this.pageSize, this.searchTerm, this.sortBy, this.sortOrder).subscribe({
       next: (response: StockListResponse) => {
         this.stocks = response.records;
         this.totalStocks = response.count;
@@ -46,6 +49,24 @@ export class StockListComponent implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  onSearchChange(term: string): void {
+    this.searchTerm = term;
+    this.currentPage = 0;
+    this.loadStocks();
+  }
+
+  onSortChange(sortBy: string): void {
+    this.sortBy = sortBy;
+    this.currentPage = 0;
+    this.loadStocks();
+  }
+
+  onOrderChange(order: string): void {
+    this.sortOrder = order;
+    this.currentPage = 0;
+    this.loadStocks();
   }
 
   viewStock(stockId: string, event?: MouseEvent): void {

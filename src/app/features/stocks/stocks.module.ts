@@ -7,6 +7,7 @@ import { StockListComponent } from './stock-list/stock-list.component';
 import { StockDetailComponent } from './stock-detail/stock-detail.component';
 import { StockTimelineComponent } from './stock-timeline/stock-timeline.component';
 import {HighchartsChartModule} from "highcharts-angular";
+import {FormsModule} from "@angular/forms";
 
 const routes = [
   {
@@ -25,11 +26,12 @@ const routes = [
     StockDetailComponent,
     StockTimelineComponent
   ],
-  imports: [
-    CommonModule,
-    SharedModule,
-    RouterModule.forChild(routes),
-    HighchartsChartModule
-  ]
+    imports: [
+        CommonModule,
+        SharedModule,
+        RouterModule.forChild(routes),
+        HighchartsChartModule,
+        FormsModule
+    ]
 })
 export class StocksModule { }
