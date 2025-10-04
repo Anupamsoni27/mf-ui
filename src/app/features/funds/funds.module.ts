@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 
 import { SharedModule } from '../../shared/shared.module';
 import { FundListComponent } from './fund-list/fund-list.component';
@@ -26,6 +27,7 @@ const routes = [
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    FormsModule,
     SharedModule,
     RouterModule.forChild(routes)
   ]

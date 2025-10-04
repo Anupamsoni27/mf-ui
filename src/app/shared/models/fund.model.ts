@@ -18,6 +18,7 @@ export interface Fund {
 export interface FundInfo {
   _id: string;
   date: string;
+  name: string;
   holding_count: number;
   stocks: Stock[];
   unique_id: string;

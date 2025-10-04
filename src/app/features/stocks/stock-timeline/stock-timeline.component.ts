@@ -9,7 +9,7 @@ import { StockTimeline, TimelineDataPoint } from '../../../shared/models/stock.m
 })
 export class StockTimelineComponent implements OnInit, OnChanges {
   @Input() stockId: string = '';
-  
+
   timelineData: StockTimeline | null = null;
   loading: boolean = false;
   error: string | null = null;
@@ -31,13 +31,13 @@ export class StockTimelineComponent implements OnInit, OnChanges {
 
   loadTimeline(): void {
     if (!this.stockId) return;
-    
+
     this.loading = true;
     this.error = null;
-    
+
     this.timelineService.getStockTimeline(this.stockId).subscribe({
-      next: (timeline: StockTimeline) => {
-        this.timelineData = timeline;
+      next: (timeline: any) => {
+        this.timelineData = timeline.records;
         this.loading = false;
       },
       error: (error) => {
@@ -49,11 +49,11 @@ export class StockTimelineComponent implements OnInit, OnChanges {
 
   getRecentData(): TimelineDataPoint[] {
     if (!this.timelineData || !this.timelineData.timeline) return [];
-    
+
     if (this.showAll) {
       return this.timelineData.timeline;
     }
-    
+
     return this.timelineData.timeline.slice(0, 10);
   }
 

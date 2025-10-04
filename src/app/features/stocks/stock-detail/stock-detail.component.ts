@@ -31,13 +31,13 @@ export class StockDetailComponent implements OnInit {
 
   loadStockDetails(): void {
     if (!this.stockId) return;
-    
+
     this.loading = true;
     this.error = null;
-    
+
     this.stockService.getStockInfo(this.stockId).subscribe({
-      next: (stockInfo: StockInfo) => {
-        this.stockInfo = stockInfo;
+      next: (stockInfo: any) => {
+        this.stockInfo = stockInfo.records;
         this.loading = false;
       },
       error: (error) => {

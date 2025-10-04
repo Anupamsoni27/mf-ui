@@ -34,105 +34,103 @@
     <div class="bg-white shadow rounded-lg p-6">
       <div class="flex items-center justify-between">
         <div>
-          <h1 class="text-3xl font-bold text-gray-900">{{ fundInfo.unique_id }}</h1>
-<!--          <div class="mt-2 flex items-center space-x-4">-->
-<!--            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">-->
-<!--              {{ fundInfo.fund.symbol }}-->
-<!--            </span>-->
-<!--            <span class="text-sm text-gray-500">-->
-<!--              Last updated: {{ fundInfo.fund.lastUpdated | date:'medium' }}-->
-<!--            </span>-->
-<!--          </div>-->
+          <h1 class="text-3xl font-bold text-gray-900">{{ fundInfo.name }}</h1>
+          <div class="mt-2 flex items-center space-x-4">
+            <span class="inline-flex items-center px-3 py-1
+             rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+              Fund ID: {{ fundInfo._id }}
+            </span>
+            <span class="text-sm text-gray-500">
+              Date: {{ fundInfo.date | date:'medium' }}
+            </span>
+            <span class="text-sm text-gray-500">
+              Holdings: {{ fundInfo.holding_count | number }}
+            </span>
+          </div>
         </div>
-<!--        <div class="text-right">-->
-<!--          <div class="text-3xl font-bold text-gray-900">-->
-<!--            {{ fundInfo.fund.totalValue | currency:'USD':'symbol':'1.2-2' }}-->
-<!--          </div>-->
-<!--          <div class="flex items-center justify-end mt-1">-->
-<!--            <span [class]="getChangeClass(fundInfo.fund.changePercent)" class="text-lg font-medium">-->
-<!--              {{ fundInfo.fund.changePercent > 0 ? '+' : '' }}{{ fundInfo.fund.changePercent | number:'1.2-2' }}%-->
-<!--            </span>-->
-<!--            <span [class]="getChangeClass(fundInfo.fund.changePercent)" class="ml-2 text-sm">-->
-<!--              ({{ fundInfo.fund.changeAmount > 0 ? '+' : '' }}{{ fundInfo.fund.changeAmount | currency:'USD':'symbol':'1.2-2' }})-->
-<!--            </span>-->
-<!--          </div>-->
-<!--        </div>-->
+        <div class="text-right">
+          <div class="text-2xl font-bold text-gray-900">
+            {{ fundInfo.holding_count | number }} Holdings
+          </div>
+          <div class="text-sm text-gray-500 mt-1">
+            {{ fundInfo.stocks.length }} Stocks
+          </div>
+        </div>
       </div>
     </div>
 
     <!-- Performance Metrics -->
-    <div class="bg-white shadow rounded-lg p-6">
+    <div *ngIf="fundInfo.performance" class="bg-white shadow rounded-lg p-6">
       <h2 class="text-xl font-semibold text-gray-900 mb-4">Performance</h2>
-<!--      <div class="grid grid-cols-1 md:grid-cols-5 gap-4">-->
-<!--        <div class="text-center p-4 bg-gray-50 rounded-lg">-->
-<!--          <div class="text-sm text-gray-500">1 Day</div>-->
-<!--          <div [class]="getChangeClass(fundInfo.performance.oneDay)" class="text-lg font-semibold">-->
-<!--            {{ fundInfo.performance.oneDay > 0 ? '+' : '' }}{{ fundInfo.performance.oneDay | number:'1.2-2' }}%-->
-<!--          </div>-->
-<!--        </div>-->
-<!--        <div class="text-center p-4 bg-gray-50 rounded-lg">-->
-<!--          <div class="text-sm text-gray-500">1 Week</div>-->
-<!--          <div [class]="getChangeClass(fundInfo.performance.oneWeek)" class="text-lg font-semibold">-->
-<!--            {{ fundInfo.performance.oneWeek > 0 ? '+' : '' }}{{ fundInfo.performance.oneWeek | number:'1.2-2' }}%-->
-<!--          </div>-->
-<!--        </div>-->
-<!--        <div class="text-center p-4 bg-gray-50 rounded-lg">-->
-<!--          <div class="text-sm text-gray-500">1 Month</div>-->
-<!--          <div [class]="getChangeClass(fundInfo.performance.oneMonth)" class="text-lg font-semibold">-->
-<!--            {{ fundInfo.performance.oneMonth > 0 ? '+' : '' }}{{ fundInfo.performance.oneMonth | number:'1.2-2' }}%-->
-<!--          </div>-->
-<!--        </div>-->
-<!--        <div class="text-center p-4 bg-gray-50 rounded-lg">-->
-<!--          <div class="text-sm text-gray-500">3 Months</div>-->
-<!--          <div [class]="getChangeClass(fundInfo.performance.threeMonths)" class="text-lg font-semibold">-->
-<!--            {{ fundInfo.performance.threeMonths > 0 ? '+' : '' }}{{ fundInfo.performance.threeMonths | number:'1.2-2' }}%-->
-<!--          </div>-->
-<!--        </div>-->
-<!--        <div class="text-center p-4 bg-gray-50 rounded-lg">-->
-<!--          <div class="text-sm text-gray-500">1 Year</div>-->
-<!--          <div [class]="getChangeClass(fundInfo.performance?.oneYear || 0)" class="text-lg font-semibold">-->
-<!--            {{ (fundInfo.performance?.oneYear || 0) > 0 ? '+' : '' }}{{ fundInfo.performance?.oneYear | number:'1.2-2' || '0.00' }}%-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </div>-->
+      <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+        <div class="text-center p-4 bg-gray-50 rounded-lg">
+          <div class="text-sm text-gray-500">1 Day</div>
+          <div [class]="getChangeClass(fundInfo.performance?.oneDay || 0)" class="text-lg font-semibold">
+            {{ (fundInfo.performance?.oneDay || 0) > 0 ? '+' : '' }}{{ fundInfo.performance?.oneDay | number:'1.2-2' || '0.00' }}%
+          </div>
+        </div>
+        <div class="text-center p-4 bg-gray-50 rounded-lg">
+          <div class="text-sm text-gray-500">1 Week</div>
+          <div [class]="getChangeClass(fundInfo.performance?.oneWeek || 0)" class="text-lg font-semibold">
+            {{ (fundInfo.performance?.oneWeek || 0) > 0 ? '+' : '' }}{{ fundInfo.performance?.oneWeek | number:'1.2-2' || '0.00' }}%
+          </div>
+        </div>
+        <div class="text-center p-4 bg-gray-50 rounded-lg">
+          <div class="text-sm text-gray-500">1 Month</div>
+          <div [class]="getChangeClass(fundInfo.performance?.oneMonth || 0)" class="text-lg font-semibold">
+            {{ (fundInfo.performance?.oneMonth || 0) > 0 ? '+' : '' }}{{ fundInfo.performance?.oneMonth | number:'1.2-2' || '0.00' }}%
+          </div>
+        </div>
+        <div class="text-center p-4 bg-gray-50 rounded-lg">
+          <div class="text-sm text-gray-500">3 Months</div>
+          <div [class]="getChangeClass(fundInfo.performance?.threeMonths || 0)" class="text-lg font-semibold">
+            {{ (fundInfo.performance?.threeMonths || 0) > 0 ? '+' : '' }}{{ fundInfo.performance?.threeMonths | number:'1.2-2' || '0.00' }}%
+          </div>
+        </div>
+        <div class="text-center p-4 bg-gray-50 rounded-lg">
+          <div class="text-sm text-gray-500">1 Year</div>
+          <div [class]="getChangeClass(fundInfo.performance?.oneYear || 0)" class="text-lg font-semibold">
+            {{ (fundInfo.performance?.oneYear || 0) > 0 ? '+' : '' }}{{ fundInfo.performance?.oneYear | number:'1.2-2' || '0.00' }}%
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Stocks in Fund -->
     <div class="bg-white shadow rounded-lg p-6">
       <h2 class="text-xl font-semibold text-gray-900 mb-4">Stocks in Fund ({{ fundInfo.stocks.length }})</h2>
-      <div class="overflow-x-auto">
+      <div *ngIf="fundInfo.stocks.length > 0" class="overflow-x-auto">
+        <!-- Search Input -->
+        <div class="mb-4 flex items-center justify-between">
+          <input
+            type="text"
+            class="w-full sm:w-1/3 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
+            placeholder="Search stocks by name, ID, or sector..."
+            [(ngModel)]="stocksSearchTerm"
+          />
+        </div>
         <table class="min-w-full divide-y divide-gray-200">
           <thead class="bg-gray-50">
             <tr>
               <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Symbol</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Change</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Volume</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sector</th>
               <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
-            <tr *ngFor="let stock of fundInfo.stocks" class="hover:bg-gray-50">
+            <tr *ngFor="let stock of paginatedStocks" class="hover:bg-gray-50">
               <td class="px-6 py-4 whitespace-nowrap">
                 <div class="text-sm font-medium text-gray-900">{{ stock.name }}</div>
-                <div *ngIf="stock.sector" class="text-sm text-gray-500">{{ stock.sector }}</div>
+                <div class="text-sm text-gray-500">ID: {{ stock._id }}</div>
               </td>
               <td class="px-6 py-4 whitespace-nowrap">
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                  {{ stock.symbol }}
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                  {{ stock.instrument_type }}
                 </span>
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                {{ stock.currentPrice | currency:'USD':'symbol':'1.2-2' }}
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <span [class]="getChangeClass(stock.changePercent || 0)" class="text-sm font-medium">
-                  {{ (stock.changePercent || 0) > 0 ? '+' : '' }}{{ stock.changePercent | number:'1.2-2' || '0.00' }}%
-                </span>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                {{ stock.volume | number }}
+                {{ stock.sector || 'N/A' }}
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                 <app-button variant="outline" size="sm" (clicked)="viewStock(stock._id)">
@@ -142,6 +140,37 @@
             </tr>
           </tbody>
         </table>
+        <!-- Pagination Controls -->
+        <div class="flex items-center justify-between mt-4">
+          <div class="text-sm text-gray-700">
+            Showing
+            <span class="font-medium">{{ stocksPage * stocksPageSize + 1 }}</span>
+            to
+            <span class="font-medium">{{ Math.min((stocksPage + 1) * stocksPageSize, stocksTotal) }}</span>
+            of
+            <span class="font-medium">{{ stocksTotal }}</span>
+            stocks
+          </div>
+          <div class="space-x-2 m-4">
+            <app-button
+              variant="outline"
+              size="sm"
+              [disabled]="stocksPage === 0"
+              (clicked)="stocksPreviousPage()">
+              Previous
+            </app-button>
+            <app-button
+              variant="outline"
+              size="sm"
+              [disabled]="!stocksHasNextPage"
+              (clicked)="stocksNextPage()">
+              Next
+            </app-button>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="fundInfo.stocks.length === 0" class="text-center py-8">
+        <p class="text-gray-500">No stocks found in this fund.</p>
       </div>
     </div>
   </div>
