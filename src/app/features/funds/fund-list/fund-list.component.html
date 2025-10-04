@@ -91,7 +91,7 @@
               {{ fund.holding_count | number:'1.0-0' }}
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-              {{ fund.latest_date | date:'medium' }}
+              {{ fund.latest_date | date:'yyyy-MM-dd' }}
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
               <app-button variant="primaryOutline" size="sm" (clicked)="viewFund(fund._id, $event)">

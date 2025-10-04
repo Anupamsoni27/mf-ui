@@ -13,6 +13,7 @@ export interface Stock {
   volume?: number;
   marketCap?: number;
   lastUpdated?: string;
+  recentlyAddInFunds?: boolean
 }
 
 export interface StockInfo {
