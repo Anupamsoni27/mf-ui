@@ -1,12 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { ReactiveFormsModule } from '@angular/forms';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { HighchartsChartModule } from 'highcharts-angular';
 
 import { SharedModule } from '../../shared/shared.module';
 import { FundListComponent } from './fund-list/fund-list.component';
 import { FundDetailComponent } from './fund-detail/fund-detail.component';
+import { FundTimelineChartComponent } from './fund-timeline-chart.component';
 
 const routes = [
   {
@@ -22,12 +23,14 @@ const routes = [
 @NgModule({
   declarations: [
     FundListComponent,
-    FundDetailComponent
+    FundDetailComponent,
+    FundTimelineChartComponent
   ],
   imports: [
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
+    HighchartsChartModule,
     SharedModule,
     RouterModule.forChild(routes)
   ]

@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, OnChanges } from '@angular/core';
 import { TimelineService } from '../../../core/services/timeline.service';
 import { StockTimeline, TimelineDataPoint } from '../../../shared/models/stock.model';
+import * as Highcharts from 'highcharts';
 
 @Component({
   selector: 'app-stock-timeline',
@@ -14,6 +15,15 @@ export class StockTimelineComponent implements OnInit, OnChanges {
   loading: boolean = false;
   error: string | null = null;
   showAll: boolean = false;
+
+  Highcharts: typeof Highcharts = Highcharts;
+  chartOptions: Highcharts.Options = {
+    title: { text: 'Stock Timeline' },
+    xAxis: { type: 'datetime', title: { text: 'Date' } },
+    yAxis: { title: { text: 'Fund Count' } },
+    series: [{ type: 'line', name: 'Fund Count', data: [] }],
+    credits: { enabled: false }
+  };
 
   constructor(private timelineService: TimelineService) { }
 
@@ -38,6 +48,7 @@ export class StockTimelineComponent implements OnInit, OnChanges {
     this.timelineService.getStockTimeline(this.stockId).subscribe({
       next: (timeline: any) => {
         this.timelineData = timeline.records;
+        this.updateChart();
         this.loading = false;
       },
       error: (error) => {
@@ -45,6 +56,18 @@ export class StockTimelineComponent implements OnInit, OnChanges {
         this.loading = false;
       }
     });
+  }
+
+  updateChart() {
+    if (!this.timelineData || !this.timelineData.timeline) return;
+    this.chartOptions = {
+      ...this.chartOptions,
+      series: [{
+        type: 'line',
+        name: 'Fund Count',
+        data: this.timelineData.timeline.map(point => [Date.parse(point.date), point.fund_count])
+      }]
+    };
   }
 
   getRecentData(): TimelineDataPoint[] {
