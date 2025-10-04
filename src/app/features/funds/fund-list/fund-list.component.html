@@ -38,7 +38,7 @@
           </span>
         </p>
       </div>
-     
+
       <div>
         <form [formGroup]="filterForm" class="flex flex-col sm:flex-row gap-3">
           <div class="flex-1">
@@ -136,14 +136,14 @@
         <div>
           <nav class="relative z-0 inline-flex gap-4 rounded-md shadow-sm -space-x-px" aria-label="Pagination">
             <app-button
-              variant="secondary"
+              variant="outline"
               size="sm"
               [disabled]="currentPage === 0"
               (clicked)="previousPage()">
               Previous
             </app-button>
             <app-button
-              variant="secondary"
+              variant="primary"
               size="sm"
               [disabled]="!hasNextPage"
               (clicked)="nextPage()">

@@ -2,7 +2,9 @@ export interface Stock {
   _id: string;
   name: string;
   instrument_type: string;
+  funds_holding_count: number;
   sector: string;
+  timeline: TimelineDataPoint[];
   url: string;
   symbol?: string;
   currentPrice?: number;

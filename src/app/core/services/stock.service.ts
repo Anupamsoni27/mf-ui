@@ -14,8 +14,11 @@ export class StockService {
   getAllStocks(skip: number = 0, limit: number = 10): Observable<StockListResponse> {
     const params = new HttpParams()
       .set('skip', skip.toString())
+      .set('show_timeline', "true")
+      .set('timeline_limit', 10)
       .set('limit', limit.toString());
-    
+
+
     return this.apiService.get<StockListResponse>('/getAllStocks', params);
   }
 

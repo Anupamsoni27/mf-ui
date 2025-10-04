@@ -39,10 +39,11 @@
           <tr>
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Symbol</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Change</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Volume</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Market Cap</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Holding Count</th>
+<!--            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Change</th>-->
+<!--            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Volume</th>-->
+<!--            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Market Cap</th>-->
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sparkline</th>
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
           </tr>
         </thead>
@@ -60,19 +61,22 @@
               </span>
             </td>
             <td *ngIf="stock" class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-              {{ stock.currentPrice | currency:'USD':'symbol':'1.2-2' || 'N/A' }}
+              {{ stock.funds_holding_count || 'N/A' }}
             </td>
+<!--            <td *ngIf="stock" class="px-6 py-4 whitespace-nowrap">-->
+<!--              <span [class]="getChangeClass(stock.changePercent || 0)" class="text-sm font-medium">-->
+<!--                {{ (stock.changePercent || 0) > 0 ? '+' : '' }}{{ stock.changePercent | number:'1.2-2' || '0.00' }}%-->
+<!--                ({{ (stock.changeAmount || 0) > 0 ? '+' : '' }}{{ stock.changeAmount | currency:'USD':'symbol':'1.2-2' || '$0.00' }})-->
+<!--              </span>-->
+<!--            </td>-->
+<!--            <td *ngIf="stock" class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">-->
+<!--              {{ (stock.volume | number )|| 'N/A' }}-->
+<!--            </td>-->
+<!--            <td *ngIf="stock" class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">-->
+<!--              {{ stock.marketCap | currency:'USD':'symbol':'1.0-0' || 'N/A' }}-->
+<!--            </td>-->
             <td *ngIf="stock" class="px-6 py-4 whitespace-nowrap">
-              <span [class]="getChangeClass(stock.changePercent || 0)" class="text-sm font-medium">
-                {{ (stock.changePercent || 0) > 0 ? '+' : '' }}{{ stock.changePercent | number:'1.2-2' || '0.00' }}%
-                ({{ (stock.changeAmount || 0) > 0 ? '+' : '' }}{{ stock.changeAmount | currency:'USD':'symbol':'1.2-2' || '$0.00' }})
-              </span>
-            </td>
-            <td *ngIf="stock" class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-              {{ (stock.volume | number )|| 'N/A' }}
-            </td>
-            <td *ngIf="stock" class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-              {{ stock.marketCap | currency:'USD':'symbol':'1.0-0' || 'N/A' }}
+              <app-sparkline *ngIf="stock.timeline" [timeline]="stock.timeline"></app-sparkline>
             </td>
             <td *ngIf="stock" class="px-6 py-4 whitespace-nowrap text-sm font-medium">
               <app-button variant="outline" size="sm" (clicked)="viewStock(stock._id, $event)">
@@ -86,7 +90,7 @@
 
     <!-- Pagination -->
     <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
-      <div class="flex-1 flex justify-between sm:hidden">
+      <div class="flex-1 flex gap-4 m-4 justify-between sm:hidden">
         <app-button
           variant="outline"
           size="sm"
@@ -115,7 +119,7 @@
           </p>
         </div>
         <div>
-          <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+          <nav class="relative z-0 inline-flex gap-4 rounded-md shadow-sm -space-x-px" aria-label="Pagination">
             <app-button
               variant="outline"
               size="sm"
@@ -124,7 +128,7 @@
               Previous
             </app-button>
             <app-button
-              variant="outline"
+              variant="primary"
               size="sm"
               [disabled]="!hasNextPage"
               (clicked)="nextPage()">
