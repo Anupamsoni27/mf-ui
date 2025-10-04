@@ -1,0 +1,138 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900 mb-2">Stocks</h1>
+    <p class="text-gray-600">Browse and analyze individual stock investments</p>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="flex justify-center py-12">
+    <app-loading-spinner size="lg" [showText]="true" text="Loading stocks..."></app-loading-spinner>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="bg-red-50 border border-red-200 rounded-md p-4 mb-6">
+    <div class="flex">
+      <div class="ml-3">
+        <h3 class="text-sm font-medium text-red-800">Error loading stocks</h3>
+        <div class="mt-2 text-sm text-red-700">
+          <p>{{ error }}</p>
+        </div>
+        <div class="mt-4">
+          <app-button variant="outline" size="sm" (clicked)="loadStocks()">
+            Try Again
+          </app-button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stocks Table -->
+  <div *ngIf="!loading && !error" class="bg-white shadow overflow-hidden sm:rounded-md">
+    <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
+      <h3 class="text-lg leading-6 font-medium text-gray-900">Stock List</h3>
+      <p class="mt-1 max-w-2xl text-sm text-gray-500">Total: {{ totalStocks }} stocks</p>
+    </div>
+
+    <div *ngIf="stocks" class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Symbol</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Change</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Volume</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Market Cap</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <tr  *ngFor="let stock of stocks"
+              class="hover:bg-gray-50 cursor-pointer transition-colors duration-150"
+              (click)="viewStock(stock._id)">
+            <td *ngIf="stock" class="px-6 py-4 whitespace-nowrap">
+              <div class="text-sm font-medium text-gray-900">{{ stock.name }}</div>
+              <div *ngIf="stock.sector" class="text-sm text-gray-500">{{ stock.sector }}</div>
+            </td>
+            <td *ngIf="stock" class="px-6 py-4 whitespace-nowrap">
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                {{ stock.symbol || stock.name.substring(0, 4).toUpperCase() }}
+              </span>
+            </td>
+            <td *ngIf="stock" class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+              {{ stock.currentPrice | currency:'USD':'symbol':'1.2-2' || 'N/A' }}
+            </td>
+            <td *ngIf="stock" class="px-6 py-4 whitespace-nowrap">
+              <span [class]="getChangeClass(stock.changePercent || 0)" class="text-sm font-medium">
+                {{ (stock.changePercent || 0) > 0 ? '+' : '' }}{{ stock.changePercent | number:'1.2-2' || '0.00' }}%
+                ({{ (stock.changeAmount || 0) > 0 ? '+' : '' }}{{ stock.changeAmount | currency:'USD':'symbol':'1.2-2' || '$0.00' }})
+              </span>
+            </td>
+            <td *ngIf="stock" class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+              {{ (stock.volume | number )|| 'N/A' }}
+            </td>
+            <td *ngIf="stock" class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+              {{ stock.marketCap | currency:'USD':'symbol':'1.0-0' || 'N/A' }}
+            </td>
+            <td *ngIf="stock" class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+              <app-button variant="outline" size="sm" (clicked)="viewStock(stock._id, $event)">
+                View Details
+              </app-button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+      <div class="flex-1 flex justify-between sm:hidden">
+        <app-button
+          variant="outline"
+          size="sm"
+          [disabled]="currentPage === 0"
+          (clicked)="previousPage()">
+          Previous
+        </app-button>
+        <app-button
+          variant="outline"
+          size="sm"
+          [disabled]="!hasNextPage"
+          (clicked)="nextPage()">
+          Next
+        </app-button>
+      </div>
+      <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+        <div>
+          <p class="text-sm text-gray-700">
+            Showing
+            <span class="font-medium">{{ (currentPage * pageSize) + 1 }}</span>
+            to
+            <span class="font-medium">{{ Math.min((currentPage + 1) * pageSize, totalStocks) }}</span>
+            of
+            <span class="font-medium">{{ totalStocks }}</span>
+            results
+          </p>
+        </div>
+        <div>
+          <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+            <app-button
+              variant="outline"
+              size="sm"
+              [disabled]="currentPage === 0"
+              (clicked)="previousPage()">
+              Previous
+            </app-button>
+            <app-button
+              variant="outline"
+              size="sm"
+              [disabled]="!hasNextPage"
+              (clicked)="nextPage()">
+              Next
+            </app-button>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

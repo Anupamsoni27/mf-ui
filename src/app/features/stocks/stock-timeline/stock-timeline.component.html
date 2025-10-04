@@ -1,0 +1,90 @@
+<div class="w-full">
+  <!-- Loading State -->
+  <div *ngIf="loading" class="flex justify-center py-8">
+    <app-loading-spinner size="md" [showText]="true" text="Loading timeline data..."></app-loading-spinner>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="bg-red-50 border border-red-200 rounded-md p-4">
+    <div class="flex">
+      <div class="ml-3">
+        <h3 class="text-sm font-medium text-red-800">Error loading timeline</h3>
+        <div class="mt-2 text-sm text-red-700">
+          <p>{{ error }}</p>
+        </div>
+        <div class="mt-4">
+          <app-button variant="outline" size="sm" (clicked)="loadTimeline()">
+            Try Again
+          </app-button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Timeline Data -->
+  <div *ngIf="!loading && !error && timelineData" class="space-y-4">
+    <!-- Summary Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+      <div class="bg-gray-50 rounded-lg p-4 text-center">
+        <div class="text-sm text-gray-500">Highest Price</div>
+        <div class="text-lg font-semibold text-gray-900">
+          {{ getHighestPrice() | currency:'USD':'symbol':'1.2-2' }}
+        </div>
+      </div>
+      <div class="bg-gray-50 rounded-lg p-4 text-center">
+        <div class="text-sm text-gray-500">Lowest Price</div>
+        <div class="text-lg font-semibold text-gray-900">
+          {{ getLowestPrice() | currency:'USD':'symbol':'1.2-2' }}
+        </div>
+      </div>
+      <div class="bg-gray-50 rounded-lg p-4 text-center">
+        <div class="text-sm text-gray-500">Average Volume</div>
+        <div class="text-lg font-semibold text-gray-900">
+          {{ getAverageVolume() | number:'1.0-0' }}
+        </div>
+      </div>
+      <div class="bg-gray-50 rounded-lg p-4 text-center">
+        <div class="text-sm text-gray-500">Data Points</div>
+        <div class="text-lg font-semibold text-gray-900">
+          {{ timelineData.timeline.length }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Timeline Table -->
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fund Count</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Compared To</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <tr *ngFor="let point of getRecentData()" class="hover:bg-gray-50">
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+              {{ point.date | date:'short' }}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+              {{ point.fund_count | number }}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              {{ point.compared_to || 'N/A' }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Show More/Less Button -->
+    <div *ngIf="timelineData.timeline.length > 10" class="text-center">
+      <app-button 
+        variant="outline" 
+        size="sm" 
+        (clicked)="toggleShowAll()">
+        {{ showAll ? 'Show Less' : 'Show All (' + timelineData.timeline.length + ')' }}
+      </app-button>
+    </div>
+  </div>
+</div>

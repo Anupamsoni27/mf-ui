@@ -1,0 +1,157 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900 mb-2">Mutual Funds</h1>
+    <p class="text-gray-600">Browse and manage your mutual fund investments</p>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="flex justify-center py-12">
+    <app-loading-spinner size="lg" [showText]="true" text="Loading funds..."></app-loading-spinner>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="bg-red-50 border border-red-200 rounded-md p-4 mb-6">
+    <div class="flex">
+      <div class="ml-3">
+        <h3 class="text-sm font-medium text-red-800">Error loading funds</h3>
+        <div class="mt-2 text-sm text-red-700">
+          <p>{{ error }}</p>
+        </div>
+        <div class="mt-4">
+          <app-button variant="outline" size="sm" (clicked)="loadFunds()">
+            Try Again
+          </app-button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Funds Table -->
+  <div *ngIf="!loading && !error" class="bg-white shadow overflow-hidden sm:rounded-md">
+    <div class="flex flex-row justify-between px-4 py-5 sm:px-6 border-b border-gray-200">
+      <div>
+        <h3 class="text-lg leading-6 font-medium text-gray-900">Fund List</h3>
+        <p class="mt-1 max-w-2xl text-sm text-gray-500">
+          Total: {{ totalFunds }} funds
+          <span *ngIf="selectedDate" class="ml-2 text-blue-600">
+            • Filtered by: {{ selectedDate }}
+          </span>
+        </p>
+      </div>
+     
+      <div>
+        <form [formGroup]="filterForm" class="flex flex-col sm:flex-row gap-3">
+          <div class="flex-1">
+            <label for="date-filter" class="block text-sm font-medium text-gray-700 mb-1">
+              Select Date
+            </label>
+            <input
+              id="date-filter"
+              type="date"
+              formControlName="date"
+              (change)="onDateChange()"
+              class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              placeholder="Select a date">
+          </div>
+          <div class="flex items-end">
+            <app-button
+              variant="outline"
+              size="sm"
+              (clicked)="clearDateFilter()"
+              [disabled]="!selectedDate">
+              Clear Filter
+            </app-button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fund ID</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Holding Count</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Latest Date</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <tr *ngFor="let fund of funds"
+              class="hover:bg-gray-50 cursor-pointer transition-colors duration-150"
+              (click)="viewFund(fund._id)">
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="text-sm font-medium text-gray-900">{{ fund._id }}</div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="text-sm font-medium text-gray-900">{{ fund.name }}</div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+              {{ fund.holding_count | number:'1.0-0' }}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+              {{ fund.latest_date | date:'medium' }}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+              <app-button variant="outline" size="sm" (clicked)="viewFund(fund._id, $event)">
+                View Details
+              </app-button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+      <div class="flex-1 flex justify-between sm:hidden">
+        <app-button
+          variant="outline"
+          size="sm"
+          [disabled]="currentPage === 0"
+          (clicked)="previousPage()">
+          Previous
+        </app-button>
+        <app-button
+          variant="outline"
+          size="sm"
+          [disabled]="!hasNextPage"
+          (clicked)="nextPage()">
+          Next
+        </app-button>
+      </div>
+      <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+        <div>
+          <p class="text-sm text-gray-700">
+            Showing
+            <span class="font-medium">{{ (currentPage * pageSize) + 1 }}</span>
+            to
+            <span class="font-medium">{{ Math.min((currentPage + 1) * pageSize, totalFunds) }}</span>
+            of
+            <span class="font-medium">{{ totalFunds }}</span>
+            results
+          </p>
+        </div>
+        <div>
+          <nav class="relative z-0 inline-flex gap-4 rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+            <app-button
+              variant="secondary"
+              size="sm"
+              [disabled]="currentPage === 0"
+              (clicked)="previousPage()">
+              Previous
+            </app-button>
+            <app-button
+              variant="secondary"
+              size="sm"
+              [disabled]="!hasNextPage"
+              (clicked)="nextPage()">
+              Next
+            </app-button>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
