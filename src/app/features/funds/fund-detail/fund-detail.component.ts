@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { FundService } from '../../../core/services/fund.service';
 import { FundInfo, Fund } from '../../../shared/models/fund.model';
 import { Stock } from '../../../shared/models/stock.model';
+import * as Highcharts from 'highcharts';
 
 @Component({
   selector: 'app-fund-detail',
@@ -23,6 +24,9 @@ export class FundDetailComponent implements OnInit {
   stocksPageSize: number = 10;
   // Search for stocks
   stocksSearchTerm: string = '';
+
+  Highcharts: typeof Highcharts = Highcharts;
+  chartOptions: Highcharts.Options = {};
 
   constructor(
     private fundService: FundService,
@@ -54,6 +58,7 @@ export class FundDetailComponent implements OnInit {
       next: (fundInfo: any) => {
         console.log(fundInfo)
         this.fundInfo = fundInfo.records;
+        this.loadChart();
         this.stocksPage = 0; // Reset stocks pagination on new data
         this.loading = false;
       },
@@ -140,6 +145,58 @@ export class FundDetailComponent implements OnInit {
     if (this.stocksPage > 0) {
       this.stocksPage--;
     }
+  }
+
+
+  loadChart() {
+    const sectorCount: { [key: string]: number } = {};
+
+    this.fundInfo?.stocks.forEach(stock => {
+      if (stock.sector) {
+        sectorCount[stock.sector] = (sectorCount[stock.sector] || 0) + 1;
+      }
+    });
+
+    const data = Object.entries(sectorCount).map(([sector, count]) => ({
+      name: sector,
+      y: count,
+    }));
+
+    this.chartOptions = {
+      chart: {
+        type: 'pie',
+        backgroundColor: 'transparent',
+      },
+      title: {
+        text: 'Stock Distribution by Sector',
+      },
+      tooltip: {
+        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b> ({point.y} stocks)',
+      },
+      accessibility: {
+        point: {
+          valueSuffix: '%',
+        },
+      },
+      plotOptions: {
+        pie: {
+          allowPointSelect: true,
+          cursor: 'pointer',
+          dataLabels: {
+            enabled: true,
+            format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+          },
+          showInLegend: true,
+        },
+      },
+      series: [
+        {
+          type: 'pie',
+          name: 'Sector Share',
+          data,
+        },
+      ],
+    };
   }
 
   protected readonly JSON = JSON;
