@@ -28,6 +28,14 @@ export class FundDetailComponent implements OnInit {
   Highcharts: typeof Highcharts = Highcharts;
   chartOptions: Highcharts.Options = {};
 
+  chartOptions2: Highcharts.Options = {
+    title: { text: 'Fund Timeline' },
+    xAxis: { type: 'datetime', title: { text: 'Date' } },
+    yAxis: { title: { text: 'Fund Count' } },
+    series: [{ type: 'line', name: 'Fund Count', data: [] }],
+    credits: { enabled: false }
+  };
+
   constructor(
     private fundService: FundService,
     private route: ActivatedRoute,
@@ -59,6 +67,7 @@ export class FundDetailComponent implements OnInit {
         console.log(fundInfo)
         this.fundInfo = fundInfo.records;
         this.loadChart();
+        this.updateChart();
         this.stocksPage = 0; // Reset stocks pagination on new data
         this.loading = false;
       },
@@ -199,6 +208,19 @@ export class FundDetailComponent implements OnInit {
     };
   }
 
+
+
+  updateChart() {
+    if (!this.fundInfo || !this.fundInfo.fund_count) return;
+    this.chartOptions2 = {
+      ...this.chartOptions2,
+      series: [{
+        type: 'line',
+        name: 'Fund Count',
+        data: this.fundInfo.fund_count.map(point => [Date.parse(point.date), point.holding_count])
+      }]
+    };
+  }
   protected readonly JSON = JSON;
   protected readonly Math = Math;
 }

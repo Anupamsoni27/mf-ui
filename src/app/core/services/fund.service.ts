@@ -11,17 +11,38 @@ import { map } from 'rxjs/operators';
 export class FundService {
   constructor(private apiService: ApiService) { }
 
-  getAllFunds(skip: number = 0, limit: number = 10, date?: string): Observable<FundListResponse> {
+
+  getAllFunds(
+    skip: number = 0,
+    limit: number = 10,
+    date?: string,
+    search?: string,
+    sortBy?: string,
+    order?: string
+  ): Observable<FundListResponse> {
     let params = new HttpParams()
       .set('skip', skip.toString())
       .set('limit', limit.toString());
-    
+
     if (date) {
       params = params.set('date', date);
     }
-    
+
+    if (search && search.trim()) {
+      params = params.set('search', search.trim());
+    }
+
+    if (sortBy) {
+      params = params.set('sort_by', sortBy);
+    }
+
+    if (order) {
+      params = params.set('order', order);
+    }
+
     return this.apiService.get<FundListResponse>('/getAllFunds', params);
   }
+
 
   getFundInfo(fundId: string, date?: string): Observable<FundInfo> {
     let params = new HttpParams().set('fund_id', fundId);

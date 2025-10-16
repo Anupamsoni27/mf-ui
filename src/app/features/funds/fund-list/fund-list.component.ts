@@ -19,6 +19,8 @@ export class FundListComponent implements OnInit {
   hasNextPage: boolean = false;
   filterForm: FormGroup;
   selectedDate: string | null = null;
+  sortBy: string = 'holding_count';
+  sortOrder: string = 'desc';
 
   Math = Math; // Make Math available in template
 
@@ -36,14 +38,27 @@ export class FundListComponent implements OnInit {
     this.loadFunds();
   }
 
+  onSortChange(sortBy: string): void {
+    this.sortBy = sortBy;
+    this.currentPage = 0;
+    this.loadFunds();
+  }
+
+  onOrderChange(order: string): void {
+    this.sortOrder = order;
+    this.currentPage = 0;
+    this.loadFunds();
+  }
+
+
   loadFunds(): void {
     this.loading = true;
     this.error = null;
-    
+
     const skip = this.currentPage * this.pageSize;
     const date = this.selectedDate;
-    
-    this.fundService.getAllFunds(skip, this.pageSize, date || undefined).subscribe({
+
+    this.fundService.getAllFunds(skip, this.pageSize, date || undefined, '', this.sortBy).subscribe({
       next: (response: FundListResponse) => {
         this.funds = response.records;
         this.totalFunds = response.count;

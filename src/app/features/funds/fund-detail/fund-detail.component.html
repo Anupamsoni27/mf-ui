@@ -6,6 +6,15 @@
     </app-button>
   </div>
 
+  <!-- Timeline Chart -->
+  <div *ngIf="!loading && !error && fundInfo?.fund_count">
+    <highcharts-chart
+      [Highcharts]="Highcharts"
+      [options]="chartOptions2"
+      style="width: 100%; height: 400px; display: block;"
+    ></highcharts-chart>
+  </div>
+
   <!-- Loading State -->
   <div *ngIf="loading" class="flex justify-center py-12">
     <app-loading-spinner size="lg" [showText]="true" text="Loading fund details..."></app-loading-spinner>

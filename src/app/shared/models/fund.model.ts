@@ -4,6 +4,8 @@ export interface Fund {
   _id: string;
   holding_count: number;
   latest_date: string;
+  added_count: number;
+  removed_count: number;
   unique_id?: string;
   name?: string;
   symbol?: string;
@@ -23,6 +25,9 @@ export interface FundInfo {
   stocks: Stock[];
   unique_id: string;
   fund?: Fund;
+  fund_count: {
+    "date": string,
+    "holding_count": number }[];
   performance?: {
     oneDay: number;
     oneWeek: number;
