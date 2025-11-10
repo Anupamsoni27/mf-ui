@@ -19,7 +19,7 @@ export class StockListComponent implements OnInit {
   searchTerm: string = '';
   sortBy: string = 'funds_holding_count';
   sortOrder: string = 'desc';
-
+  selectedStockId: string | null = '68d8564a9fece62833483580';
   Math = Math; // Make Math available in template
 
   constructor(
@@ -31,12 +31,17 @@ export class StockListComponent implements OnInit {
     this.loadStocks();
   }
 
+  setSelectedStockId(stockId: string): void {
+    this.selectedStockId = stockId;
+  }
+
+
   loadStocks(): void {
     this.loading = true;
     this.error = null;
-    
+
     const skip = this.currentPage * this.pageSize;
-    
+
     this.stockService.getAllStocks(skip, this.pageSize, this.searchTerm, this.sortBy, this.sortOrder).subscribe({
       next: (response: StockListResponse) => {
         this.stocks = response.records;

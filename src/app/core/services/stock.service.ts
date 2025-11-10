@@ -15,7 +15,7 @@ export class StockService {
     let params = new HttpParams()
       .set('skip', skip.toString())
       .set('show_timeline', "true")
-      .set('timeline_limit', 10)
+      .set('timeline_limit', 25)
       .set('limit', limit.toString());
 
     if (search && search.trim()) {
