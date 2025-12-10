@@ -42,14 +42,14 @@
 
     <!-- Main table area -->
     <div class="flex-1 overflow-auto px-2 pt-2 pb-2 bg-slate-950">
-      <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4 mb-6">
-        <!-- Placeholder dashboard widgets, ready for content -->
+      <!-- <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4 mb-6">
+        Placeholder dashboard widgets, ready for content
 
         <div class="rounded-md bg-slate-900 shadow flex flex-col p-4 border border-slate-800">
           <div class="text-xs text-slate-400">Sample Widget</div>
           <div class="font-medium text-lg text-slate-200">Coming soon…</div>
         </div>
-      </div>
+      </div> -->
       <!-- Table -->
       <table class="min-w-full bg-slate-900 rounded-lg shadow-md focus:outline-none overflow-hidden" tabindex="0"
         (keydown)="onTableKeydown($event)">
@@ -145,7 +145,7 @@
   </main>
 
   <!-- Right Panel -->
-  <aside class="w-[45%] h-full max-h-screen bg-slate-900 overflow-y-auto border-l border-slate-800">
+  <aside class="w-[45%] h-full max-h-screen bg-slate-950 overflow-y-auto border-l border-slate-800">
     <app-stock-detail [stockId]="selectedStockId"></app-stock-detail>
   </aside>
 </div>

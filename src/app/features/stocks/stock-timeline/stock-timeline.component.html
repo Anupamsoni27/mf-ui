@@ -23,28 +23,28 @@
   </div>
 
   <!-- Timeline Data -->
-  <div *ngIf="!loading && !error && timelineData" class="space-y-4">
+  <div *ngIf="!loading && !error && timelineData" class="space-y-3">
     <!-- Summary Stats -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-      <div class="bg-slate-900 border border-slate-700 rounded-lg p-4 text-center">
-        <div class="text-[10px] text-slate-400">Highest Price</div>
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mb-4">
+      <div class="bg-slate-900 border border-slate-700 rounded-lg p-3 text-center">
+        <div class="text-[10px] text-slate-400">Max Funds</div>
         <div class="text-lg font-semibold text-slate-200">
-          {{ getHighestPrice() | currency:'USD':'symbol':'1.2-2' }}
+          {{ getHighestPrice() | number:'1.0-0' }}
         </div>
       </div>
-      <div class="bg-slate-900 border border-slate-700 rounded-lg p-4 text-center">
-        <div class="text-[10px] text-slate-400">Lowest Price</div>
+      <div class="bg-slate-900 border border-slate-700 rounded-lg p-3 text-center">
+        <div class="text-[10px] text-slate-400">Min Funds</div>
         <div class="text-lg font-semibold text-slate-200">
-          {{ getLowestPrice() | currency:'USD':'symbol':'1.2-2' }}
+          {{ getLowestPrice() | number:'1.0-0' }}
         </div>
       </div>
-      <div class="bg-slate-900 border border-slate-700 rounded-lg p-4 text-center">
-        <div class="text-[10px] text-slate-400">Average Volume</div>
+      <div class="bg-slate-900 border border-slate-700 rounded-lg p-3 text-center">
+        <div class="text-[10px] text-slate-400">Avg Funds</div>
         <div class="text-lg font-semibold text-slate-200">
-          {{ getAverageVolume() | number:'1.0-0' }}
+          {{ getAverageVolume() | number:'1.0-1' }}
         </div>
       </div>
-      <div class="bg-slate-900 border border-slate-700 rounded-lg p-4 text-center">
+      <div class="bg-slate-900 border border-slate-700 rounded-lg p-3 text-center">
         <div class="text-[10px] text-slate-400">Data Points</div>
         <div class="text-lg font-semibold text-slate-200">
           {{ timelineData.timeline.length }}
@@ -53,32 +53,33 @@
     </div>
 
     <!-- Timeline Chart -->
-    <div *ngIf="!loading && !error && timelineData">
+    <div *ngIf="!loading && !error && timelineData" class="mb-4">
       <highcharts-chart [Highcharts]="Highcharts" [options]="chartOptions"
         style="width: 100%; height: 400px; display: block;"></highcharts-chart>
     </div>
 
     <!-- Timeline Table -->
-    <div class="overflow-x-auto border border-slate-700 rounded-lg">
+    <div class="border border-slate-700 rounded-lg">
       <table class="min-w-full divide-y divide-slate-800">
         <thead class="bg-slate-800">
           <tr>
-            <th class="px-6 py-2 text-left text-[10px] font-medium text-slate-400 uppercase tracking-wider">Date</th>
-            <th class="px-6 py-2 text-left text-[10px] font-medium text-slate-400 uppercase tracking-wider">Fund Count
+            <th class="px-4 py-1.5 text-left text-[10px] font-medium text-slate-400 uppercase tracking-wider">Date</th>
+            <th class="px-4 py-1.5 text-left text-[10px] font-medium text-slate-400 uppercase tracking-wider">Fund Count
             </th>
-            <th class="px-6 py-2 text-left text-[10px] font-medium text-slate-400 uppercase tracking-wider">Compared To
+            <th class="px-4 py-1.5 text-left text-[10px] font-medium text-slate-400 uppercase tracking-wider">Compared
+              To
             </th>
           </tr>
         </thead>
         <tbody class="bg-slate-900 divide-y divide-slate-800">
           <tr *ngFor="let point of getRecentData()" class="hover:bg-slate-800">
-            <td class="px-6 py-2 whitespace-nowrap text-[10px] text-slate-200">
+            <td class="px-4 py-1.5 whitespace-nowrap text-[10px] text-slate-200">
               {{ point.date | date:'short' }}
             </td>
-            <td class="px-6 py-2 whitespace-nowrap text-[10px] text-slate-200">
+            <td class="px-4 py-1.5 whitespace-nowrap text-[10px] text-slate-200">
               {{ point.fund_count | number }}
             </td>
-            <td class="px-6 py-2 whitespace-nowrap text-[10px] text-slate-400">
+            <td class="px-4 py-1.5 whitespace-nowrap text-[10px] text-slate-400">
               {{ point.compared_to || 'N/A' }}
             </td>
           </tr>
@@ -87,7 +88,7 @@
     </div>
 
     <!-- Show More/Less Button -->
-    <div *ngIf="timelineData.timeline.length > 10" class="text-center">
+    <div *ngIf="timelineData.timeline.length > 10" class="text-center mt-3">
       <app-button variant="outline" size="xs" (clicked)="toggleShowAll()">
         {{ showAll ? 'Show Less' : 'Show All (' + timelineData.timeline.length + ')' }}
       </app-button>
