@@ -13,7 +13,7 @@ export class StockListComponent implements OnInit {
   loading: boolean = false;
   error: string | null = null;
   currentPage: number = 0;
-  pageSize: number = 10;
+  pageSize: number = 20;
   totalStocks: number = 0;
   hasNextPage: boolean = false;
   searchTerm: string = '';
