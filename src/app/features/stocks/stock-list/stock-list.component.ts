@@ -31,6 +31,22 @@ export class StockListComponent implements OnInit {
     this.loadStocks();
   }
 
+  onTableKeydown(event: KeyboardEvent): void {
+    if (!this.stocks || this.stocks.length === 0) return;
+    const currentIdx = this.stocks.findIndex(s => s._id === this.selectedStockId);
+    if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      if (currentIdx < this.stocks.length - 1) {
+        this.selectedStockId = this.stocks[currentIdx + 1]._id;
+      }
+    } else if (event.key === 'ArrowUp') {
+      event.preventDefault();
+      if (currentIdx > 0) {
+        this.selectedStockId = this.stocks[currentIdx - 1]._id;
+      }
+    }
+  }
+
   setSelectedStockId(stockId: string): void {
     this.selectedStockId = stockId;
   }
