@@ -1,19 +1,20 @@
 <div class="w-full">
   <!-- Loading State -->
   <div *ngIf="loading" class="flex justify-center py-8">
-    <app-loading-spinner size="md" [showText]="true" text="Loading timeline data..."></app-loading-spinner>
+    <app-loading-spinner size="md" [showText]="true" text="Loading timeline data..."
+      class="text-slate-200"></app-loading-spinner>
   </div>
 
   <!-- Error State -->
-  <div *ngIf="error" class="bg-red-50 border border-red-200 rounded-md p-4">
+  <div *ngIf="error" class="bg-red-900/20 border border-red-800 rounded-md p-4">
     <div class="flex">
       <div class="ml-3">
-        <h3 class="text-sm font-medium text-red-800">Error loading timeline</h3>
-        <div class="mt-2 text-sm text-red-700">
+        <h3 class="text-sm font-medium text-red-400">Error loading timeline</h3>
+        <div class="mt-2 text-sm text-red-300">
           <p>{{ error }}</p>
         </div>
         <div class="mt-4">
-          <app-button variant="outline" size="sm" (clicked)="loadTimeline()">
+          <app-button variant="outline" size="xs" (clicked)="loadTimeline()">
             Try Again
           </app-button>
         </div>
@@ -25,27 +26,27 @@
   <div *ngIf="!loading && !error && timelineData" class="space-y-4">
     <!-- Summary Stats -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-      <div class="bg-gray-50 rounded-lg p-4 text-center">
-        <div class="text-sm text-gray-500">Highest Price</div>
-        <div class="text-lg font-semibold text-gray-900">
+      <div class="bg-slate-900 border border-slate-700 rounded-lg p-4 text-center">
+        <div class="text-[10px] text-slate-400">Highest Price</div>
+        <div class="text-lg font-semibold text-slate-200">
           {{ getHighestPrice() | currency:'USD':'symbol':'1.2-2' }}
         </div>
       </div>
-      <div class="bg-gray-50 rounded-lg p-4 text-center">
-        <div class="text-sm text-gray-500">Lowest Price</div>
-        <div class="text-lg font-semibold text-gray-900">
+      <div class="bg-slate-900 border border-slate-700 rounded-lg p-4 text-center">
+        <div class="text-[10px] text-slate-400">Lowest Price</div>
+        <div class="text-lg font-semibold text-slate-200">
           {{ getLowestPrice() | currency:'USD':'symbol':'1.2-2' }}
         </div>
       </div>
-      <div class="bg-gray-50 rounded-lg p-4 text-center">
-        <div class="text-sm text-gray-500">Average Volume</div>
-        <div class="text-lg font-semibold text-gray-900">
+      <div class="bg-slate-900 border border-slate-700 rounded-lg p-4 text-center">
+        <div class="text-[10px] text-slate-400">Average Volume</div>
+        <div class="text-lg font-semibold text-slate-200">
           {{ getAverageVolume() | number:'1.0-0' }}
         </div>
       </div>
-      <div class="bg-gray-50 rounded-lg p-4 text-center">
-        <div class="text-sm text-gray-500">Data Points</div>
-        <div class="text-lg font-semibold text-gray-900">
+      <div class="bg-slate-900 border border-slate-700 rounded-lg p-4 text-center">
+        <div class="text-[10px] text-slate-400">Data Points</div>
+        <div class="text-lg font-semibold text-slate-200">
           {{ timelineData.timeline.length }}
         </div>
       </div>
@@ -53,32 +54,31 @@
 
     <!-- Timeline Chart -->
     <div *ngIf="!loading && !error && timelineData">
-      <highcharts-chart
-        [Highcharts]="Highcharts"
-        [options]="chartOptions"
-        style="width: 100%; height: 400px; display: block;"
-      ></highcharts-chart>
+      <highcharts-chart [Highcharts]="Highcharts" [options]="chartOptions"
+        style="width: 100%; height: 400px; display: block;"></highcharts-chart>
     </div>
 
     <!-- Timeline Table -->
-    <div class="overflow-x-auto">
-      <table class="min-w-full divide-y divide-gray-200">
-        <thead class="bg-gray-50">
+    <div class="overflow-x-auto border border-slate-700 rounded-lg">
+      <table class="min-w-full divide-y divide-slate-800">
+        <thead class="bg-slate-800">
           <tr>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fund Count</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Compared To</th>
+            <th class="px-6 py-2 text-left text-[10px] font-medium text-slate-400 uppercase tracking-wider">Date</th>
+            <th class="px-6 py-2 text-left text-[10px] font-medium text-slate-400 uppercase tracking-wider">Fund Count
+            </th>
+            <th class="px-6 py-2 text-left text-[10px] font-medium text-slate-400 uppercase tracking-wider">Compared To
+            </th>
           </tr>
         </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
-          <tr *ngFor="let point of getRecentData()" class="hover:bg-gray-50">
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+        <tbody class="bg-slate-900 divide-y divide-slate-800">
+          <tr *ngFor="let point of getRecentData()" class="hover:bg-slate-800">
+            <td class="px-6 py-2 whitespace-nowrap text-[10px] text-slate-200">
               {{ point.date | date:'short' }}
             </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+            <td class="px-6 py-2 whitespace-nowrap text-[10px] text-slate-200">
               {{ point.fund_count | number }}
             </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            <td class="px-6 py-2 whitespace-nowrap text-[10px] text-slate-400">
               {{ point.compared_to || 'N/A' }}
             </td>
           </tr>
@@ -88,10 +88,7 @@
 
     <!-- Show More/Less Button -->
     <div *ngIf="timelineData.timeline.length > 10" class="text-center">
-      <app-button 
-        variant="outline" 
-        size="sm" 
-        (clicked)="toggleShowAll()">
+      <app-button variant="outline" size="xs" (clicked)="toggleShowAll()">
         {{ showAll ? 'Show Less' : 'Show All (' + timelineData.timeline.length + ')' }}
       </app-button>
     </div>

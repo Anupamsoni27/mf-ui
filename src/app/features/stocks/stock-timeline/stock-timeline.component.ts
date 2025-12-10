@@ -18,10 +18,31 @@ export class StockTimelineComponent implements OnInit, OnChanges {
 
   Highcharts: typeof Highcharts = Highcharts;
   chartOptions: Highcharts.Options = {
-    title: { text: 'Stock Timeline' },
-    xAxis: { type: 'datetime', title: { text: 'Date' } },
-    yAxis: { title: { text: 'Fund Count' } },
-    series: [{ type: 'line', name: 'Fund Count', data: [] }],
+    chart: {
+      backgroundColor: 'transparent',
+      style: { fontFamily: 'inherit' }
+    },
+    title: {
+      text: 'Stock Timeline',
+      style: { color: '#cbd5e1' } // slate-300
+    },
+    xAxis: {
+      type: 'datetime',
+      title: { text: 'Date', style: { color: '#94a3b8' } }, // slate-400
+      labels: { style: { color: '#94a3b8' } },
+      lineColor: '#334155', // slate-700
+      tickColor: '#334155'
+    },
+    yAxis: {
+      title: { text: 'Fund Count', style: { color: '#94a3b8' } },
+      labels: { style: { color: '#94a3b8' } },
+      gridLineColor: '#334155' // slate-700
+    },
+    legend: {
+      itemStyle: { color: '#cbd5e1' },
+      itemHoverStyle: { color: '#fff' }
+    },
+    series: [{ type: 'line', name: 'Fund Count', data: [], color: '#34d399' }], // emerald-400
     credits: { enabled: false }
   };
 
@@ -65,7 +86,8 @@ export class StockTimelineComponent implements OnInit, OnChanges {
       series: [{
         type: 'line',
         name: 'Fund Count',
-        data: this.timelineData.timeline.map(point => [Date.parse(point.date), point.fund_count])
+        data: this.timelineData.timeline.map(point => [Date.parse(point.date), point.fund_count]),
+        color: '#34d399' // emerald-400
       }]
     };
   }

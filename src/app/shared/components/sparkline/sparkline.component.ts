@@ -36,7 +36,7 @@ export class SparklineComponent implements OnChanges {
       legend: { enabled: false },
       plotOptions: {
         series: {
-          color: '#3b82f6',
+          color: '#34d399',
           lineWidth: 1,
           marker: { enabled: false }
         }
