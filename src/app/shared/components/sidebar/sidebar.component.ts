@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../../../core/services/auth.service';
+import { UserProfile } from '../../models/user.model';
 
 @Component({
   selector: 'app-sidebar',
@@ -31,12 +33,6 @@ import { Component, OnInit } from '@angular/core';
             </svg>
             Funds
           </a>
-          <!-- <a class="flex items-center px-6 py-2 text-sm font-medium rounded-lg hover:bg-slate-800 text-slate-300 transition" [routerLink]="['/reports']" routerLinkActive="bg-slate-800 text-emerald-400">
-            <span class="mr-3">📊</span> Reports
-          </a>
-          <a class="flex items-center px-6 py-2 text-sm font-medium rounded-lg hover:bg-slate-800 text-slate-300 transition" [routerLink]="['/settings']" routerLinkActive="bg-slate-800 text-emerald-400">
-            <span class="mr-3">⚙️</span> Settings
-          </a> -->
         </nav>
 
         <!-- Sidebar Widgets (Projected Content) -->
@@ -45,19 +41,34 @@ import { Component, OnInit } from '@angular/core';
         </div>
       </div>
 
-      <!-- Sidebar Footer -->
+      <!-- Sidebar Footer - User Profile -->
       <div class="flex items-center justify-between px-6 h-20 border-t border-slate-800 mt-2">
-        <div class="flex items-center gap-2">
-          <div class="bg-blue-600 rounded-full w-8 h-8 flex items-center justify-center text-white font-semibold">A</div>
-          <div class="flex flex-col">
-            <span class="text-xs font-medium text-slate-200">Anupam S</span>
-            <a href="#" class="text-xs text-emerald-400 hover:underline">Profile</a>
+        <div *ngIf="userProfile" class="flex items-center gap-2 flex-1 min-w-0">
+          <!-- User Avatar -->
+          <img *ngIf="userProfile.picture" [src]="userProfile.picture" [alt]="userProfile.name" 
+            class="w-8 h-8 rounded-full border-2 border-emerald-500">
+          <div *ngIf="!userProfile.picture" 
+            class="bg-blue-600 rounded-full w-8 h-8 flex items-center justify-center text-white font-semibold text-xs">
+            {{ getInitials(userProfile.name) }}
+          </div>
+          
+          <!-- User Info -->
+          <div class="flex flex-col flex-1 min-w-0">
+            <span class="text-xs font-medium text-slate-200 truncate" [title]="userProfile.name">
+              {{ userProfile.name }}
+            </span>
+            <span class="text-[10px] text-slate-400 truncate" [title]="userProfile.email">
+              {{ userProfile.email }}
+            </span>
           </div>
         </div>
-        <button class="text-slate-400 hover:text-white transition-colors p-1 rounded-md hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500" title="Settings">
+        
+        <!-- Logout Button -->
+        <button *ngIf="userProfile" (click)="onLogout()" 
+          class="text-slate-400 hover:text-red-400 transition-colors p-1 rounded-md hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-red-500" 
+          title="Sign out">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
           </svg>
         </button>
       </div>
@@ -66,6 +77,27 @@ import { Component, OnInit } from '@angular/core';
   styles: []
 })
 export class SidebarComponent implements OnInit {
-  constructor() { }
-  ngOnInit(): void { }
+  userProfile: UserProfile | null = null;
+
+  constructor(private authService: AuthService) { }
+
+  ngOnInit(): void {
+    // Subscribe to auth state to get user profile
+    this.authService.getAuthState().subscribe(authState => {
+      this.userProfile = authState.user;
+    });
+  }
+
+  getInitials(name: string): string {
+    if (!name) return '?';
+    const parts = name.split(' ');
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    }
+    return name.substring(0, 2).toUpperCase();
+  }
+
+  onLogout(): void {
+    this.authService.logout();
+  }
 }
