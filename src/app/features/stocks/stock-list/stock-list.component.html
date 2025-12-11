@@ -2,7 +2,7 @@
   <!-- Main Area -->
   <main class="flex-1 flex flex-col min-w-0 h-full">
     <!-- Sticky Summary/Action Bar -->
-    <div class="sticky top-0 bg-slate-900 z-10 px-2 py-2 flex items-center justify-between shadow-sm flex-wrap gap-4">
+    <div class="sticky top-0 bg-slate-900 z-10 px-6 py-4 flex items-center justify-between shadow-sm flex-wrap gap-4">
       <div class="flex gap-4 items-end">
         <div>
           <div class="text-xl font-extrabold text-emerald-400">{{ totalStocks }}</div>
@@ -41,7 +41,7 @@
     </div>
 
     <!-- Main table area -->
-    <div class="flex-1 overflow-auto px-2 pt-2 pb-2 bg-slate-950">
+    <div class="flex-1 overflow-auto px-6 pt-4 pb-4 bg-slate-950">
       <!-- <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4 mb-6">
         Placeholder dashboard widgets, ready for content
 
@@ -55,11 +55,11 @@
         (keydown)="onTableKeydown($event)">
         <thead class="bg-slate-800 sticky top-0 z-10">
           <tr>
-            <th class="px-6 py-1 text-left text-[10px] font-bold text-slate-300 uppercase tracking-wider">Stock</th>
-            <th class="px-6 py-1 text-left text-[10px] font-bold text-slate-300 uppercase tracking-wider">Symbol</th>
-            <th class="px-6 py-1 text-left text-[10px] font-bold text-slate-300 uppercase tracking-wider">Holding Count
+            <th class="px-6 py-3 text-left text-[10px] font-bold text-slate-300 uppercase tracking-wider">Stock</th>
+            <th class="px-6 py-3 text-left text-[10px] font-bold text-slate-300 uppercase tracking-wider">Symbol</th>
+            <th class="px-6 py-3 text-left text-[10px] font-bold text-slate-300 uppercase tracking-wider">Holding Count
             </th>
-            <th class="px-6 py-1 text-left text-[10px] font-bold text-slate-300 uppercase tracking-wider">Sparkline</th>
+            <th class="px-6 py-3 text-left text-[10px] font-bold text-slate-300 uppercase tracking-wider">Sparkline</th>
           </tr>
         </thead>
         <tbody class="">
@@ -69,7 +69,7 @@
                 'bg-slate-900 border-l-4 border-transparent hover:scale-[1.005]': !stock.recentlyAddInFunds && stock._id !== selectedStockId,
                 'bg-emerald-900/20 border-l-4 border-emerald-800 hover:scale-[1.005]': stock.recentlyAddInFunds && stock._id !== selectedStockId
               }">
-            <td class="px-6 py-1">
+            <td class="px-6 py-3">
               <div class="text-[10px] font-medium text-slate-200">
                 <a [href]="'https://groww.in'+ stock.url" target="_blank" class="hover:underline text-emerald-400">
                   {{ stock.name }}
@@ -83,7 +83,7 @@
                 {{ stock.symbol || stock.name.substring(0, 4).toUpperCase() }}
               </span>
             </td>
-            <td class="px-6 py-1 text-[10px] text-slate-300">
+            <td class="px-6 py-3 text-[10px] text-slate-300">
               {{ stock.funds_holding_count || 'N/A' }}
             </td>
             <td class="px-6 py-1">
@@ -113,7 +113,7 @@
     </div>
 
     <!-- Sticky Footer -->
-    <div class="px-8 py-4 bg-slate-900">
+    <div class="px-6 py-4 bg-slate-900 border-t border-slate-800">
       <div class="flex items-center justify-between flex-wrap">
         <div class="flex-1 flex justify-between sm:hidden">
           <app-button variant="outline" size="xs" [disabled]="currentPage === 0"

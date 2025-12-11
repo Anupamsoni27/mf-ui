@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { FundService } from '../../../core/services/fund.service';
 import { Fund, FundListResponse } from '../../../shared/models/fund.model';
 
@@ -9,7 +11,7 @@ import { Fund, FundListResponse } from '../../../shared/models/fund.model';
   templateUrl: './fund-list.component.html',
   styleUrls: ['./fund-list.component.scss']
 })
-export class FundListComponent implements OnInit {
+export class FundListComponent implements OnInit, OnDestroy {
   funds: Fund[] = [];
   loading: boolean = false;
   error: string | null = null;
@@ -24,6 +26,8 @@ export class FundListComponent implements OnInit {
 
   Math = Math; // Make Math available in template
 
+  private dateFilterSubject = new Subject<string | null>();
+
   constructor(
     private fundService: FundService,
     private router: Router,
@@ -36,6 +40,20 @@ export class FundListComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadFunds();
+
+    // Setup debounced date filter
+    this.dateFilterSubject.pipe(
+      debounceTime(300),
+      distinctUntilChanged()
+    ).subscribe(date => {
+      this.selectedDate = date;
+      this.currentPage = 0;
+      this.loadFunds();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.dateFilterSubject.complete();
   }
 
   onSortChange(sortBy: string): void {
@@ -103,16 +121,13 @@ export class FundListComponent implements OnInit {
   }
 
   onDateChange(): void {
-    this.selectedDate = this.filterForm.get('date')?.value;
-    this.currentPage = 0; // Reset to first page when filtering
-    this.loadFunds();
+    const date = this.filterForm.get('date')?.value;
+    this.dateFilterSubject.next(date || null);
   }
 
   clearDateFilter(): void {
     this.filterForm.patchValue({ date: '' });
-    this.selectedDate = null;
-    this.currentPage = 0; // Reset to first page when clearing filter
-    this.loadFunds();
+    this.dateFilterSubject.next(null);
   }
 
   getFilterSummary(): string {

@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { StockService } from '../../../core/services/stock.service';
 import { Stock, StockListResponse } from '../../../shared/models/stock.model';
 
@@ -8,7 +10,7 @@ import { Stock, StockListResponse } from '../../../shared/models/stock.model';
   templateUrl: './stock-list.component.html',
   styleUrls: ['./stock-list.component.scss']
 })
-export class StockListComponent implements OnInit {
+export class StockListComponent implements OnInit, OnDestroy {
   stocks: Stock[] = [];
   loading: boolean = false;
   error: string | null = null;
@@ -22,6 +24,8 @@ export class StockListComponent implements OnInit {
   selectedStockId: string | null = '68d8564a9fece62833483580';
   Math = Math; // Make Math available in template
 
+  private searchSubject = new Subject<string>();
+
   constructor(
     private stockService: StockService,
     private router: Router
@@ -29,6 +33,20 @@ export class StockListComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadStocks();
+
+    // Setup debounced search
+    this.searchSubject.pipe(
+      debounceTime(300),
+      distinctUntilChanged()
+    ).subscribe(searchTerm => {
+      this.searchTerm = searchTerm;
+      this.currentPage = 0;
+      this.loadStocks();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.searchSubject.complete();
   }
 
   onTableKeydown(event: KeyboardEvent): void {
@@ -73,9 +91,7 @@ export class StockListComponent implements OnInit {
   }
 
   onSearchChange(term: string): void {
-    this.searchTerm = term;
-    this.currentPage = 0;
-    this.loadStocks();
+    this.searchSubject.next(term);
   }
 
   onSortChange(sortBy: string): void {

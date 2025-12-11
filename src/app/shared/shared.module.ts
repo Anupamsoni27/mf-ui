@@ -9,6 +9,7 @@ import { LoadingSpinnerComponent } from './components/loading-spinner/loading-sp
 import { ModalComponent } from './components/modal/modal.component';
 import { SparklineComponent } from './components/sparkline/sparkline.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
+import { NotificationComponent } from './components/notification/notification.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
     LoadingSpinnerComponent,
     ModalComponent,
     SparklineComponent,
-    SidebarComponent
+    SidebarComponent,
+    NotificationComponent
   ],
   imports: [
     CommonModule,
@@ -30,6 +32,7 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
     ModalComponent,
     SparklineComponent,
     SidebarComponent,
+    NotificationComponent,
     ReactiveFormsModule
   ]
 })
