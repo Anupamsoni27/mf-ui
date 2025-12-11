@@ -33,6 +33,10 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: 'how-it-works',
+    loadChildren: () => import('./features/how-it-works/how-it-works.module').then(m => m.HowItWorksModule)
+  },
+  {
     path: '**',
     redirectTo: '/stocks'
   }
