@@ -23,6 +23,11 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: 'profile',
+    loadChildren: () => import('./features/user-profile/user-profile.module').then(m => m.UserProfileModule),
+    canActivate: [AuthGuard]
+  },
+  {
     path: '**',
     redirectTo: '/stocks'
   }

@@ -1,0 +1,94 @@
+<div class="profile-page">
+  <div *ngIf="user" class="profile-content">
+    <!-- Header Section with Gradient -->
+    <div class="profile-header">
+      <div class="header-background"></div>
+      <div class="header-content">
+        <div class="avatar-container">
+          <img [src]="user.picture || defaultAvatar" [alt]="user.name" class="avatar">
+          <div *ngIf="user.emailVerified" class="verified-badge" title="Verified Account">
+            <svg xmlns="http://www.w3.org/2000/svg" class="verified-icon" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd"
+                d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clip-rule="evenodd" />
+            </svg>
+          </div>
+        </div>
+        <h1 class="user-name">{{ user.name }}</h1>
+        <p class="user-email">{{ user.email }}</p>
+      </div>
+    </div>
+
+    <!-- Information Cards -->
+    <div class="info-section">
+      <div class="info-grid">
+        <!-- Personal Information Card -->
+        <div class="info-card">
+          <div class="card-header">
+            <svg xmlns="http://www.w3.org/2000/svg" class="card-icon" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+            </svg>
+            <h2 class="card-title">Personal Information</h2>
+          </div>
+          <div class="card-content">
+            <div class="info-row" *ngIf="user.givenName">
+              <span class="info-label">First Name</span>
+              <span class="info-value">{{ user.givenName }}</span>
+            </div>
+            <div class="info-row" *ngIf="user.familyName">
+              <span class="info-label">Last Name</span>
+              <span class="info-value">{{ user.familyName }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Full Name</span>
+              <span class="info-value">{{ user.name }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Account Details Card -->
+        <div class="info-card">
+          <div class="card-header">
+            <svg xmlns="http://www.w3.org/2000/svg" class="card-icon" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+              <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+            </svg>
+            <h2 class="card-title">Account Details</h2>
+          </div>
+          <div class="card-content">
+            <div class="info-row">
+              <span class="info-label">Email Address</span>
+              <span class="info-value">{{ user.email }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">User ID</span>
+              <span class="info-value user-id">{{ user.id }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Verification Status</span>
+              <span class="info-value">
+                <span class="status-badge" [class.verified]="user.emailVerified"
+                  [class.unverified]="!user.emailVerified">
+                  {{ user.emailVerified ? 'Verified' : 'Unverified' }}
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!user" class="empty-state">
+    <div class="empty-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd"
+          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+          clip-rule="evenodd" />
+      </svg>
+    </div>
+    <h2 class="empty-title">User Not Found</h2>
+    <p class="empty-description">Unable to load user profile information. Please try logging in again.</p>
+  </div>
+</div>
