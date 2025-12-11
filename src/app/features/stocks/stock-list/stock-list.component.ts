@@ -135,4 +135,20 @@ export class StockListComponent implements OnInit, OnDestroy {
     }
     return 'text-gray-600';
   }
+
+  copyStockName(stockName: string, event: MouseEvent): void {
+    event.stopPropagation(); // Prevent row selection
+    navigator.clipboard.writeText(stockName).then(() => {
+      console.log('Stock name copied to clipboard:', stockName);
+    }).catch(err => {
+      console.error('Failed to copy stock name:', err);
+    });
+  }
+
+  clearSearch(): void {
+    this.searchTerm = '';
+    this.onSearchChange('');
+  }
+
+
 }
