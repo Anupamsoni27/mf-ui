@@ -19,6 +19,8 @@ export interface UserProfile {
     emailVerified?: boolean;
     roles?: UserRole[];
     preferences?: UserPreferences;
+    favoriteStocks?: string[];
+    favoriteFunds?: string[];
 }
 
 export interface AuthState {

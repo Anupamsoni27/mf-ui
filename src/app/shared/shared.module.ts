@@ -10,6 +10,7 @@ import { ModalComponent } from './components/modal/modal.component';
 import { SparklineComponent } from './components/sparkline/sparkline.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { NotificationComponent } from './components/notification/notification.component';
+import { FavoriteButtonComponent } from './components/favorite-button/favorite-button.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { NotificationComponent } from './components/notification/notification.co
     ModalComponent,
     SparklineComponent,
     SidebarComponent,
-    NotificationComponent
+    NotificationComponent,
+    FavoriteButtonComponent
   ],
   imports: [
     CommonModule,
@@ -33,6 +35,7 @@ import { NotificationComponent } from './components/notification/notification.co
     SparklineComponent,
     SidebarComponent,
     NotificationComponent,
+    FavoriteButtonComponent,
     ReactiveFormsModule
   ]
 })
