@@ -37,9 +37,14 @@ export class SparklineComponent implements OnChanges {
       legend: { enabled: false },
       plotOptions: {
         series: {
-          color: '#34d399',
+          color: '#2962FF', // TradingView blue
           lineWidth: 1,
-          marker: { enabled: false }
+          marker: { enabled: false },
+          states: {
+            hover: {
+              lineWidthPlus: 0
+            }
+          }
         }
       },
       series: [{

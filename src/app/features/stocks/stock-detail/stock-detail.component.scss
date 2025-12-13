@@ -1,1 +1,31 @@
-// Additional custom styles if needed
+/* TradingView-Inspired Stock Detail Styles */
+
+/* Make all scrollbars match TradingView */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--tv-bg-dark);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--tv-border);
+    border-radius: 0;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--tv-border-light);
+}
+
+.custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: var(--tv-border) var(--tv-bg-dark);
+}
+
+/* Background */
+::ng-deep app-stock-detail {
+    background: var(--tv-bg-dark);
+    color: var(--tv-text-primary);
+}

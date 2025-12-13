@@ -5,88 +5,208 @@ import { UserProfile } from '../../models/user.model';
 @Component({
   selector: 'app-sidebar',
   template: `
-    <aside class="flex flex-col justify-between w-64 min-w-64 max-w-64 h-full bg-slate-900 border-r border-slate-800 text-slate-100 shadow-md z-30">
-      <div>
-        <!-- Brand/Logo -->
-        <div class="flex items-center h-16 px-6 gap-2">
-          <div class="bg-emerald-600 rounded-full w-9 h-9 flex items-center justify-center text-white font-bold text-lg">S</div>
-          <span class="ml-2 font-extrabold text-xl tracking-tight text-emerald-400">StockDash</span>
+    <header class="top-nav">
+      <div class="nav-container">
+        <!-- Logo/Brand -->
+        <div class="nav-brand">
+          <div class="brand-icon">S</div>
+          <span class="brand-name">StockDash</span>
         </div>
-        
-        <!-- Navigation -->
-        <nav class="mt-8 flex flex-col gap-2">
-          <a class="flex items-center px-6 py-2 text-sm font-medium rounded-lg hover:bg-slate-800 text-slate-300 transition border-l-4 border-transparent" [routerLink]="['/dashboard']" routerLinkActive="!bg-slate-800 bg-emerald-900/20 text-emerald-300 font-bold border-emerald-500">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+
+        <!-- Navigation Menu -->
+        <nav class="nav-menu">
+          <a class="nav-item" [routerLink]="['/dashboard']" routerLinkActive="active">
+            <svg xmlns="http://www.w3.org/2000/svg" class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
             </svg>
-            Dashboard
+            <span>Dashboard</span>
           </a>
-          <a class="flex items-center px-6 py-2 text-sm font-medium rounded-lg hover:bg-slate-800 text-slate-300 transition border-l-4 border-transparent" [routerLink]="['/stocks']" routerLinkActive="!bg-slate-800 bg-emerald-900/20 text-emerald-300 font-bold border-emerald-500">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <a class="nav-item" [routerLink]="['/stocks']" routerLinkActive="active">
+            <svg xmlns="http://www.w3.org/2000/svg" class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
             </svg>
-            Stocks
+            <span>Stocks</span>
           </a>
-          <a class="flex items-center px-6 py-2 text-sm font-medium rounded-lg hover:bg-slate-800 text-slate-300 transition border-l-4 border-transparent" [routerLink]="['/funds']" routerLinkActive="!bg-slate-800 bg-emerald-900/20 text-emerald-300 font-bold border-emerald-500">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <a class="nav-item" [routerLink]="['/funds']" routerLinkActive="active">
+            <svg xmlns="http://www.w3.org/2000/svg" class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            Funds
+            <span>Funds</span>
           </a>
-          <a class="flex items-center px-6 py-2 text-sm font-medium rounded-lg hover:bg-slate-800 text-slate-300 transition border-l-4 border-transparent" [routerLink]="['/profile']" routerLinkActive="!bg-slate-800 bg-emerald-900/20 text-emerald-300 font-bold border-emerald-500">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-            </svg>
-            Profile
-          </a>
-          <a class="flex items-center px-6 py-2 text-sm font-medium rounded-lg hover:bg-slate-800 text-slate-300 transition border-l-4 border-transparent" [routerLink]="['/how-it-works']" routerLinkActive="!bg-slate-800 bg-emerald-900/20 text-emerald-300 font-bold border-emerald-500">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <a class="nav-item" [routerLink]="['/how-it-works']" routerLinkActive="active">
+            <svg xmlns="http://www.w3.org/2000/svg" class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            How It Works
+            <span>How It Works</span>
           </a>
         </nav>
 
-        <!-- Sidebar Widgets (Projected Content) -->
-        <div class="mt-8 px-6">
-          <ng-content select="[sidebar-widgets]"></ng-content>
+        <!-- User Profile & Actions -->
+        <div class="nav-actions">
+          <a *ngIf="userProfile" class="nav-item" [routerLink]="['/profile']" routerLinkActive="active">
+            <img *ngIf="userProfile.picture" [src]="userProfile.picture" [alt]="userProfile.name" class="user-avatar">
+            <div *ngIf="!userProfile.picture" class="user-avatar-text">{{ getInitials(userProfile.name) }}</div>
+            <span class="user-name">{{ userProfile.name }}</span>
+          </a>
+          <button *ngIf="userProfile" (click)="onLogout()" class="logout-btn" title="Sign out">
+            <svg xmlns="http://www.w3.org/2000/svg" class="logout-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+          </button>
         </div>
       </div>
-
-      <!-- Sidebar Footer - User Profile -->
-      <div class="flex items-center justify-between px-6 h-20 border-t border-slate-800 mt-2">
-        <div *ngIf="userProfile" class="flex items-center gap-2 flex-1 min-w-0">
-          <!-- User Avatar -->
-          <img *ngIf="userProfile.picture" [src]="userProfile.picture" [alt]="userProfile.name" 
-            class="w-8 h-8 rounded-full border-2 border-emerald-500">
-          <div *ngIf="!userProfile.picture" 
-            class="bg-blue-600 rounded-full w-8 h-8 flex items-center justify-center text-white font-semibold text-xs">
-            {{ getInitials(userProfile.name) }}
-          </div>
-          
-          <!-- User Info -->
-          <div class="flex flex-col flex-1 min-w-0">
-            <span class="text-xs font-medium text-slate-200 truncate" [title]="userProfile.name">
-              {{ userProfile.name }}
-            </span>
-            <span class="text-[10px] text-slate-400 truncate" [title]="userProfile.email">
-              {{ userProfile.email }}
-            </span>
-          </div>
-        </div>
-        
-        <!-- Logout Button -->
-        <button *ngIf="userProfile" (click)="onLogout()" 
-          class="text-slate-400 hover:text-red-400 transition-colors p-1 rounded-md hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-red-500" 
-          title="Sign out">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-          </svg>
-        </button>
-      </div>
-    </aside>
+    </header>
   `,
-  styles: []
+  styles: [`
+    .top-nav {
+      background: var(--tv-bg-panel);
+      border-bottom: 1px solid var(--tv-border);
+      height: 48px;
+      display: flex;
+      align-items: center;
+      position: relative;
+      z-index: 100;
+    }
+
+    .nav-container {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+      padding: 0 16px;
+      gap: 24px;
+    }
+
+    /* Brand */
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding-right: 24px;
+      border-right: 1px solid var(--tv-border);
+    }
+
+    .brand-icon {
+      background: var(--tv-blue);
+      border-radius: 4px;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .brand-name {
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--tv-text-primary);
+      letter-spacing: -0.02em;
+    }
+
+    /* Navigation Menu */
+    .nav-menu {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex: 1;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      color: var(--tv-text-secondary);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.15s;
+      border-radius: 0;
+      border-bottom: 2px solid transparent;
+      height: 48px;
+      cursor: pointer;
+
+      &:hover {
+        color: var(--tv-text-primary);
+        background: var(--tv-bg-hover);
+      }
+
+      &.active {
+        color: var(--tv-blue);
+        border-bottom-color: var(--tv-blue);
+        background: transparent;
+      }
+
+      span {
+        white-space: nowrap;
+      }
+    }
+
+    .nav-icon {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* User Actions */
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding-left: 24px;
+      border-left: 1px solid var(--tv-border);
+    }
+
+    .user-avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .user-avatar-text {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--tv-blue);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    .user-name {
+      max-width: 120px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .logout-btn {
+      padding: 6px;
+      background: transparent;
+      border: none;
+      color: var(--tv-text-secondary);
+      cursor: pointer;
+      transition: color 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:hover {
+        color: var(--tv-red);
+      }
+    }
+
+    .logout-icon {
+      width: 18px;
+      height: 18px;
+    }
+  `]
 })
 export class SidebarComponent implements OnInit {
   userProfile: UserProfile | null = null;
