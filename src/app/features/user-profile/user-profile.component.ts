@@ -98,7 +98,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   }
 
   viewStock(stockId: string): void {
-    this.router.navigate(['/stocks'], { queryParams: { selected: stockId } });
+    this.router.navigate(['/stocks'], { queryParams: { id: stockId } });
   }
 
   viewFund(fundId: string): void {

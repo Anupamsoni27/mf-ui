@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { StockService } from '../../../core/services/stock.service';
@@ -28,10 +28,20 @@ export class StockListComponent implements OnInit, OnDestroy {
 
   constructor(
     private stockService: StockService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
+    // Handle query params for deep linking
+    this.route.queryParams.subscribe(params => {
+      if (params['id']) {
+        this.selectedStockId = params['id'];
+      } else if (params['selected']) { // Backward compatibility
+        this.selectedStockId = params['selected'];
+      }
+    });
+
     this.loadStocks();
 
     // Setup debounced search
