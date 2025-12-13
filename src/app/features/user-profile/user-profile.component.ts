@@ -1,9 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subject } from 'rxjs';
+import { Subject, forkJoin } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { AuthService } from '../../core/services/auth.service';
 import { FavoritesService } from '../../core/services/favorites.service';
+import { FavoriteItem } from '../../shared/models/favorite.model';
 import { StockService } from '../../core/services/stock.service';
 import { FundService } from '../../core/services/fund.service';
 import { UserProfile } from '../../shared/models/user.model';
@@ -48,15 +49,25 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     this.loadingFavorites = true;
     this.favoritesError = null;
 
-    // Get favorite stock IDs
+    // Get favorite stock items
     this.favoritesService.getFavorites('stock')
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (stockIds) => {
-          if (stockIds.length > 0) {
-            // Load stock details (you may need to add a method to get multiple stocks)
-            // For now, we'll just store the IDs
-            this.favoriteStocks = stockIds.map(id => ({ _id: id } as Stock));
+        next: (items: FavoriteItem[]) => {
+          if (items.length > 0) {
+            // Optimization: Use the name directly from FavoritesService
+            // This avoids N+1 API calls. Sector info will be unavailable (N/A).
+            this.favoriteStocks = items.map((item: FavoriteItem) => ({
+              _id: item.id,
+              name: item.name || 'Unknown Stock',
+              instrument_type: 'Equity', // Default
+              sector: '', // Sector info not available in optimized view
+              url: '',
+              funds_holding_count: 0,
+              timeline: []
+            } as Stock));
+          } else {
+            this.favoriteStocks = [];
           }
           this.loadingFavorites = false;
         },
@@ -67,13 +78,17 @@ export class UserProfileComponent implements OnInit, OnDestroy {
         }
       });
 
-    // Get favorite fund IDs
+    // Get favorite fund items
     this.favoritesService.getFavorites('fund')
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (fundIds) => {
-          if (fundIds.length > 0) {
-            this.favoriteFunds = fundIds.map(id => ({ _id: id } as Fund));
+        next: (items: FavoriteItem[]) => {
+          if (items.length > 0) {
+            // Map FavoriteItem {id, name} to Fund model
+            this.favoriteFunds = items.map((item: FavoriteItem) => ({
+              _id: item.id,
+              name: item.name
+            } as Fund));
           }
         },
         error: (error) => {
@@ -88,6 +103,20 @@ export class UserProfileComponent implements OnInit, OnDestroy {
 
   viewFund(fundId: string): void {
     this.router.navigate(['/funds'], { queryParams: { selected: fundId } });
+  }
+
+  removeStock(stockId: string): void {
+    this.favoritesService.removeFavorite(stockId, 'stock')
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          this.favoriteStocks = this.favoriteStocks.filter(s => s._id !== stockId);
+        },
+        error: (error) => {
+          console.error('Error removing favorite stock:', error);
+          // Optional: Show error message
+        }
+      });
   }
 
   getInitials(name: string): string {

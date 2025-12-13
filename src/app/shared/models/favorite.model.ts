@@ -12,18 +12,31 @@ export interface Favorite {
     updatedAt?: Date;
 }
 
+export interface FavoriteItem {
+    id: string;
+    name: string;
+}
+
 export interface FavoriteListResponse {
     status: string;
     count: number;
     data: {
-        stocks: string[];
-        funds: string[];
+        stocks: FavoriteItem[];
+        funds: FavoriteItem[];
     };
 }
 
-export interface FavoriteToggleRequest {
+export interface AddFavoriteRequest {
+    userId: string;
     itemId: string;
-    itemType: FavoriteType | 'stock' | 'fund';
+    itemType: string;
+    itemName: string;
+}
+
+export interface RemoveFavoriteRequest {
+    userId: string;
+    itemId: string;
+    itemType: string;
 }
 
 export interface FavoriteToggleResponse {

@@ -325,6 +325,7 @@
     text-align: left;
   }
 }
+
 // Favorites Section
 .favorites-section {
   margin-top: 3rem;
@@ -519,6 +520,16 @@
   flex-direction: column;
   gap: 0.25rem;
   flex: 1;
+
+  .favorite-item-name {
+    font-weight: 500;
+    color: #f3f4f6;
+  }
+
+  .favorite-item-sector {
+    font-size: 0.75rem;
+    color: #6b7280;
+  }
 }
 
 .favorite-item-id {
@@ -526,6 +537,37 @@
   font-weight: 500;
   color: white;
   font-family: 'Monaco', 'Courier New', monospace;
+}
+
+.favorite-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.remove-btn {
+  background: transparent;
+  border: none;
+  padding: 0.25rem;
+  cursor: pointer;
+  color: #ef4444;
+  opacity: 0;
+  transition: all 0.2s ease;
+  border-radius: 0.25rem;
+
+  &:hover {
+    background: rgba(239, 68, 68, 0.1);
+    transform: scale(1.1);
+  }
+}
+
+.favorite-item:hover .remove-btn {
+  opacity: 1;
+}
+
+.remove-icon {
+  width: 18px;
+  height: 18px;
 }
 
 .favorite-item-arrow {

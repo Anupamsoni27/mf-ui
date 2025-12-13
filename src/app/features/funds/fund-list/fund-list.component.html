@@ -99,7 +99,8 @@
               <td class="px-6 py-4 whitespace-nowrap">
                 <div class="flex items-center gap-2">
                   <div class="text-sm font-medium text-slate-200">{{ fund.name }}</div>
-                  <app-favorite-button [itemId]="fund._id" itemType="fund" size="small"></app-favorite-button>
+                  <app-favorite-button [itemId]="fund._id" [itemName]="fund.name" itemType="fund"
+                    size="small"></app-favorite-button>
                 </div>
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-200">

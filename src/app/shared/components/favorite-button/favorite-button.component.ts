@@ -12,6 +12,7 @@ export class FavoriteButtonComponent implements OnInit, OnDestroy {
     @Input() itemId!: string;
     @Input() itemType!: 'stock' | 'fund';
     @Input() size: 'small' | 'medium' | 'large' = 'small';
+    @Input() itemName?: string;
     @Output() favoriteToggled = new EventEmitter<boolean>();
 
     isFavorite = false;
@@ -40,7 +41,7 @@ export class FavoriteButtonComponent implements OnInit, OnDestroy {
 
         this.isLoading = true;
 
-        this.favoritesService.toggleFavorite(this.itemId, this.itemType)
+        this.favoritesService.toggleFavorite(this.itemId, this.itemType, this.itemName)
             .subscribe({
                 next: () => {
                     this.isLoading = false;
