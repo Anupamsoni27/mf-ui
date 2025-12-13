@@ -25,14 +25,50 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #020617; /* slate-950 */
+  background: #020617;
+  /* slate-950 */
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #334155; /* slate-700 */
+  background: #334155;
+  /* slate-700 */
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #475569; /* slate-600 */
+  background: #475569;
+  /* slate-600 */
+}
+
+/* Global Variables & Utilities */
+:root {
+  --glass-bg: rgba(30, 41, 59, 0.7);
+  --glass-border: rgba(148, 163, 184, 0.1);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  --primary-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  --card-hover-transform: translateY(-4px);
+}
+
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.5s ease-out forwards;
 }

@@ -1,210 +1,119 @@
-<div class="flex h-full w-full">
+<div class="flex h-full w-full stock-list-wrapper">
   <!-- Main Area -->
-  <main class="flex-1 flex flex-col min-w-0 h-full">
-    <!-- Sticky Summary/Action Bar -->
-    <div
-      class="sticky top-0 bg-gradient-to-r from-slate-900 via-slate-900 to-slate-800 z-10 px-6 py-5 border-b border-slate-700/50 shadow-lg">
-      <div class="flex items-center justify-between flex-wrap gap-4">
-        <!-- Left: Stats Section -->
-        <div class="flex gap-6 items-center">
-          <!-- Total Stocks Card -->
-          <div
-            class="flex items-center gap-3 bg-slate-800/50 px-4 py-2.5 rounded-lg border border-slate-700/50 shadow-sm">
-            <div class="p-2 bg-emerald-500/10 rounded-lg">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-emerald-400" fill="none" viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-              </svg>
-            </div>
-            <div>
-              <div class="text-2xl font-extrabold text-emerald-400 leading-none">{{ totalStocks }}</div>
-              <div class="text-[10px] text-slate-400 mt-0.5 font-medium">Total Stocks</div>
-            </div>
-          </div>
+  <main class="flex-1 flex flex-col min-w-0 h-full relative">
 
-          <!-- Current Sector Badge -->
-          <div *ngIf="stocks && stocks.length"
-            class="hidden md:flex items-center gap-2 bg-blue-500/10 px-4 py-2.5 rounded-lg border border-blue-500/20">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-400" fill="none" viewBox="0 0 24 24"
-              stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-            </svg>
-            <div>
-              <div class="text-[9px] text-blue-300/70 font-medium uppercase tracking-wide">Current Sector</div>
-              <div class="text-xs font-bold text-blue-400 leading-none mt-0.5">{{ stocks[0]?.sector || '-' }}</div>
-            </div>
-          </div>
-        </div>
+    <!-- Controls Section (Sticky) -->
+    <div class="controls-section sticky top-0 z-20 px-6 py-4 glass-panel border-b-0 rounded-none mb-0">
+      <div class="search-box">
+        <svg xmlns="http://www.w3.org/2000/svg" class="search-icon" fill="none" viewBox="0 0 24 24"
+          stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+        <input type="text" [(ngModel)]="searchTerm" (keyup.enter)="onSearchChange(searchTerm)"
+          placeholder="Search stocks by name or symbol..." />
+        <button *ngIf="searchTerm" (click)="clearSearch()"
+          class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
 
-        <!-- Right: Controls Section -->
-        <div class="flex items-center gap-3">
-          <!-- Search -->
-          <div class="relative">
-            <div class="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-slate-400" fill="none" viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-            </div>
-            <input type="text" [(ngModel)]="searchTerm" (keyup.enter)="onSearchChange(searchTerm)"
-              class="w-56 pl-9 pr-8 py-2 bg-slate-950/50 border border-slate-600/50 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 text-xs text-slate-200 placeholder-slate-500 transition-all duration-200"
-              placeholder="Search stocks..." />
-            <button *ngIf="searchTerm" (click)="clearSearch()"
-              class="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 rounded hover:bg-slate-700 transition-colors duration-150 group"
-              title="Clear search" type="button">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-slate-400 group-hover:text-emerald-400"
-                fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
-
-          <!-- Sort Controls Group -->
-          <div class="flex items-center gap-2 bg-slate-800/50 px-3 py-1.5 rounded-lg border border-slate-700/50">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-slate-400" fill="none" viewBox="0 0 24 24"
-              stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
-            </svg>
-            <select [(ngModel)]="sortBy" (change)="onSortChange(sortBy)"
-              class="px-2.5 py-1.5 bg-slate-950/50 border border-slate-600/50 rounded-md text-xs text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all duration-200 cursor-pointer">
-              <option value="funds_holding_count">Holding</option>
-              <option value="name">Name</option>
-              <option value="sector">Sector</option>
-              <option value="symbol">Symbol</option>
-            </select>
-            <select [(ngModel)]="sortOrder" (change)="onOrderChange(sortOrder)"
-              class="px-2.5 py-1.5 bg-slate-950/50 border border-slate-600/50 rounded-md text-xs text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all duration-200 cursor-pointer">
-              <option value="desc">Desc</option>
-              <option value="asc">Asc</option>
-            </select>
-          </div>
+      <div class="flex items-center gap-3">
+        <!-- Sort Controls -->
+        <div
+          class="flex items-center gap-2 bg-slate-800/30 px-3 py-1.5 rounded-lg border border-slate-700/30 backdrop-blur-sm">
+          <span class="text-xs text-slate-400 uppercase font-semibold">Sort</span>
+          <select [(ngModel)]="sortBy" (change)="onSortChange(sortBy)"
+            class="bg-transparent text-sm text-slate-200 focus:outline-none border-none p-0 cursor-pointer">
+            <option value="funds_holding_count">Holding</option>
+            <option value="name">Name</option>
+            <option value="sector">Sector</option>
+          </select>
         </div>
       </div>
     </div>
 
     <!-- Main table area -->
-    <div class="flex-1 overflow-auto px-6 pt-4 pb-4 bg-slate-950">
-      <!-- <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4 mb-6">
-        Placeholder dashboard widgets, ready for content
-
-        <div class="rounded-md bg-slate-900 shadow flex flex-col p-4 border border-slate-800">
-          <div class="text-xs text-slate-400">Sample Widget</div>
-          <div class="font-medium text-lg text-slate-200">Coming soon…</div>
-        </div>
-      </div> -->
-      <!-- Table -->
-      <table class="min-w-full bg-slate-900 rounded-lg shadow-md focus:outline-none overflow-hidden" tabindex="0"
-        (keydown)="onTableKeydown($event)">
-        <thead class="bg-slate-800 sticky top-0 z-10">
-          <tr>
-            <th class="px-6 py-3 text-left text-[10px] font-bold text-slate-300 uppercase tracking-wider">Stock</th>
-            <th class="px-6 py-3 text-left text-[10px] font-bold text-slate-300 uppercase tracking-wider">Symbol</th>
-            <th class="px-6 py-3 text-left text-[10px] font-bold text-slate-300 uppercase tracking-wider">Holding Count
-            </th>
-            <th class="px-6 py-3 text-left text-[10px] font-bold text-slate-300 uppercase tracking-wider">Sparkline</th>
-          </tr>
-        </thead>
-        <tbody class="">
-          <tr *ngFor="let stock of stocks" (click)="setSelectedStockId(stock._id)"
-            class="cursor-pointer transition-all duration-150 ease-in-out hover:bg-slate-800" [ngClass]="{
-                'bg-gradient-to-r from-emerald-900/30 to-slate-900 border-l-4 border-emerald-500 ring-1 ring-emerald-500/30 shadow-md scale-[1.005]': stock._id === selectedStockId,
-                'bg-slate-900 border-l-4 border-transparent hover:scale-[1.005]': !stock.recentlyAddInFunds && stock._id !== selectedStockId,
-                'bg-emerald-900/20 border-l-4 border-emerald-800 hover:scale-[1.005]': stock.recentlyAddInFunds && stock._id !== selectedStockId
-              }">
-            <td class="px-6 py-3">
-              <div class="flex items-center gap-2">
-                <div class="text-[10px] font-medium text-slate-200">
-                  <a [href]="'https://groww.in'+ stock.url" target="_blank" class="hover:underline text-emerald-400">
-                    {{ stock.name }}
-                  </a>
+    <div class="flex-1 overflow-auto px-6 py-4">
+      <div class="table-responsive">
+        <table class="min-w-full" tabindex="0" (keydown)="onTableKeydown($event)">
+          <thead>
+            <tr>
+              <th>Stock</th>
+              <th>Symbol</th>
+              <th>Holding Count</th>
+              <th>Trend</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let stock of stocks" (click)="setSelectedStockId(stock._id)"
+              [class.selected-row]="stock._id === selectedStockId">
+              <td>
+                <div class="flex items-center gap-3">
+                  <app-favorite-button [itemId]="stock._id" [itemName]="stock.name" itemType="stock"
+                    size="small"></app-favorite-button>
+                  <div>
+                    <a [href]="'https://groww.in'+ stock.url" target="_blank" class="stock-link">
+                      {{ stock.name }}
+                    </a>
+                    <span class="stock-symbol" *ngIf="stock.sector">{{ stock.sector }}</span>
+                  </div>
+                  <button (click)="copyStockName(stock.name, $event)"
+                    class="opacity-0 group-hover:opacity-100 p-1 text-slate-500 hover:text-emerald-400 transition-opacity">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24"
+                      stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
+                  </button>
                 </div>
-                <button (click)="copyStockName(stock.name, $event)"
-                  class="p-1 rounded hover:bg-slate-700 transition-colors duration-150 group" title="Copy stock name"
-                  type="button">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-slate-400 group-hover:text-emerald-400"
-                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                  </svg>
-                </button>
-                <app-favorite-button [itemId]="stock._id" [itemName]="stock.name" itemType="stock"
-                  size="small"></app-favorite-button>
-              </div>
-              <div *ngIf="stock.sector" class="text-[10px] text-slate-500">{{ stock.sector }}</div>
-            </td>
-            <td class="px-6 py-1">
-              <span
-                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-900/50 text-emerald-400 border border-emerald-900">
-                {{ stock.symbol || stock.name.substring(0, 4).toUpperCase() }}
-              </span>
-            </td>
-            <td class="px-6 py-3 text-[10px] text-slate-300">
-              {{ stock.funds_holding_count || 'N/A' }}
-            </td>
-            <td class="px-6 py-1">
-              <app-sparkline *ngIf="stock.timeline" [timeline]="stock.timeline"></app-sparkline>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+              </td>
+              <td>
+                <span class="badge instrument">
+                  {{ stock.symbol || stock.name.substring(0, 4).toUpperCase() }}
+                </span>
+              </td>
+              <td>
+                <span class="font-mono text-slate-300">{{ stock.funds_holding_count || '-' }}</span>
+              </td>
+              <td class="w-32">
+                <app-sparkline *ngIf="stock.timeline" [timeline]="stock.timeline"></app-sparkline>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
+      <!-- Loading/Error States -->
       <div *ngIf="loading" class="flex justify-center py-12">
         <app-loading-spinner size="lg" [showText]="true" text="Loading stocks..."
           class="text-slate-200"></app-loading-spinner>
       </div>
-      <div *ngIf="error" class="bg-red-900/20 border border-red-800 rounded-md p-4 mb-6">
-        <div class="flex">
-          <div class="ml-3">
-            <h3 class="text-sm font-medium text-red-400">Error loading stocks</h3>
-            <div class="mt-2 text-sm text-red-300">
-              <p>{{ error }}</p>
-            </div>
-            <div class="mt-4">
-              <app-button variant="outline" size="xs" (clicked)="loadStocks()">Try Again</app-button>
-            </div>
-          </div>
-        </div>
+
+      <div *ngIf="error" class="bg-red-500/10 border border-red-500/20 rounded-xl p-6 text-center">
+        <p class="text-red-400 mb-4">{{ error }}</p>
+        <app-button variant="outline" size="sm" (clicked)="loadStocks()">Try Again</app-button>
       </div>
     </div>
 
-    <!-- Sticky Footer -->
-    <div class="px-6 py-4 bg-slate-900 border-t border-slate-800">
-      <div class="flex items-center justify-between flex-wrap">
-        <div class="flex-1 flex justify-between sm:hidden">
-          <app-button variant="outline" size="xs" [disabled]="currentPage === 0"
-            (clicked)="previousPage()">Previous</app-button>
-          <app-button variant="outline" size="xs" [disabled]="!hasNextPage" (clicked)="nextPage()">Next</app-button>
-        </div>
-        <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between w-full">
-          <div>
-            <p class="text-[10px] text-slate-400">
-              Showing
-              <span class="font-medium text-slate-200">{{ (currentPage * pageSize) + 1 }}</span>
-              to
-              <span class="font-medium text-slate-200">{{ Math.min((currentPage + 1) * pageSize, totalStocks) }}</span>
-              of
-              <span class="font-medium text-slate-200">{{ totalStocks }}</span>
-              results
-            </p>
-          </div>
-          <div>
-            <nav class="relative z-0 inline-flex gap-4 rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-              <app-button variant="outline" size="xs" [disabled]="currentPage === 0"
-                (clicked)="previousPage()">Previous</app-button>
-              <app-button variant="primary" size="xs" [disabled]="!hasNextPage" (clicked)="nextPage()">Next</app-button>
-            </nav>
-          </div>
-        </div>
+    <!-- Sticky Footer Pagination -->
+    <div class="px-6 py-4 glass-panel border-t border-slate-800/50 rounded-none mt-auto">
+      <div class="pagination">
+        <span class="text-xs text-slate-400 mr-auto">
+          Showing <b>{{ (currentPage * pageSize) + 1 }}</b> - <b>{{ Math.min((currentPage + 1) * pageSize, totalStocks)
+            }}</b> of <b>{{ totalStocks }}</b>
+        </span>
+        <button [disabled]="currentPage === 0" (click)="previousPage()">Previous</button>
+        <button [disabled]="!hasNextPage" (click)="nextPage()">Next</button>
       </div>
     </div>
   </main>
 
   <!-- Right Panel -->
-  <aside class="w-[45%] h-full max-h-screen bg-slate-950 overflow-y-auto border-l border-slate-800">
+  <aside
+    class="w-[45%] h-full max-h-screen bg-slate-950/80 backdrop-blur-xl border-l border-slate-800/50 relative z-30">
     <app-stock-detail [stockId]="selectedStockId"></app-stock-detail>
   </aside>
 </div>

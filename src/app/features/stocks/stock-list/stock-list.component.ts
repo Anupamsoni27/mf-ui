@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { StockService } from '../../../core/services/stock.service';
+import { TimelineService } from '../../../core/services/timeline.service';
 import { Stock, StockListResponse } from '../../../shared/models/stock.model';
 
 @Component({
@@ -23,11 +24,12 @@ export class StockListComponent implements OnInit, OnDestroy {
   sortOrder: string = 'desc';
   selectedStockId: string | null = '68d8564a9fece62833483580';
   Math = Math; // Make Math available in template
-
+  JSON = JSON;
   private searchSubject = new Subject<string>();
 
   constructor(
     private stockService: StockService,
+    private timelineService: TimelineService,
     private router: Router,
     private route: ActivatedRoute
   ) { }
@@ -89,6 +91,7 @@ export class StockListComponent implements OnInit, OnDestroy {
     this.stockService.getAllStocks(skip, this.pageSize, this.searchTerm, this.sortBy, this.sortOrder).subscribe({
       next: (response: StockListResponse) => {
         this.stocks = response.records;
+        this.fetchTimelines();
         this.totalStocks = response.count;
         this.hasNextPage = (skip + this.pageSize) < response.count;
         this.loading = false;
@@ -97,6 +100,31 @@ export class StockListComponent implements OnInit, OnDestroy {
         this.error = error.message || 'Failed to load stocks';
         this.loading = false;
       }
+    });
+  }
+
+  fetchTimelines(): void {
+    if (!this.stocks.length) return;
+
+    // Progressively fetch timelines to avoid UI blocking
+    this.stocks.forEach(stock => {
+      this.timelineService.getStockTimeline(stock._id).subscribe({
+        next: (response: any) => {
+          // Robust extraction of timeline array
+          let timelineData = response?.records?.timeline;
+
+          if (!timelineData && response?.records?.timeline) {
+            timelineData = response.records.timeline;
+          }
+
+          if (Array.isArray(timelineData)) {
+            stock.timeline = timelineData;
+          }
+        },
+        error: (err) => {
+          // Silently fail for individual timelines
+        }
+      });
     });
   }
 

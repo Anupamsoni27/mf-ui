@@ -5,6 +5,7 @@ import { TimelineDataPoint } from '../../models/stock.model';
 @Component({
   selector: 'app-sparkline',
   template: `
+
     <highcharts-chart
       [Highcharts]="Highcharts"
       [options]="chartOptions"

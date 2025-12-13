@@ -23,6 +23,7 @@ export interface StockInfo {
   sector: string;
   url: string;
   stock?: Stock;
+  timeline?: TimelineDataPoint[];
   description?: string;
   website?: string;
   employees?: number;

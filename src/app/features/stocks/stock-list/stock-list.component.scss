@@ -1,1 +1,207 @@
+.stock-list-container {
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    animation: fadeInUp 0.6s ease-out forwards;
+}
 
+/* Header & Controls */
+.controls-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+
+    .search-box {
+        position: relative;
+        flex: 1;
+        max-width: 400px;
+
+        input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(8px);
+
+            &:focus {
+                outline: none;
+                border-color: #10b981;
+                box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+                background: rgba(30, 41, 59, 0.8);
+            }
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            width: 20px;
+            height: 20px;
+        }
+    }
+}
+
+/* Table Container */
+.table-responsive {
+    background: rgba(30, 41, 59, 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(148, 163, 184, 0.1);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 2rem;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    color: #e2e8f0;
+}
+
+thead {
+    background: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(8px);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+
+    th {
+        padding: 1.25rem 1.5rem;
+        text-align: left;
+        font-size: 0.875rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #94a3b8;
+        cursor: pointer;
+        transition: color 0.2s;
+        white-space: nowrap;
+
+        &:hover {
+            color: #fff;
+        }
+    }
+}
+
+tbody {
+    tr {
+        border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+        transition: all 0.2s ease;
+
+        &:last-child {
+            border-bottom: none;
+        }
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.03);
+
+        }
+
+        &.selected-row {
+            background: rgba(16, 185, 129, 0.12);
+            border-left: 3px solid #10b981;
+
+            &:hover {
+                background: rgba(16, 185, 129, 0.18);
+            }
+        }
+    }
+
+    td {
+        padding: 1rem 1.5rem;
+        vertical-align: middle;
+    }
+}
+
+/* Badges */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+
+    &.sector {
+        background: rgba(59, 130, 246, 0.15);
+        color: #60a5fa;
+        border: 1px solid rgba(59, 130, 246, 0.2);
+    }
+
+    &.instrument {
+        background: rgba(168, 85, 247, 0.15);
+        color: #c084fc;
+        border: 1px solid rgba(168, 85, 247, 0.2);
+    }
+}
+
+/* Stock Name Link */
+.stock-link {
+    color: #fff;
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 1rem;
+    display: block;
+
+    &:hover {
+        color: #10b981;
+    }
+}
+
+.stock-symbol {
+    font-size: 0.8rem;
+    color: #94a3b8;
+    display: block;
+    margin-top: 0.25rem;
+}
+
+
+/* Pagination */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    color: #94a3b8;
+
+    button {
+        padding: 0.75rem 1.5rem;
+        background: rgba(30, 41, 59, 0.8);
+        border: 1px solid rgba(148, 163, 184, 0.2);
+        border-radius: 8px;
+        color: #fff;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-weight: 500;
+
+        &:hover:not(:disabled) {
+            background: #10b981;
+            border-color: #10b981;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: rgba(15, 23, 42, 0.6);
+        }
+    }
+}
+
+.text-green-500 {
+    color: #10b981;
+}
+
+.text-red-500 {
+    color: #ef4444;
+}

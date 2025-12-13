@@ -1,6 +1,7 @@
 .dashboard-page {
     min-height: 100vh;
     background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    animation: fadeInUp 0.6s ease-out forwards;
 }
 
 .welcome-section {
@@ -16,22 +17,24 @@
 }
 
 .stat-card {
-    background: rgba(30, 41, 59, 0.6);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(148, 163, 184, 0.1);
+    background: var(--glass-bg);
+    /* Use global var */
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
     border-radius: 1rem;
     padding: 1.5rem;
     display: flex;
     align-items: center;
     gap: 1rem;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
 
     &:hover {
         transform: translateY(-4px);
-        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
-        border-color: rgba(16, 185, 129, 0.3);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        border-color: rgba(16, 185, 129, 0.4);
     }
 }
 
@@ -214,8 +217,9 @@
 }
 
 .quick-link-card {
-    background: rgba(30, 41, 59, 0.4);
-    border: 1px solid rgba(148, 163, 184, 0.1);
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(8px);
     border-radius: 0.75rem;
     padding: 1.5rem;
     display: flex;
@@ -238,9 +242,10 @@
     }
 
     &:hover {
-        background: rgba(30, 41, 59, 0.6);
-        border-color: rgba(16, 185, 129, 0.3);
+        background: rgba(30, 41, 59, 0.8);
+        border-color: rgba(16, 185, 129, 0.4);
         transform: translateX(4px);
+        box-shadow: var(--glass-shadow);
     }
 }
 
