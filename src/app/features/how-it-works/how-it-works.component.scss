@@ -7,6 +7,14 @@
 .header-section {
     border-bottom: 1px solid var(--tv-border);
     padding-bottom: 2rem;
+
+    h1 {
+        color: var(--tv-text-primary) !important;
+    }
+
+    p {
+        color: var(--tv-text-secondary) !important;
+    }
 }
 
 // Navigation Cards
@@ -69,6 +77,10 @@
     border: 1px solid var(--tv-border);
     border-radius: 1.25rem;
     padding: 2.5rem;
+
+    p {
+        color: var(--tv-text-secondary) !important;
+    }
 }
 
 // Feature Grid

@@ -90,7 +90,9 @@
                         <span class="stock-symbol" *ngIf="stock.sector">{{ stock.sector }}</span>
                       </div>
                       <button (click)="copyStockName(stock.name, $event)"
-                        class="opacity-0 group-hover:opacity-100 p-1 text-slate-500 hover:text-emerald-400 transition-opacity">
+                        class="opacity-0 group-hover:opacity-100 p-1 transition-opacity"
+                        style="color: var(--tv-text-muted);" onmouseenter="this.style.color = 'var(--tv-green)'"
+                        onmouseleave="this.style.color = 'var(--tv-text-muted)'">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24"
                           stroke="currentColor">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -105,7 +107,8 @@
                     </span>
                   </td>
                   <td>
-                    <span class="font-mono text-slate-300">{{ stock.funds_holding_count || '-' }}</span>
+                    <span class="font-mono" style="color: var(--tv-text-primary);">{{ stock.funds_holding_count || '-'
+                      }}</span>
                   </td>
                   <td class="w-32">
                     <app-sparkline *ngIf="stock.timeline" [timeline]="stock.timeline"></app-sparkline>
@@ -117,8 +120,7 @@
 
           <!-- Loading/Error States -->
           <div *ngIf="loading" class="flex justify-center py-12">
-            <app-loading-spinner size="lg" [showText]="true" text="Loading stocks..."
-              class="text-slate-200"></app-loading-spinner>
+            <app-loading-spinner size="lg" [showText]="true" text="Loading stocks..."></app-loading-spinner>
           </div>
 
           <div *ngIf="error" class="bg-red-500/10 border border-red-500/20 rounded-xl p-6 text-center">

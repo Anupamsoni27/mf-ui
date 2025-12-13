@@ -1,1 +1,114 @@
-// Additional custom styles if needed
+/* Button Component - Theme-aware Styles */
+
+.btn {
+    font-weight: 500;
+    border-radius: 0.375rem;
+    transition: all 0.2s;
+    font-family: var(--tv-font-sans);
+    cursor: pointer;
+    border: none;
+
+    &:focus {
+        outline: none;
+        box-shadow: 0 0 0 2px var(--tv-bg-dark), 0 0 0 4px var(--tv-blue);
+    }
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+}
+
+/* Primary Button - Jira Blue */
+.btn-primary {
+    background: var(--tv-blue);
+    color: #FFFFFF;
+
+    &:hover:not(:disabled) {
+        opacity: 0.9;
+    }
+
+    &:active:not(:disabled) {
+        opacity: 0.8;
+    }
+}
+
+/* Secondary Button - Panel Background */
+.btn-secondary {
+    background: var(--tv-bg-hover);
+    color: var(--tv-text-primary);
+    border: 1px solid var(--tv-border);
+
+    &:hover:not(:disabled) {
+        background: var(--tv-bg-active);
+    }
+
+    &:active:not(:disabled) {
+        background: var(--tv-border);
+    }
+}
+
+/* Danger Button - Red */
+.btn-danger {
+    background: var(--tv-red);
+    color: #FFFFFF;
+
+    &:hover:not(:disabled) {
+        opacity: 0.9;
+    }
+
+    &:active:not(:disabled) {
+        opacity: 0.8;
+    }
+}
+
+/* Outline Buttons */
+.btn-outline {
+    background: transparent;
+    color: var(--tv-text-primary);
+    border: 1px solid var(--tv-border);
+
+    &:hover:not(:disabled) {
+        background: var(--tv-bg-hover);
+        border-color: var(--tv-border-light);
+    }
+
+    &:active:not(:disabled) {
+        background: var(--tv-bg-active);
+    }
+}
+
+.btn-primary-outline {
+    background: transparent;
+    color: var(--tv-blue);
+    border: 1px solid var(--tv-blue);
+
+    &:hover:not(:disabled) {
+        background: var(--tv-bg-hover);
+    }
+
+    &:active:not(:disabled) {
+        background: var(--tv-bg-active);
+    }
+}
+
+/* Sizes */
+.btn-xs {
+    padding: 0.25rem 0.5rem;
+    font-size: 10px;
+}
+
+.btn-sm {
+    padding: 0.375rem 0.75rem;
+    font-size: 13px;
+}
+
+.btn-md {
+    padding: 0.5rem 1rem;
+    font-size: 14px;
+}
+
+.btn-lg {
+    padding: 0.75rem 1.5rem;
+    font-size: 16px;
+}
