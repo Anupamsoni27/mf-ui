@@ -1,29 +1,32 @@
-<div class="flex items-center justify-center min-h-screen bg-slate-950">
+<div class="flex items-center justify-center min-h-screen" style="background-color: var(--tv-bg-dark);">
     <div class="w-full max-w-md">
         <!-- Login Card -->
-        <div class="bg-slate-900 shadow-2xl rounded-lg overflow-hidden border border-slate-700">
+        <div class="shadow-2xl rounded-lg overflow-hidden border"
+            style="background-color: var(--tv-bg-panel); border-color: var(--tv-border);">
             <!-- Header -->
-            <div class="bg-gradient-to-r from-emerald-900/50 to-slate-900 px-8 py-6 border-b border-slate-700">
+            <div class="px-8 py-6 border-b"
+                style="background: linear-gradient(to right, var(--tv-bg-hover), var(--tv-bg-panel)); border-color: var(--tv-border);">
                 <div class="flex items-center justify-center mb-4">
                     <svg class="w-16 h-16 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
                     </svg>
                 </div>
-                <h1 class="text-3xl font-bold text-center text-slate-100">Investment Platform</h1>
-                <p class="text-center text-slate-400 mt-2">Manage your mutual funds and stocks</p>
+                <h1 class="text-3xl font-bold text-center" style="color: var(--tv-text-primary);">Investment Platform
+                </h1>
+                <p class="text-center mt-2" style="color: var(--tv-text-secondary);">Manage your mutual funds and stocks
+                </p>
             </div>
 
             <!-- Body -->
             <div class="px-8 py-10">
-                <h2 class="text-xl font-semibold text-slate-200 mb-6 text-center">
+                <h2 class="text-xl font-semibold mb-6 text-center" style="color: var(--tv-text-primary);">
                     Sign in to continue
                 </h2>
 
                 <!-- Loading State -->
                 <div *ngIf="loading" class="flex justify-center py-8">
-                    <app-loading-spinner size="md" [showText]="true" text="Loading sign-in..."
-                        class="text-slate-200"></app-loading-spinner>
+                    <app-loading-spinner size="md" [showText]="true" text="Loading sign-in..."></app-loading-spinner>
                 </div>
 
                 <!-- Error State -->
@@ -47,15 +50,16 @@
 
                 <!-- Info Text -->
                 <div class="mt-8 text-center">
-                    <p class="text-xs text-slate-500">
+                    <p class="text-xs" style="color: var(--tv-text-muted);">
                         By signing in, you agree to our Terms of Service and Privacy Policy
                     </p>
                 </div>
             </div>
 
             <!-- Footer -->
-            <div class="bg-slate-800 px-8 py-4 border-t border-slate-700">
-                <p class="text-center text-xs text-slate-400">
+            <div class="px-8 py-4 border-t"
+                style="background-color: var(--tv-bg-hover); border-color: var(--tv-border);">
+                <p class="text-center text-xs" style="color: var(--tv-text-secondary);">
                     Secure authentication powered by Google
                 </p>
             </div>
@@ -63,8 +67,8 @@
 
         <!-- Additional Info -->
         <div class="mt-6 text-center">
-            <p class="text-sm text-slate-500">
-                Need help? <a href="#" class="text-emerald-400 hover:text-emerald-300">Contact Support</a>
+            <p class="text-sm" style="color: var(--tv-text-muted);">
+                Need help? <a href="#" class="hover:underline" style="color: var(--tv-blue);">Contact Support</a>
             </p>
         </div>
     </div>

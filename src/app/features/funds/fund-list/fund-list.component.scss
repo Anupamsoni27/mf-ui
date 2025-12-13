@@ -1,1 +1,72 @@
-// Additional custom styles if needed
+/* Fund List Component - Theme-aware styles */
+
+/* Main container */
+:host {
+    display: block;
+    min-height: 100vh;
+    background-color: var(--tv-bg-dark);
+}
+
+/* Table container */
+.table-container {
+    background: var(--tv-bg-panel);
+    border: 1px solid var(--tv-border);
+}
+
+/* Table styles */
+thead {
+    background: var(--tv-bg-hover);
+
+    th {
+        color: var(--tv-text-secondary);
+    }
+}
+
+tbody {
+    background: var(--tv-bg-panel);
+
+    tr.fund-row {
+        background: var(--tv-bg-panel);
+
+        &:hover {
+            background: var(--tv-bg-hover);
+        }
+    }
+
+    td {
+        color: var(--tv-text-primary);
+    }
+}
+
+/* Form controls */
+select,
+input[type="date"] {
+    background: var(--tv-bg-dark);
+    border-color: var(--tv-border);
+    color: var(--tv-text-primary);
+
+    &:focus {
+        outline: none;
+        border-color: var(--tv-blue);
+        box-shadow: 0 0 0 2px rgba(var(--tv-blue-rgb, 41, 98, 255), 0.1);
+    }
+}
+
+/* Pagination */
+.pagination-container {
+    background: var(--tv-bg-panel);
+    border-top: 1px solid var(--tv-border);
+}
+
+/* Text colors */
+.text-primary {
+    color: var(--tv-text-primary) !important;
+}
+
+.text-secondary {
+    color: var(--tv-text-secondary) !important;
+}
+
+.text-muted {
+    color: var(--tv-text-muted) !important;
+}

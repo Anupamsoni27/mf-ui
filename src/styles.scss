@@ -18,64 +18,65 @@ body {
   box-sizing: border-box;
 }
 
-/* Custom Scrollbar for Dark Theme */
+/* Custom Scrollbar for Dark Theme (Jira) */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #020617;
-  /* slate-950 */
+  background: #1D2125;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #334155;
-  /* slate-700 */
+  background: #38414A;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #475569;
-  /* slate-600 */
+  background: #454F59;
 }
 
-/* TradingView-Inspired Design System */
+/* Atlassian Jira Design System */
 :root {
-  /* TradingView Color Palette */
-  --tv-bg-dark: #131722;
-  /* Main background */
-  --tv-bg-panel: #1E222D;
-  /* Panel/Card background */
-  --tv-bg-hover: #2A2E39;
-  /* Hover state */
-  --tv-bg-active: #363A45;
-  /* Active/Selected state */
+  /* Jira Dark Theme Colors */
+  --tv-bg-dark: #1D2125;
+  /* Jira dark background */
+  --tv-bg-panel: #22272B;
+  /* Jira dark surface */
+  --tv-bg-hover: #2C333A;
+  /* Jira dark hover */
+  --tv-bg-active: #38414A;
+  /* Jira dark active */
 
-  --tv-border: #2A2E39;
-  /* Subtle borders */
-  --tv-border-light: #363A45;
-  /* Lighter borders */
+  --tv-border: #38414A;
+  /* Jira dark border */
+  --tv-border-light: #454F59;
+  /* Jira lighter border */
 
-  --tv-text-primary: #D1D4DC;
-  /* Primary text */
-  --tv-text-secondary: #787B86;
-  /* Secondary text */
-  --tv-text-muted: #5D606B;
-  /* Muted text */
+  --tv-text-primary: #B6C2CF;
+  /* Jira dark primary text */
+  --tv-text-secondary: #8C9BAB;
+  /* Jira dark secondary text */
+  --tv-text-muted: #626F86;
+  /* Jira dark muted text */
 
-  --tv-blue: #2962FF;
-  /* Accent blue */
-  --tv-green: #26A69A;
-  /* Bullish green */
-  --tv-red: #EF5350;
-  /* Bearish red */
-  --tv-orange: #FF9800;
-  /* Warning orange */
+  --tv-blue: #579DFF;
+  /* Jira blue */
+  --tv-green: #4BCE97;
+  /* Jira green */
+  --tv-red: #F87168;
+  /* Jira red */
+  --tv-orange: #FAA53D;
+  /* Jira orange */
+  --tv-purple: #9F8FEF;
+  /* Jira purple */
+  --tv-teal: #6CC3E0;
+  /* Jira teal */
 
   /* Chart colors */
-  --tv-chart-line: #2962FF;
-  --tv-chart-grid: #2A2E39;
+  --tv-chart-line: #579DFF;
+  --tv-chart-grid: #38414A;
 
   /* Spacing */
   --tv-spacing-xs: 4px;
@@ -86,7 +87,65 @@ body {
 
   /* Typography */
   --tv-font-mono: 'Consolas', 'Monaco', 'Courier New', monospace;
-  --tv-font-sans: -apple-system, BlinkMacSystemFont, 'Trebuchet MS', Roboto, Ubuntu, sans-serif;
+  --tv-font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Noto Sans', 'Ubuntu', 'Droid Sans', 'Helvetica Neue', sans-serif;
+}
+
+.light-theme {
+  /* Jira Light Theme Colors */
+  --tv-bg-dark: #FFFFFF;
+  /* Jira light background */
+  --tv-bg-panel: #F7F8F9;
+  /* Jira light surface */
+  --tv-bg-hover: #F1F2F4;
+  /* Jira light hover */
+  --tv-bg-active: #DCDFE4;
+  /* Jira light active */
+
+  --tv-border: #DCDFE4;
+  /* Jira light border */
+  --tv-border-light: #E9EAED;
+  /* Jira lighter border */
+
+  --tv-text-primary: #172B4D;
+  /* Jira light primary text */
+  --tv-text-secondary: #44546F;
+  /* Jira light secondary text */
+  --tv-text-muted: #626F86;
+  /* Jira light muted text */
+
+  --tv-blue: #0C66E4;
+  /* Jira blue (light mode) */
+  --tv-green: #1F845A;
+  /* Jira green (light mode) */
+  --tv-red: #C9372C;
+  /* Jira red (light mode) */
+  --tv-orange: #974F0C;
+  /* Jira orange (light mode) */
+  --tv-purple: #5E4DB2;
+  /* Jira purple (light mode) */
+  --tv-teal: #206A83;
+  /* Jira teal (light mode) */
+
+  --tv-chart-line: #0C66E4;
+  --tv-chart-grid: #E9EAED;
+}
+
+/* Apply background color to body for light theme */
+.light-theme {
+  background-color: #FFFFFF;
+}
+
+/* Light theme scrollbar */
+.light-theme::-webkit-scrollbar-track {
+  background: #F7F8F9;
+}
+
+.light-theme::-webkit-scrollbar-thumb {
+  background: #DCDFE4;
+}
+
+.light-theme::-webkit-scrollbar-thumb:hover {
+  background: #B3B9C4;
 }
 
 .tv-panel {

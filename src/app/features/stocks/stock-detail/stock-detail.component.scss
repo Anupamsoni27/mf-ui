@@ -1,6 +1,14 @@
-/* TradingView-Inspired Stock Detail Styles */
+/* Jira-Themed Stock Detail Styles */
 
-/* Make all scrollbars match TradingView */
+/* Component container */
+:host {
+    display: block;
+    height: 100%;
+    background: var(--tv-bg-dark);
+    color: var(--tv-text-primary);
+}
+
+/* Scrollbar */
 ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
@@ -24,8 +32,152 @@
     scrollbar-color: var(--tv-border) var(--tv-bg-dark);
 }
 
-/* Background */
-::ng-deep app-stock-detail {
-    background: var(--tv-bg-dark);
-    color: var(--tv-text-primary);
+/* Header Section */
+.stock-header {
+    background: var(--tv-bg-panel);
+    border-bottom: 1px solid var(--tv-border);
+
+    h1 {
+        color: var(--tv-text-primary);
+        background: none !important;
+        -webkit-background-clip: unset !important;
+        -webkit-text-fill-color: unset !important;
+    }
+
+    .sector-badge {
+        background: var(--tv-bg-hover);
+        border-color: var(--tv-border);
+        color: var(--tv-text-secondary);
+    }
+
+    .meta-text {
+        color: var(--tv-text-muted);
+    }
+
+    .action-btn {
+        background: var(--tv-bg-hover);
+        border-color: var(--tv-border);
+        color: var(--tv-text-secondary);
+
+        &:hover {
+            background: var(--tv-bg-active);
+            color: var(--tv-text-primary);
+        }
+    }
+}
+
+/* Chart Section */
+.chart-section {
+    .section-header {
+        color: var(--tv-text-primary);
+    }
+
+    .live-badge {
+        background: rgba(var(--tv-green-rgb), 0.1);
+        border-color: var(--tv-green);
+        color: var(--tv-green);
+    }
+
+    .chart-container {
+        background: var(--tv-bg-panel);
+        border-color: var(--tv-border);
+    }
+}
+
+/* Stats Grid */
+.stat-card {
+    background: var(--tv-bg-panel);
+    border-color: var(--tv-border);
+
+    &:hover {
+        background: var(--tv-bg-hover);
+    }
+
+    .stat-label {
+        color: var(--tv-text-muted);
+    }
+
+    .stat-value {
+        color: var(--tv-text-primary);
+    }
+}
+
+/* About Section */
+.about-section {
+    h3 {
+        color: var(--tv-text-primary);
+    }
+
+    p {
+        color: var(--tv-text-secondary);
+        line-height: 1.6;
+    }
+}
+
+/* Footer */
+.detail-footer {
+    border-top: 1px solid var(--tv-border);
+    color: var(--tv-text-muted);
+}
+
+/* Loading State */
+.loading-state {
+    .spinner {
+        color: var(--tv-blue);
+    }
+
+    p {
+        color: var(--tv-text-secondary);
+    }
+}
+
+/* Error State */
+.error-state {
+    .error-container {
+        background: rgba(var(--tv-red-rgb), 0.05);
+        border-color: rgba(var(--tv-red-rgb), 0.2);
+    }
+
+    .error-icon-bg {
+        background: rgba(var(--tv-red-rgb), 0.1);
+    }
+
+    .error-icon {
+        color: var(--tv-red);
+    }
+
+    h3 {
+        color: var(--tv-text-primary);
+    }
+
+    p {
+        color: var(--tv-text-secondary);
+    }
+}
+
+/* Empty State */
+.empty-state {
+    color: var(--tv-text-muted);
+
+    .empty-icon-bg {
+        background: var(--tv-bg-panel);
+        border-color: var(--tv-border);
+    }
+
+    svg {
+        opacity: 0.5;
+    }
+}
+
+/* Light theme specific adjustments */
+:host-context(.light-theme) {
+
+    /* Ensure proper contrast in light mode */
+    .chart-container {
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .stat-card {
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+    }
 }

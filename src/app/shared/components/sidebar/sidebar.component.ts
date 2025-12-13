@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { UserProfile } from '../../models/user.model';
+import { ThemeService } from '../../../core/services/theme.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -43,6 +44,18 @@ import { UserProfile } from '../../models/user.model';
 
         <!-- User Profile & Actions -->
         <div class="nav-actions">
+           <!-- Theme Toggle -->
+          <button (click)="toggleTheme()" class="theme-btn" [title]="(isDarkMode$ | async) ? 'Switch to Light Mode' : 'Switch to Dark Mode'">
+            <!-- Sun Icon (for Dark Mode) -->
+            <svg *ngIf="(isDarkMode$ | async)" xmlns="http://www.w3.org/2000/svg" class="theme-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+            <!-- Moon Icon (for Light Mode) -->
+            <svg *ngIf="!(isDarkMode$ | async)" xmlns="http://www.w3.org/2000/svg" class="theme-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+            </svg>
+          </button>
+
           <a *ngIf="userProfile" class="nav-item" [routerLink]="['/profile']" routerLinkActive="active">
             <img *ngIf="userProfile.picture" [src]="userProfile.picture" [alt]="userProfile.name" class="user-avatar">
             <div *ngIf="!userProfile.picture" class="user-avatar-text">{{ getInitials(userProfile.name) }}</div>
@@ -206,12 +219,38 @@ import { UserProfile } from '../../models/user.model';
       width: 18px;
       height: 18px;
     }
+
+    .theme-btn {
+      padding: 6px;
+      background: transparent;
+      border: none;
+      color: var(--tv-text-secondary);
+      cursor: pointer;
+      transition: color 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 8px;
+
+      &:hover {
+        color: var(--tv-blue);
+      }
+    }
+
+    .theme-icon {
+      width: 20px;
+      height: 20px;
+    }
   `]
 })
 export class SidebarComponent implements OnInit {
   userProfile: UserProfile | null = null;
+  isDarkMode$ = this.themeService.isDarkMode$;
 
-  constructor(private authService: AuthService) { }
+  constructor(
+    private authService: AuthService,
+    private themeService: ThemeService
+  ) { }
 
   ngOnInit(): void {
     // Subscribe to auth state to get user profile
@@ -227,6 +266,10 @@ export class SidebarComponent implements OnInit {
       return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
     }
     return name.substring(0, 2).toUpperCase();
+  }
+
+  toggleTheme(): void {
+    this.themeService.toggleTheme();
   }
 
   onLogout(): void {

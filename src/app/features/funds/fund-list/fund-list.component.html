@@ -2,7 +2,7 @@
   <div class="container mx-auto px-4 py-8">
     <div class="mb-8">
       <h1 class="text-3xl font-bold text-emerald-400 mb-2">Mutual Funds</h1>
-      <p class="text-slate-400">Browse and manage your mutual fund investments</p>
+      <p style="color: var(--tv-text-secondary);">Browse and manage your mutual fund investments</p>
     </div>
 
     <!-- Loading State -->
@@ -29,12 +29,12 @@
     </div>
 
     <!-- Funds Table -->
-    <div *ngIf="!loading && !error" class="bg-slate-900 shadow rounded-lg overflow-hidden">
+    <div *ngIf="!loading && !error" class="table-container shadow rounded-lg overflow-hidden">
       <div class="flex flex-row justify-between items-center px-4 py-3 sm:px-6">
         <div class="flex items-center gap-6">
-          <h3 class="text-lg font-medium text-slate-100">Fund List</h3>
-          <p class="text-sm text-slate-400">
-            Total: <span class="font-medium text-slate-200">{{ totalFunds }}</span> funds
+          <h3 class="text-lg font-medium text-primary">Fund List</h3>
+          <p class="text-sm text-secondary">
+            Total: <span class="font-medium text-primary">{{ totalFunds }}</span> funds
             <span *ngIf="selectedDate" class="ml-2 text-blue-400">
               • Filtered by: {{ selectedDate }}
             </span>
@@ -43,9 +43,9 @@
 
         <div class="flex flex-wrap gap-4 items-center">
           <!-- Sort Options -->
-          <label class="text-sm font-medium text-slate-400">Sort by:</label>
-          <select [(ngModel)]="sortBy" (change)="onSortChange(sortBy)"
-            class="px-3 py-2 border border-slate-700 bg-slate-900 text-slate-200 rounded-md text-sm focus:ring-emerald-500 focus:border-emerald-500">
+          <label class="text-sm font-medium text-secondary">Sort by:</label>
+          <select [(ngModel)]="sortBy" (change)="onSortChange(sortBy)" class="px-3 py-2 border rounded-md text-sm"
+            style="background-color: var(--tv-bg-dark); border-color: var(--tv-border); color: var(--tv-text-primary);">
             <option value="funds_holding_count">Holding Count</option>
             <option value="name">Name</option>
             <option value="holding_count">Holding Count</option>
@@ -53,20 +53,22 @@
             <option value="Removed">Removed</option>
           </select>
 
-          <label class="text-sm font-medium text-slate-400">Order:</label>
+          <label class="text-sm font-medium text-secondary">Order:</label>
           <select [(ngModel)]="sortOrder" (change)="onOrderChange(sortOrder)"
-            class="px-3 py-2 border border-slate-700 bg-slate-900 text-slate-200 rounded-md text-sm focus:ring-emerald-500 focus:border-emerald-500">
+            class="px-3 py-2 border rounded-md text-sm"
+            style="background-color: var(--tv-bg-dark); border-color: var(--tv-border); color: var(--tv-text-primary);">
             <option value="desc">Descending</option>
             <option value="asc">Ascending</option>
           </select>
 
           <!-- Date Filter -->
           <form [formGroup]="filterForm" class="flex gap-3 items-center ml-4">
-            <label for="date-filter" class="text-sm font-medium text-slate-400">
+            <label for="date-filter" class="text-sm font-medium text-secondary">
               Select Date:
             </label>
             <input id="date-filter" type="date" formControlName="date" (change)="onDateChange()"
-              class="px-3 py-2 border border-slate-700 bg-slate-900 text-slate-200 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 text-sm"
+              class="px-3 py-2 border rounded-md shadow-sm text-sm"
+              style="background-color: var(--tv-bg-dark); border-color: var(--tv-border); color: var(--tv-text-primary);"
               placeholder="Select a date">
             <app-button variant="outline" size="xs" (clicked)="clearDateFilter()" [disabled]="!selectedDate">
               Clear Filter
@@ -77,42 +79,49 @@
 
       <div class="overflow-x-auto">
         <table class="min-w-full">
-          <thead class="bg-slate-800">
+          <thead style="background-color: var(--tv-bg-hover);">
             <tr>
-              <th class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Fund ID</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Name</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Holding Count
+              <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                style="color: var(--tv-text-secondary);">Fund ID</th>
+              <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                style="color: var(--tv-text-secondary);">Name</th>
+              <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                style="color: var(--tv-text-secondary);">Holding Count
               </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Added</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Removed</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Latest Date
+              <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                style="color: var(--tv-text-secondary);">Added</th>
+              <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                style="color: var(--tv-text-secondary);">Removed</th>
+              <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                style="color: var(--tv-text-secondary);">Latest Date
               </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Actions</th>
+              <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                style="color: var(--tv-text-secondary);">Actions</th>
             </tr>
           </thead>
-          <tbody class="bg-slate-900">
-            <tr *ngFor="let fund of funds" class="hover:bg-slate-800 cursor-pointer transition-colors duration-150"
+          <tbody style="background-color: var(--tv-bg-panel);">
+            <tr *ngFor="let fund of funds" class="fund-row cursor-pointer transition-colors duration-150"
               (click)="viewFund(fund._id)">
               <td class="px-6 py-4 whitespace-nowrap">
-                <div class="text-sm font-medium text-slate-200">{{ fund._id }}</div>
+                <div class="text-sm font-medium text-primary">{{ fund._id }}</div>
               </td>
               <td class="px-6 py-4 whitespace-nowrap">
                 <div class="flex items-center gap-2">
-                  <div class="text-sm font-medium text-slate-200">{{ fund.name }}</div>
+                  <div class="text-sm font-medium text-primary">{{ fund.name }}</div>
                   <app-favorite-button [itemId]="fund._id" [itemName]="fund.name" itemType="fund"
                     size="small"></app-favorite-button>
                 </div>
               </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-200">
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">
                 {{ fund.holding_count | number:'1.0-0' }}
               </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-200">
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">
                 {{ fund.added_count | number:'1.0-0' }}
               </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-200">
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">
                 {{ fund.removed_count | number:'1.0-0' }}
               </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-200">
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">
                 {{ fund.latest_date | date:'yyyy-MM-dd' }}
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
@@ -126,7 +135,7 @@
       </div>
 
       <!-- Pagination -->
-      <div class="bg-slate-900 px-4 py-3 flex items-center justify-between sm:px-6">
+      <div class="pagination-container px-4 py-3 flex items-center justify-between sm:px-6">
         <div class="flex-1 flex justify-between sm:hidden">
           <app-button variant="outline" size="xs" [disabled]="currentPage === 0" (clicked)="previousPage()">
             Previous
@@ -137,13 +146,13 @@
         </div>
         <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
           <div>
-            <p class="text-sm text-slate-400">
+            <p class="text-sm text-secondary">
               Showing
-              <span class="font-medium text-slate-200">{{ (currentPage * pageSize) + 1 }}</span>
+              <span class="font-medium text-primary">{{ (currentPage * pageSize) + 1 }}</span>
               to
-              <span class="font-medium text-slate-200">{{ Math.min((currentPage + 1) * pageSize, totalFunds) }}</span>
+              <span class="font-medium text-primary">{{ Math.min((currentPage + 1) * pageSize, totalFunds) }}</span>
               of
-              <span class="font-medium text-slate-200">{{ totalFunds }}</span>
+              <span class="font-medium text-primary">{{ totalFunds }}</span>
               results
             </p>
           </div>

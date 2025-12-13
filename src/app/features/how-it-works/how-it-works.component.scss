@@ -1,20 +1,20 @@
 .how-it-works-page {
     min-height: 100vh;
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    background-color: var(--tv-bg-dark);
 }
 
 // Header
 .header-section {
-    border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+    border-bottom: 1px solid var(--tv-border);
     padding-bottom: 2rem;
 }
 
 // Navigation Cards
 .nav-cards {
     .nav-card {
-        background: rgba(30, 41, 59, 0.6);
+        background: var(--tv-bg-panel);
         backdrop-filter: blur(10px);
-        border: 2px solid rgba(148, 163, 184, 0.1);
+        border: 2px solid var(--tv-border);
         border-radius: 1rem;
         padding: 1.5rem;
         display: flex;
@@ -27,24 +27,24 @@
         .icon {
             width: 40px;
             height: 40px;
-            color: #10b981;
+            color: var(--tv-green);
         }
 
         span {
             font-size: 1rem;
             font-weight: 600;
-            color: white;
+            color: var(--tv-text-primary);
         }
 
         &:hover {
             transform: translateY(-4px);
-            border-color: rgba(16, 185, 129, 0.5);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+            border-color: var(--tv-blue);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
         }
 
         &.active {
-            background: rgba(16, 185, 129, 0.1);
-            border-color: #10b981;
+            background: var(--tv-bg-active);
+            border-color: var(--tv-blue);
         }
     }
 }
@@ -58,15 +58,15 @@
 .section-title {
     font-size: 2rem;
     font-weight: 700;
-    color: white;
+    color: var(--tv-text-primary);
     margin-bottom: 2rem;
     padding-bottom: 1rem;
-    border-bottom: 2px solid rgba(16, 185, 129, 0.3);
+    border-bottom: 2px solid var(--tv-border);
 }
 
 .section-content {
-    background: rgba(30, 41, 59, 0.4);
-    border: 1px solid rgba(148, 163, 184, 0.1);
+    background: var(--tv-bg-panel);
+    border: 1px solid var(--tv-border);
     border-radius: 1.25rem;
     padding: 2.5rem;
 }
@@ -79,8 +79,8 @@
 }
 
 .feature-card {
-    background: rgba(15, 23, 42, 0.6);
-    border: 1px solid rgba(148, 163, 184, 0.1);
+    background: var(--tv-bg-panel);
+    border: 1px solid var(--tv-border);
     border-radius: 1rem;
     padding: 2rem;
     text-align: center;
@@ -88,7 +88,7 @@
 
     &:hover {
         transform: translateY(-4px);
-        border-color: rgba(16, 185, 129, 0.3);
+        border-color: var(--tv-blue);
     }
 }
 
@@ -123,13 +123,13 @@
 .feature-title {
     font-size: 1.25rem;
     font-weight: 600;
-    color: white;
+    color: var(--tv-text-primary);
     margin-bottom: 0.5rem;
 }
 
 .feature-description {
     font-size: 0.9375rem;
-    color: rgba(148, 163, 184, 0.9);
+    color: var(--tv-text-secondary);
     line-height: 1.6;
 }
 
@@ -143,14 +143,14 @@
 .step-card {
     display: flex;
     gap: 1.5rem;
-    background: rgba(15, 23, 42, 0.4);
-    border: 1px solid rgba(148, 163, 184, 0.1);
+    background: var(--tv-bg-panel);
+    border: 1px solid var(--tv-border);
     border-radius: 1rem;
     padding: 2rem;
     transition: all 0.3s ease;
 
     &:hover {
-        border-color: rgba(16, 185, 129, 0.3);
+        border-color: var(--tv-blue);
         transform: translateX(8px);
     }
 }
@@ -176,18 +176,18 @@
 .step-title {
     font-size: 1.25rem;
     font-weight: 600;
-    color: white;
+    color: var(--tv-text-primary);
     margin-bottom: 0.75rem;
 }
 
 .step-description {
     font-size: 1rem;
-    color: rgba(148, 163, 184, 0.9);
+    color: var(--tv-text-secondary);
     line-height: 1.6;
     margin-bottom: 1rem;
 
     strong {
-        color: #10b981;
+        color: var(--tv-green);
     }
 }
 
@@ -198,30 +198,30 @@
 
     li {
         padding: 0.5rem 0 0.5rem 1.5rem;
-        color: rgba(148, 163, 184, 0.9);
+        color: var(--tv-text-secondary);
         position: relative;
 
         &::before {
             content: '→';
             position: absolute;
             left: 0;
-            color: #10b981;
+            color: var(--tv-green);
             font-weight: 700;
         }
     }
 }
 
 .step-tip {
-    background: rgba(16, 185, 129, 0.1);
-    border-left: 3px solid #10b981;
+    background: var(--tv-bg-hover);
+    border-left: 3px solid var(--tv-green);
     padding: 0.75rem 1rem;
     border-radius: 0.5rem;
     margin-top: 1rem;
-    color: rgba(148, 163, 184, 0.9);
+    color: var(--tv-text-secondary);
     font-size: 0.9375rem;
 
     strong {
-        color: #10b981;
+        color: var(--tv-green);
     }
 }
 
@@ -249,22 +249,22 @@
 }
 
 .decision-card {
-    background: rgba(15, 23, 42, 0.6);
-    border: 2px solid rgba(148, 163, 184, 0.1);
+    background: var(--tv-bg-panel);
+    border: 2px solid var(--tv-border);
     border-radius: 1rem;
     padding: 2rem;
     transition: all 0.3s ease;
 
     &.buy {
         &:hover {
-            border-color: rgba(16, 185, 129, 0.5);
+            border-color: var(--tv-green);
             box-shadow: 0 0 30px rgba(16, 185, 129, 0.2);
         }
     }
 
     &.sell {
         &:hover {
-            border-color: rgba(239, 68, 68, 0.5);
+            border-color: var(--tv-red);
             box-shadow: 0 0 30px rgba(239, 68, 68, 0.2);
         }
     }
@@ -276,7 +276,7 @@
     gap: 1rem;
     margin-bottom: 1.5rem;
     padding-bottom: 1rem;
-    border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+    border-bottom: 1px solid var(--tv-border);
 
     .decision-icon {
         width: 32px;
@@ -286,16 +286,16 @@
     h3 {
         font-size: 1.5rem;
         font-weight: 700;
-        color: white;
+        color: var(--tv-text-primary);
         margin: 0;
     }
 
     .buy & .decision-icon {
-        color: #10b981;
+        color: var(--tv-green);
     }
 
     .sell & .decision-icon {
-        color: #ef4444;
+        color: var(--tv-red);
     }
 }
 
@@ -306,15 +306,15 @@
 
     li {
         padding: 0.75rem 0;
-        color: rgba(148, 163, 184, 0.9);
-        border-bottom: 1px solid rgba(148, 163, 184, 0.05);
+        color: var(--tv-text-secondary);
+        border-bottom: 1px solid var(--tv-border);
 
         &:last-child {
             border-bottom: none;
         }
 
         strong {
-            color: white;
+            color: var(--tv-text-primary);
             display: block;
             margin-bottom: 0.25rem;
         }
@@ -323,8 +323,8 @@
 
 // Best Practices
 .best-practices {
-    background: rgba(15, 23, 42, 0.6);
-    border: 1px solid rgba(148, 163, 184, 0.1);
+    background: var(--tv-bg-panel);
+    border: 1px solid var(--tv-border);
     border-radius: 1rem;
     padding: 2rem;
     margin-bottom: 2rem;
@@ -333,7 +333,7 @@
 .practices-title {
     font-size: 1.5rem;
     font-weight: 700;
-    color: white;
+    color: var(--tv-text-primary);
     margin-bottom: 1.5rem;
 }
 
@@ -346,7 +346,7 @@
     display: flex;
     gap: 1rem;
     padding: 1rem;
-    background: rgba(30, 41, 59, 0.4);
+    background: var(--tv-bg-hover);
     border-radius: 0.75rem;
 }
 
@@ -354,12 +354,12 @@
     flex-shrink: 0;
     width: 32px;
     height: 32px;
-    background: rgba(16, 185, 129, 0.2);
+    background: var(--tv-bg-active);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #10b981;
+    color: var(--tv-green);
     font-weight: 700;
     font-size: 1.25rem;
 }
@@ -370,13 +370,13 @@
     h4 {
         font-size: 1.125rem;
         font-weight: 600;
-        color: white;
+        color: var(--tv-text-primary);
         margin: 0 0 0.5rem 0;
     }
 
     p {
         font-size: 0.9375rem;
-        color: rgba(148, 163, 184, 0.9);
+        color: var(--tv-text-secondary);
         margin: 0;
         line-height: 1.6;
     }

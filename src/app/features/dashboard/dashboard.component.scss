@@ -1,12 +1,22 @@
 .dashboard-page {
     min-height: 100vh;
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    background-color: var(--tv-bg-dark);
     animation: fadeInUp 0.6s ease-out forwards;
 }
 
 .welcome-section {
     padding: 2rem 0;
-    border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+    border-bottom: 1px solid var(--tv-border);
+}
+
+// Welcome section text colors
+h1,
+h2 {
+    color: var(--tv-text-primary) !important;
+}
+
+p {
+    color: var(--tv-text-secondary) !important;
 }
 
 // Stats Grid
@@ -17,11 +27,10 @@
 }
 
 .stat-card {
-    background: var(--glass-bg);
-    /* Use global var */
+    background: var(--tv-bg-panel);
     backdrop-filter: blur(12px);
-    border: 1px solid var(--glass-border);
-    box-shadow: var(--glass-shadow);
+    border: 1px solid var(--tv-border);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     border-radius: 1rem;
     padding: 1.5rem;
     display: flex;
@@ -34,7 +43,7 @@
     &:hover {
         transform: translateY(-4px);
         box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-        border-color: rgba(16, 185, 129, 0.4);
+        border-color: var(--tv-blue);
     }
 }
 
@@ -75,7 +84,7 @@
 .stat-label {
     font-size: 0.875rem;
     font-weight: 500;
-    color: rgba(148, 163, 184, 0.9);
+    color: var(--tv-text-secondary);
     text-transform: uppercase;
     letter-spacing: 0.05em;
     margin-bottom: 0.25rem;
@@ -84,7 +93,7 @@
 .stat-value {
     font-size: 1.125rem;
     font-weight: 600;
-    color: white;
+    color: var(--tv-text-primary);
     margin: 0;
 }
 
@@ -92,8 +101,8 @@
     width: 36px;
     height: 36px;
     border-radius: 8px;
-    background: rgba(16, 185, 129, 0.1);
-    color: #10b981;
+    background: var(--tv-bg-hover);
+    color: var(--tv-blue);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -105,7 +114,7 @@
     }
 
     &:hover {
-        background: rgba(16, 185, 129, 0.2);
+        background: var(--tv-bg-active);
         transform: translateX(4px);
     }
 }
@@ -113,7 +122,7 @@
 // Features Section
 .features-section {
     padding: 2rem 0;
-    border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+    border-bottom: 1px solid var(--tv-border);
 }
 
 .features-grid {
@@ -123,16 +132,16 @@
 }
 
 .feature-card {
-    background: rgba(30, 41, 59, 0.4);
-    border: 1px solid rgba(148, 163, 184, 0.1);
+    background: var(--tv-bg-panel);
+    border: 1px solid var(--tv-border);
     border-radius: 1rem;
     padding: 2rem;
     transition: all 0.3s ease;
 
     &:hover {
         transform: translateY(-4px);
-        border-color: rgba(16, 185, 129, 0.3);
-        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+        border-color: var(--tv-blue);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
     }
 }
 
@@ -179,13 +188,13 @@
 .feature-title {
     font-size: 1.125rem;
     font-weight: 700;
-    color: white;
+    color: var(--tv-text-primary);
     margin-bottom: 0.75rem;
 }
 
 .feature-description {
     font-size: 0.9375rem;
-    color: rgba(148, 163, 184, 0.9);
+    color: var(--tv-text-secondary);
     line-height: 1.6;
     margin-bottom: 0.5rem;
 }
@@ -195,12 +204,12 @@
     margin-top: 0.75rem;
     font-size: 0.875rem;
     font-weight: 600;
-    color: #10b981;
+    color: var(--tv-blue);
     text-decoration: none;
     transition: all 0.2s ease;
 
     &:hover {
-        color: #059669;
+        opacity: 0.8;
         transform: translateX(4px);
     }
 }
@@ -217,22 +226,22 @@
 }
 
 .quick-link-card {
-    background: var(--glass-bg);
-    border: 1px solid var(--glass-border);
+    background: var(--tv-bg-panel);
+    border: 1px solid var(--tv-border);
     backdrop-filter: blur(8px);
     border-radius: 0.75rem;
     padding: 1.5rem;
     display: flex;
     align-items: center;
     gap: 1rem;
-    color: white;
+    color: var(--tv-text-primary);
     text-decoration: none;
     transition: all 0.3s ease;
 
     .icon {
         width: 24px;
         height: 24px;
-        color: #10b981;
+        color: var(--tv-blue);
         flex-shrink: 0;
     }
 
@@ -242,10 +251,10 @@
     }
 
     &:hover {
-        background: rgba(30, 41, 59, 0.8);
-        border-color: rgba(16, 185, 129, 0.4);
+        background: var(--tv-bg-hover);
+        border-color: var(--tv-blue);
         transform: translateX(4px);
-        box-shadow: var(--glass-shadow);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
 }
 
