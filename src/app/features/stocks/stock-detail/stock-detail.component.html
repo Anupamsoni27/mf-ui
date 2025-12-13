@@ -1,77 +1,127 @@
-<div class="h-full flex flex-col px-2 py-4 space-y-3">
+<div class="h-full flex flex-col relative text-slate-200">
   <!-- Loading State -->
-  <div *ngIf="loading" class="flex justify-center py-12">
-    <app-loading-spinner size="lg" [showText]="true" text="Loading stock details..."
-      class="text-slate-200"></app-loading-spinner>
+  <div *ngIf="loading" class="flex-1 flex flex-col items-center justify-center p-8 space-y-4">
+    <app-loading-spinner size="lg" class="text-emerald-500"></app-loading-spinner>
+    <p class="text-slate-400 text-sm animate-pulse">Analyzing market data...</p>
   </div>
 
   <!-- Error State -->
-  <div *ngIf="error" class="bg-red-900/20 border border-red-800 rounded-md p-4 mb-6">
-    <div class="flex">
-      <div class="ml-3">
-        <h3 class="text-sm font-medium text-red-400">Error loading stock details</h3>
-        <div class="mt-2 text-sm text-red-300">
-          <p>{{ error }}</p>
-        </div>
-        <div class="mt-4">
-          <app-button variant="outline" size="xs" (clicked)="loadStockDetails()">
-            Try Again
-          </app-button>
-        </div>
+  <div *ngIf="error" class="flex-1 flex items-center justify-center p-6">
+    <div class="glass-panel border-red-500/20 bg-red-500/5 p-6 rounded-2xl max-w-sm text-center">
+      <div class="w-12 h-12 rounded-full bg-red-500/10 flex items-center justify-center mx-auto mb-4">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-500" fill="none" viewBox="0 0 24 24"
+          stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        </svg>
       </div>
+      <h3 class="text-lg font-semibold text-white mb-2">Unable to load details</h3>
+      <p class="text-slate-400 text-sm mb-6">{{ error }}</p>
+      <app-button variant="outline" (clicked)="loadStockDetails()">Retry Connection</app-button>
     </div>
   </div>
 
-  <!-- Stock Details -->
-  <div *ngIf="!loading && !error && stockInfo" class="flex-1 flex flex-col min-h-0 space-y-3 overflow-y-auto pr-1">
-    <!-- Stock Header -->
-    <div class="bg-slate-900 shadow-sm border border-slate-800 rounded-lg p-3">
-      <h1 class="text-lg font-bold text-slate-300">{{ stockInfo.name }}</h1>
-    </div>
-
-    <!-- Stock Information -->
-    <div class="grid grid-cols-1 gap-3">
-      <!-- Basic Info -->
-      <div class="bg-slate-900 shadow-sm border border-slate-800 rounded-lg p-3">
-        <h2 class="text-xs font-semibold text-slate-300 mb-2">Stock Information</h2>
-        <!-- Placeholder for basic info if needed -->
-        <p class="text-[10px] text-slate-400">Price/Volume info hidden</p>
+  <!-- Content -->
+  <div *ngIf="!loading && !error && stockInfo" class="flex-1 overflow-y-auto custom-scrollbar">
+    <!-- Header Section (Sticky) -->
+    <div
+      class="sticky top-0 z-20 bg-slate-950/80 backdrop-blur-xl border-b border-white/5 px-6 py-5 flex justify-between items-start">
+      <div>
+        <div class="flex items-center gap-3 mb-1">
+          <h1 class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">
+            {{ stockInfo.name }}
+          </h1>
+          <span *ngIf="stockInfo.sector"
+            class="px-2 py-0.5 rounded-full bg-slate-800/80 border border-slate-700 text-[10px] font-medium text-slate-300 tracking-wide uppercase">
+            {{ stockInfo.sector }}
+          </span>
+        </div>
+        <div class="flex items-center gap-4 text-xs text-slate-500 font-medium">
+          <span class="flex items-center gap-1.5" *ngIf="stockInfo.instrument_type">
+            <span class="w-1 h-1 rounded-full bg-emerald-500"></span>
+            {{ stockInfo.instrument_type }}
+          </span>
+          <span class="flex items-center gap-1.5" *ngIf="stockInfo.lastUpdated">
+            <span class="w-1 h-1 rounded-full bg-slate-600"></span>
+            Updated {{ stockInfo.lastUpdated | date:'mediumDate' }}
+          </span>
+        </div>
       </div>
 
-      <!-- Company Info -->
-      <div class="bg-slate-900 shadow-sm border border-slate-800 rounded-lg p-3">
-        <h2 class="text-xs font-semibold text-slate-300 mb-2">Company Information</h2>
-        <dl class="space-y-2">
-          <div *ngIf="stockInfo.description">
-            <dt class="text-[10px] font-medium text-slate-400">Description</dt>
-            <dd class="mt-0.5 text-[10px] text-slate-400 line-clamp-3">{{ stockInfo.description }}</dd>
-          </div>
-          <div *ngIf="stockInfo.website">
-            <dt class="text-[10px] font-medium text-slate-400">Website</dt>
-            <dd class="mt-0.5">
-              <a [href]="stockInfo.website" target="_blank" class="text-[10px] text-blue-400 hover:text-blue-300">
-                {{ stockInfo.website }}
-              </a>
-            </dd>
-          </div>
-          <div *ngIf="stockInfo.employees">
-            <dt class="text-[10px] font-medium text-slate-400">Employees</dt>
-            <dd class="mt-0.5 text-[10px] text-slate-400">{{ stockInfo.employees | number }}</dd>
-          </div>
-          <div *ngIf="stockInfo.founded">
-            <dt class="text-[10px] font-medium text-slate-400">Founded</dt>
-            <dd class="mt-0.5 text-[10px] text-slate-400">{{ stockInfo.founded }}</dd>
-          </div>
-        </dl>
+      <!-- Actions -->
+      <div class="flex items-center gap-2">
+        <a *ngIf="stockInfo.website" [href]="stockInfo.website" target="_blank"
+          class="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-colors border border-white/5">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+          </svg>
+        </a>
       </div>
     </div>
 
-    <!-- Stock Timeline Chart -->
-    <div class="bg-slate-900 shadow-sm border border-slate-800 rounded-lg p-3">
-      <h2 class="text-xs font-semibold text-slate-300 mb-2">Price Timeline</h2>
-      <div class="overflow-y-auto">
-        <app-stock-timeline [stockId]="stockId!"></app-stock-timeline>
+    <div class="px-6 py-6 space-y-8">
+
+      <!-- Timeline Chart Section -->
+      <section>
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-sm font-semibold text-slate-200">Fund Holding Trend</h3>
+          <span class="text-xs text-emerald-400 bg-emerald-400/10 px-2 py-1 rounded border border-emerald-400/20">
+            Live Data
+          </span>
+        </div>
+        <div class="bg-gradient-to-b from-slate-900/50 to-slate-900/10 border border-white/5 rounded-2xl p-4 shadow-xl">
+          <app-stock-timeline [stockId]="stockId!"></app-stock-timeline>
+        </div>
+      </section>
+
+      <!-- Key Stats Grid -->
+      <section class="grid grid-cols-2 gap-4">
+        <div class="p-4 rounded-xl bg-white/[0.03] border border-white/5 hover:bg-white/[0.05] transition-colors">
+          <span class="text-xs text-slate-500 block mb-1">Employees</span>
+          <span class="text-sm font-medium text-slate-200">{{ (stockInfo.employees | number) || 'N/A' }}</span>
+        </div>
+        <div class="p-4 rounded-xl bg-white/[0.03] border border-white/5 hover:bg-white/[0.05] transition-colors">
+          <span class="text-xs text-slate-500 block mb-1">Founded</span>
+          <span class="text-sm font-medium text-slate-200">{{ stockInfo.founded || 'N/A' }}</span>
+        </div>
+        <div class="p-4 rounded-xl bg-white/[0.03] border border-white/5 hover:bg-white/[0.05] transition-colors">
+          <span class="text-xs text-slate-500 block mb-1">Market Cap</span>
+          <span class="text-sm font-medium text-slate-200" *ngIf="stockInfo.stock?.marketCap">{{
+            (stockInfo.stock?.marketCap | number) || '-' }} Cr</span>
+          <span class="text-sm font-medium text-slate-200" *ngIf="!stockInfo.stock?.marketCap">Hidden</span>
+        </div>
+        <div class="p-4 rounded-xl bg-white/[0.03] border border-white/5 hover:bg-white/[0.05] transition-colors">
+          <span class="text-xs text-slate-500 block mb-1">P/E Ratio</span>
+          <span class="text-sm font-medium text-slate-200">{{ stockInfo.keyMetrics?.peRatio || 'N/A' }}</span>
+        </div>
+      </section>
+
+      <!-- About Section -->
+      <section *ngIf="stockInfo.description">
+        <h3 class="text-sm font-semibold text-slate-200 mb-3">About {{ stockInfo.name }}</h3>
+        <div class="prose prose-invert prose-sm max-w-none text-slate-400 leading-relaxed text-xs">
+          <p>{{ stockInfo.description }}</p>
+        </div>
+      </section>
+
+      <!-- Additional Info / Footer -->
+      <div class="pt-8 mt-8 border-t border-white/5 flex gap-4 text-xs text-slate-600">
+        <span>ID: {{stockInfo._id}}</span>
       </div>
+
     </div>
+  </div>
+
+  <!-- Empty State (No Selection) -->
+  <div *ngIf="!stockInfo && !loading && !error"
+    class="flex-1 flex flex-col items-center justify-center text-slate-500 p-8 text-center">
+    <div class="w-16 h-16 rounded-2xl bg-slate-800/50 flex items-center justify-center mb-4 border border-slate-700/50">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 opacity-50" fill="none" viewBox="0 0 24 24"
+        stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+      </svg>
+    </div>
+    <p>Select a stock to view details</p>
   </div>
 </div>

@@ -35,71 +35,80 @@
       </div>
     </div>
 
-    <!-- Main table area -->
-    <div class="flex-1 overflow-auto px-6 py-4">
-      <div class="table-responsive">
-        <table class="min-w-full" tabindex="0" (keydown)="onTableKeydown($event)">
-          <thead>
-            <tr>
-              <th>Stock</th>
-              <th>Symbol</th>
-              <th>Holding Count</th>
-              <th>Trend</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let stock of stocks" (click)="setSelectedStockId(stock._id)"
-              [class.selected-row]="stock._id === selectedStockId">
-              <td>
-                <div class="flex items-center gap-3">
-                  <app-favorite-button [itemId]="stock._id" [itemName]="stock.name" itemType="stock"
-                    size="small"></app-favorite-button>
-                  <div>
-                    <a [href]="'https://groww.in'+ stock.url" target="_blank" class="stock-link">
-                      {{ stock.name }}
-                    </a>
-                    <span class="stock-symbol" *ngIf="stock.sector">{{ stock.sector }}</span>
+    <!-- Content Wrapper (Table + Details) -->
+    <div class="flex flex-1 overflow-hidden relative">
+      <!-- Main table area -->
+      <div class="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 custom-scrollbar">
+        <div class="table-responsive">
+          <table class="min-w-full" tabindex="0" (keydown)="onTableKeydown($event)">
+            <thead>
+              <tr>
+                <th>Stock</th>
+                <th>Symbol</th>
+                <th>Holding Count</th>
+                <th>Trend</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let stock of stocks" (click)="setSelectedStockId(stock._id)"
+                [class.selected-row]="stock._id === selectedStockId">
+                <td>
+                  <div class="flex items-center gap-3">
+                    <app-favorite-button [itemId]="stock._id" [itemName]="stock.name" itemType="stock"
+                      size="small"></app-favorite-button>
+                    <div>
+                      <a [href]="'https://groww.in'+ stock.url" target="_blank" class="stock-link">
+                        {{ stock.name }}
+                      </a>
+                      <span class="stock-symbol" *ngIf="stock.sector">{{ stock.sector }}</span>
+                    </div>
+                    <button (click)="copyStockName(stock.name, $event)"
+                      class="opacity-0 group-hover:opacity-100 p-1 text-slate-500 hover:text-emerald-400 transition-opacity">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                      </svg>
+                    </button>
                   </div>
-                  <button (click)="copyStockName(stock.name, $event)"
-                    class="opacity-0 group-hover:opacity-100 p-1 text-slate-500 hover:text-emerald-400 transition-opacity">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24"
-                      stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                    </svg>
-                  </button>
-                </div>
-              </td>
-              <td>
-                <span class="badge instrument">
-                  {{ stock.symbol || stock.name.substring(0, 4).toUpperCase() }}
-                </span>
-              </td>
-              <td>
-                <span class="font-mono text-slate-300">{{ stock.funds_holding_count || '-' }}</span>
-              </td>
-              <td class="w-32">
-                <app-sparkline *ngIf="stock.timeline" [timeline]="stock.timeline"></app-sparkline>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+                </td>
+                <td>
+                  <span class="badge instrument">
+                    {{ stock.symbol || stock.name.substring(0, 4).toUpperCase() }}
+                  </span>
+                </td>
+                <td>
+                  <span class="font-mono text-slate-300">{{ stock.funds_holding_count || '-' }}</span>
+                </td>
+                <td class="w-32">
+                  <app-sparkline *ngIf="stock.timeline" [timeline]="stock.timeline"></app-sparkline>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Loading/Error States -->
+        <div *ngIf="loading" class="flex justify-center py-12">
+          <app-loading-spinner size="lg" [showText]="true" text="Loading stocks..."
+            class="text-slate-200"></app-loading-spinner>
+        </div>
+
+        <div *ngIf="error" class="bg-red-500/10 border border-red-500/20 rounded-xl p-6 text-center">
+          <p class="text-red-400 mb-4">{{ error }}</p>
+          <app-button variant="outline" size="sm" (clicked)="loadStocks()">Try Again</app-button>
+        </div>
       </div>
 
-      <!-- Loading/Error States -->
-      <div *ngIf="loading" class="flex justify-center py-12">
-        <app-loading-spinner size="lg" [showText]="true" text="Loading stocks..."
-          class="text-slate-200"></app-loading-spinner>
-      </div>
-
-      <div *ngIf="error" class="bg-red-500/10 border border-red-500/20 rounded-xl p-6 text-center">
-        <p class="text-red-400 mb-4">{{ error }}</p>
-        <app-button variant="outline" size="sm" (clicked)="loadStocks()">Try Again</app-button>
-      </div>
+      <!-- Right Panel (Now inside flex wrapper) -->
+      <aside
+        class="w-[45%] h-full overflow-y-auto bg-slate-950/80 backdrop-blur-xl border-l border-slate-800/50 relative z-10">
+        <app-stock-detail [stockId]="selectedStockId"></app-stock-detail>
+      </aside>
     </div>
 
     <!-- Sticky Footer Pagination -->
-    <div class="px-6 py-4 glass-panel border-t border-slate-800/50 rounded-none mt-auto">
+    <div class="px-6 py-4 glass-panel border-t border-slate-800/50 rounded-none z-20">
       <div class="pagination">
         <span class="text-xs text-slate-400 mr-auto">
           Showing <b>{{ (currentPage * pageSize) + 1 }}</b> - <b>{{ Math.min((currentPage + 1) * pageSize, totalStocks)
@@ -110,10 +119,4 @@
       </div>
     </div>
   </main>
-
-  <!-- Right Panel -->
-  <aside
-    class="w-[45%] h-full max-h-screen bg-slate-950/80 backdrop-blur-xl border-l border-slate-800/50 relative z-30">
-    <app-stock-detail [stockId]="selectedStockId"></app-stock-detail>
-  </aside>
 </div>
