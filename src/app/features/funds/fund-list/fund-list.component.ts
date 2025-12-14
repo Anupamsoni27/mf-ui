@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
@@ -16,13 +16,14 @@ export class FundListComponent implements OnInit, OnDestroy {
   loading: boolean = false;
   error: string | null = null;
   currentPage: number = 0;
-  pageSize: number = 10;
+  pageSize: number = 20;
   totalFunds: number = 0;
   hasNextPage: boolean = false;
   filterForm: FormGroup;
   selectedDate: string | null = null;
   sortBy: string = 'holding_count';
   sortOrder: string = 'desc';
+  selectedFundId: string | null = null;
 
   Math = Math; // Make Math available in template
 
@@ -31,6 +32,7 @@ export class FundListComponent implements OnInit, OnDestroy {
   constructor(
     private fundService: FundService,
     private router: Router,
+    private route: ActivatedRoute,
     private fb: FormBuilder
   ) {
     this.filterForm = this.fb.group({
@@ -39,6 +41,13 @@ export class FundListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    // Handle query params for deep linking
+    this.route.queryParams.subscribe(params => {
+      if (params['id']) {
+        this.selectedFundId = params['id'];
+      }
+    });
+
     this.loadFunds();
 
     // Setup debounced date filter
@@ -56,6 +65,32 @@ export class FundListComponent implements OnInit, OnDestroy {
     this.dateFilterSubject.complete();
   }
 
+  onTableKeydown(event: KeyboardEvent): void {
+    if (!this.funds || this.funds.length === 0) return;
+    const currentIdx = this.funds.findIndex(f => f._id === this.selectedFundId);
+    if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      if (currentIdx < this.funds.length - 1) {
+        this.setSelectedFundId(this.funds[currentIdx + 1]._id);
+      }
+    } else if (event.key === 'ArrowUp') {
+      event.preventDefault();
+      if (currentIdx > 0) {
+        this.setSelectedFundId(this.funds[currentIdx - 1]._id);
+      }
+    }
+  }
+
+  setSelectedFundId(fundId: string): void {
+    this.selectedFundId = fundId;
+    // Update URL with query param
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { id: fundId },
+      queryParamsHandling: 'merge'
+    });
+  }
+
   onSortChange(sortBy: string): void {
     this.sortBy = sortBy;
     this.currentPage = 0;
@@ -67,7 +102,6 @@ export class FundListComponent implements OnInit, OnDestroy {
     this.currentPage = 0;
     this.loadFunds();
   }
-
 
   loadFunds(): void {
     this.loading = true;
@@ -82,6 +116,11 @@ export class FundListComponent implements OnInit, OnDestroy {
         this.totalFunds = response.count;
         this.hasNextPage = (skip + this.pageSize) < response.count;
         this.loading = false;
+        
+        // Auto-select first fund if none selected
+        if (!this.selectedFundId && this.funds.length > 0) {
+          this.selectedFundId = this.funds[0]._id;
+        }
       },
       error: (error) => {
         this.error = error.message || 'Failed to load funds';
@@ -94,7 +133,7 @@ export class FundListComponent implements OnInit, OnDestroy {
     if (event) {
       event.stopPropagation();
     }
-    this.router.navigate(['/funds', fundId]);
+    this.setSelectedFundId(fundId);
   }
 
   nextPage(): void {

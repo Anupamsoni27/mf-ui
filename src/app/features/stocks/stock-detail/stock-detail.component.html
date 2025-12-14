@@ -7,8 +7,8 @@
 
   <!-- Error State -->
   <div *ngIf="error" class="flex-1 flex items-center justify-center p-6 error-state">
-    <div class="error-container border p-6 rounded-2xl max-w-sm text-center">
-      <div class="w-12 h-12 rounded-full error-icon-bg flex items-center justify-center mx-auto mb-4">
+    <div class="error-container border p-6 max-w-sm text-center">
+      <div class="w-12 h-12 error-icon-bg flex items-center justify-center mx-auto mb-4">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 error-icon" fill="none" viewBox="0 0 24 24"
           stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -24,14 +24,14 @@
   <!-- Content -->
   <div *ngIf="!loading && !error && stockInfo" class="flex-1 overflow-y-auto custom-scrollbar">
     <!-- Header Section (Sticky) -->
-    <div class="sticky top-0 z-20 stock-header px-6 py-5 flex justify-between items-start">
-      <div>
+    <div class="sticky top-0 z-20 stock-header px-4 py-4 flex justify-between items-start">
+      <div class="flex-1">
         <div class="flex items-center gap-3 mb-1">
-          <h1 class="text-2xl font-bold">
+          <h1 class="text-lg font-semibold">
             {{ stockInfo.name }}
           </h1>
           <span *ngIf="stockInfo.sector"
-            class="sector-badge px-2 py-0.5 rounded-full border text-[10px] font-medium tracking-wide uppercase">
+            class="sector-badge px-2 py-0.5 border text-[10px] font-medium tracking-wide uppercase">
             {{ stockInfo.sector }}
           </span>
         </div>
@@ -49,8 +49,14 @@
 
       <!-- Actions -->
       <div class="flex items-center gap-2">
+        <app-favorite-button 
+          [itemId]="stockInfo._id" 
+          [itemName]="stockInfo.name" 
+          itemType="stock"
+          size="medium">
+        </app-favorite-button>
         <a *ngIf="stockInfo.website" [href]="stockInfo.website" target="_blank"
-          class="action-btn p-2 rounded-lg border transition-colors">
+          class="action-btn p-2 border transition-colors">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
@@ -59,38 +65,38 @@
       </div>
     </div>
 
-    <div class="px-6 py-6 space-y-8">
+    <div class="px-4 py-4 space-y-6">
 
       <!-- Timeline Chart Section -->
       <section class="chart-section">
-        <div class="flex items-center justify-between mb-4">
-          <h3 class="section-header text-sm font-semibold">Fund Holding Trend</h3>
-          <span class="live-badge text-xs px-2 py-1 rounded border">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="section-header text-xs font-semibold uppercase tracking-wider">Fund Holding Trend</h3>
+          <span class="live-badge text-xs px-2 py-1 border">
             Live Data
           </span>
         </div>
-        <div class="chart-container border rounded-2xl p-4 shadow-sm">
+        <div class="chart-container border p-3">
           <app-stock-timeline [stockId]="stockId!"></app-stock-timeline>
         </div>
       </section>
 
       <!-- Key Stats Grid -->
-      <section class="grid grid-cols-2 gap-4">
-        <div class="stat-card p-4 rounded-xl border transition-colors">
+      <section class="grid grid-cols-2 gap-3 stats-section">
+        <div class="stat-card p-3 border transition-colors">
           <span class="stat-label text-xs block mb-1">Employees</span>
           <span class="stat-value text-sm font-medium">{{ (stockInfo.employees | number) || 'N/A' }}</span>
         </div>
-        <div class="stat-card p-4 rounded-xl border transition-colors">
+        <div class="stat-card p-3 border transition-colors">
           <span class="stat-label text-xs block mb-1">Founded</span>
           <span class="stat-value text-sm font-medium">{{ stockInfo.founded || 'N/A' }}</span>
         </div>
-        <div class="stat-card p-4 rounded-xl border transition-colors">
+        <div class="stat-card p-3 border transition-colors">
           <span class="stat-label text-xs block mb-1">Market Cap</span>
           <span class="stat-value text-sm font-medium" *ngIf="stockInfo.stock?.marketCap">{{
             (stockInfo.stock?.marketCap | number) || '-' }} Cr</span>
           <span class="stat-value text-sm font-medium" *ngIf="!stockInfo.stock?.marketCap">Hidden</span>
         </div>
-        <div class="stat-card p-4 rounded-xl border transition-colors">
+        <div class="stat-card p-3 border transition-colors">
           <span class="stat-label text-xs block mb-1">P/E Ratio</span>
           <span class="stat-value text-sm font-medium">{{ stockInfo.keyMetrics?.peRatio || 'N/A' }}</span>
         </div>
@@ -98,14 +104,14 @@
 
       <!-- About Section -->
       <section *ngIf="stockInfo.description" class="about-section">
-        <h3 class="text-sm font-semibold mb-3">About {{ stockInfo.name }}</h3>
+        <h3 class="text-xs font-semibold uppercase tracking-wider mb-3">About {{ stockInfo.name }}</h3>
         <div class="prose prose-sm max-w-none text-xs">
           <p>{{ stockInfo.description }}</p>
         </div>
       </section>
 
       <!-- Additional Info / Footer -->
-      <div class="detail-footer pt-8 mt-8 flex gap-4 text-xs">
+      <div class="detail-footer pt-6 mt-6 flex gap-4 text-xs">
         <span>ID: {{stockInfo._id}}</span>
       </div>
 
@@ -115,11 +121,11 @@
   <!-- Empty State (No Selection) -->
   <div *ngIf="!stockInfo && !loading && !error"
     class="empty-state flex-1 flex flex-col items-center justify-center p-8 text-center">
-    <div class="empty-icon-bg w-16 h-16 rounded-2xl flex items-center justify-center mb-4 border">
+    <div class="empty-icon-bg w-16 h-16 flex items-center justify-center mb-4 border">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
       </svg>
     </div>
-    <p>Select a stock to view details</p>
+    <p class="text-sm">Select a stock from the list to view details</p>
   </div>
 </div>

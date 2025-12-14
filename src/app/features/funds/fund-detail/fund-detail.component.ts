@@ -1,21 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { FundService } from '../../../core/services/fund.service';
+import { ThemeService } from '../../../core/services/theme.service';
 import { FundInfo, Fund } from '../../../shared/models/fund.model';
 import { Stock } from '../../../shared/models/stock.model';
 import * as Highcharts from 'highcharts';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-fund-detail',
   templateUrl: './fund-detail.component.html',
   styleUrls: ['./fund-detail.component.scss']
 })
-export class FundDetailComponent implements OnInit {
+export class FundDetailComponent implements OnInit, OnChanges, OnDestroy {
+  @Input() fundId: string | null = null;
+  
   fundInfo: FundInfo | null = null;
   loading: boolean = false;
   error: string | null = null;
-  fundId: string | null = null;
   filterForm: FormGroup;
   selectedDate: string | null = null;
 
@@ -27,33 +30,49 @@ export class FundDetailComponent implements OnInit {
 
   Highcharts: typeof Highcharts = Highcharts;
   chartOptions: Highcharts.Options = {};
-
-  chartOptions2: Highcharts.Options = {
-    title: { text: 'Fund Timeline' },
-    xAxis: { type: 'datetime', title: { text: 'Date' } },
-    yAxis: { title: { text: 'Fund Count' } },
-    series: [{ type: 'line', name: 'Fund Count', data: [] }],
-    credits: { enabled: false }
-  };
+  chartOptions2: Highcharts.Options = {};
+  
+  private themeSubscription?: Subscription;
 
   constructor(
     private fundService: FundService,
     private route: ActivatedRoute,
     private router: Router,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private themeService: ThemeService
   ) {
     this.filterForm = this.fb.group({
       date: ['']
     });
+    
+    // Subscribe to theme changes
+    this.themeSubscription = this.themeService.isDarkMode$.subscribe(() => {
+      this.updateChartTheme();
+    });
   }
 
   ngOnInit(): void {
+    // Support route params for direct navigation (backward compatibility)
     this.route.params.subscribe(params => {
-      this.fundId = params['fundId'];
-      if (this.fundId) {
+      const routeFundId = params['fundId'];
+      if (routeFundId && !this.fundId) {
+        this.fundId = routeFundId;
         this.loadFundDetails();
       }
     });
+    
+    // Load if fundId was set via @Input
+    if (this.fundId) {
+      this.loadFundDetails();
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['fundId'] && !changes['fundId'].firstChange) {
+      if (this.fundId) {
+        this.loadFundDetails();
+      }
+    }
   }
 
   loadFundDetails(): void {
@@ -171,16 +190,34 @@ export class FundDetailComponent implements OnInit {
       y: count,
     }));
 
+    const isDark = this.themeService.isDarkMode();
+    const textColor = isDark ? this.getCSSVariableColor('--tv-text-primary') : '#172B4D';
+    const backgroundColor = this.getCSSVariableColor('--tv-bg-panel');
+    
+    // Different color palettes for light and dark themes
+    const colorPalette = isDark ? [
+      '#2caffe', '#544fc5', '#00e272', '#fe6a35', '#6b8abc',
+      '#d568fb', '#2ee0ca', '#fa4b42', '#feb56a', '#91e8e1'
+    ] : [
+      '#0C66E4', '#8B5CF6', '#059669', '#DC2626', '#F59E0B',
+      '#C026D3', '#0891B2', '#EA580C', '#7C3AED', '#047857'
+    ];
+    
     this.chartOptions = {
       chart: {
         type: 'pie',
         backgroundColor: 'transparent',
       },
+      colors: colorPalette,
       title: {
-        text: 'Stock Distribution by Sector',
+        text: 'Sector Distribution',
+        style: { color: textColor, fontSize: '14px', fontWeight: '600' }
       },
       tooltip: {
         pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b> ({point.y} stocks)',
+        backgroundColor: backgroundColor,
+        borderColor: this.getCSSVariableColor('--tv-border'),
+        style: { color: textColor }
       },
       accessibility: {
         point: {
@@ -193,9 +230,15 @@ export class FundDetailComponent implements OnInit {
           cursor: 'pointer',
           dataLabels: {
             enabled: true,
-            format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+            format: '<b>{point.name}</b>: {point.percentage:.1f}%',
+            style: { 
+              color: textColor,
+              fontSize: '11px',
+              textOutline: 'none'
+            }
           },
           showInLegend: true,
+          borderWidth: 0,
         },
       },
       series: [
@@ -205,6 +248,10 @@ export class FundDetailComponent implements OnInit {
           data,
         },
       ],
+      legend: {
+        itemStyle: { color: textColor, fontSize: '12px' }
+      },
+      credits: { enabled: false }
     };
   }
 
@@ -212,15 +259,68 @@ export class FundDetailComponent implements OnInit {
 
   updateChart() {
     if (!this.fundInfo || !this.fundInfo.fund_count) return;
+    
+    const isDark = this.themeService.isDarkMode();
+    const textColor = isDark ? this.getCSSVariableColor('--tv-text-primary') : '#172B4D';
+    const gridColor = this.getCSSVariableColor('--tv-border');
+    const lineColor = this.getCSSVariableColor('--tv-blue');
+    
     this.chartOptions2 = {
-      ...this.chartOptions2,
+      chart: {
+        backgroundColor: 'transparent',
+      },
+      title: {
+        text: 'Fund Timeline',
+        style: { color: textColor, fontSize: '14px', fontWeight: '600' }
+      },
+      xAxis: {
+        type: 'datetime',
+        title: { text: 'Date', style: { color: textColor } },
+        labels: { style: { color: textColor } },
+        gridLineColor: gridColor,
+        lineColor: gridColor
+      },
+      yAxis: {
+        title: { text: 'Holding Count', style: { color: textColor } },
+        labels: { style: { color: textColor } },
+        gridLineColor: gridColor
+      },
       series: [{
         type: 'line',
-        name: 'Fund Count',
-        data: this.fundInfo.fund_count.map(point => [Date.parse(point.date), point.holding_count])
-      }]
+        name: 'Holding Count',
+        data: this.fundInfo.fund_count.map(point => [Date.parse(point.date), point.holding_count]),
+        color: lineColor
+      }],
+      credits: { enabled: false },
+      legend: {
+        itemStyle: { color: textColor }
+      },
+      tooltip: {
+        backgroundColor: this.getCSSVariableColor('--tv-bg-panel'),
+        borderColor: this.getCSSVariableColor('--tv-border'),
+        style: { color: textColor }
+      }
     };
   }
+
+  updateChartTheme() {
+    // Reload charts with new theme colors
+    if (this.fundInfo) {
+      this.loadChart();
+      this.updateChart();
+    }
+  }
+
+  getCSSVariableColor(variable: string): string {
+    return getComputedStyle(document.documentElement).getPropertyValue(variable).trim();
+  }
+
+  ngOnDestroy(): void {
+    if (this.themeSubscription) {
+      this.themeSubscription.unsubscribe();
+    }
+  }
+
   protected readonly JSON = JSON;
   protected readonly Math = Math;
 }

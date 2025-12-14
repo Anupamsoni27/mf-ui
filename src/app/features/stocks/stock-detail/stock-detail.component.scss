@@ -68,6 +68,9 @@
 
 /* Chart Section */
 .chart-section {
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--tv-border);
+
     .section-header {
         color: var(--tv-text-primary);
     }
@@ -82,6 +85,12 @@
         background: var(--tv-bg-panel);
         border-color: var(--tv-border);
     }
+}
+
+/* Stats Section */
+.stats-section {
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--tv-border);
 }
 
 /* Stats Grid */
@@ -104,6 +113,9 @@
 
 /* About Section */
 .about-section {
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--tv-border);
+
     h3 {
         color: var(--tv-text-primary);
     }

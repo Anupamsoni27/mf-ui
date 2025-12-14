@@ -1,72 +1,373 @@
-/* Fund List Component - Theme-aware styles */
+/* TradingView-Inspired Fund List Styles */
 
-/* Main container */
-:host {
-    display: block;
-    min-height: 100vh;
-    background-color: var(--tv-bg-dark);
+/* Controls Toolbar */
+.controls-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 16px;
+    background: var(--tv-bg-panel);
+    border-bottom: 1px solid var(--tv-border);
 }
 
-/* Table container */
-.table-container {
-    background: var(--tv-bg-panel);
+.toolbar-left,
+.toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+/* Results Count */
+.results-count {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    padding: 0 12px;
+    border-left: 1px solid var(--tv-border);
+}
+
+.count-number {
+    font-size: 14px;
+    font-weight: 600;
+    font-family: var(--tv-font-mono);
+    color: var(--tv-text-primary);
+}
+
+.count-label {
+    font-size: 11px;
+    color: var(--tv-text-secondary);
+}
+
+/* Filter Indicator */
+.filter-indicator {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    background: var(--tv-bg-active);
+    border: 1px solid var(--tv-border-light);
+    border-radius: 2px;
+}
+
+.filter-label {
+    font-size: 11px;
+    color: var(--tv-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+
+.filter-value {
+    font-size: 11px;
+    font-family: var(--tv-font-mono);
+    color: var(--tv-blue);
+    font-weight: 500;
+}
+
+/* Date Filter */
+.date-filter {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.date-input {
+    padding: 5px 28px 5px 8px;
+    background: var(--tv-bg-dark);
+    border: 1px solid var(--tv-border);
+    color: var(--tv-text-primary);
+    font-size: 12px;
+    font-family: var(--tv-font-sans);
+    cursor: pointer;
+    transition: border-color 0.15s;
+
+    &:focus {
+        outline: none;
+        border-color: var(--tv-border-light);
+    }
+
+    &::-webkit-calendar-picker-indicator {
+        cursor: pointer;
+        filter: invert(0.6);
+    }
+}
+
+.clear-btn {
+    position: absolute;
+    right: 24px;
+    padding: 4px;
+    background: transparent;
+    border: none;
+    color: var(--tv-text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.15s;
+
+    &:hover {
+        color: var(--tv-red);
+    }
+}
+
+/* Sort Control */
+.sort-control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sort-label {
+    font-size: 11px;
+    color: var(--tv-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+
+.sort-select {
+    background: var(--tv-bg-dark);
+    border: 1px solid var(--tv-border);
+    color: var(--tv-text-primary);
+    padding: 5px 24px 5px 8px;
+    font-size: 12px;
+    font-family: var(--tv-font-sans);
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23787B86' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 6px center;
+
+    &:focus {
+        outline: none;
+        border-color: var(--tv-border-light);
+    }
+
+    option {
+        background: var(--tv-bg-panel);
+    }
+}
+
+/* Order Control */
+.order-control {
+    display: flex;
+    gap: 2px;
     border: 1px solid var(--tv-border);
 }
 
-/* Table styles */
+.order-btn {
+    padding: 4px 6px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    color: var(--tv-text-secondary);
+
+    &:hover {
+        color: var(--tv-text-primary);
+        background: var(--tv-bg-hover);
+    }
+
+    &.active {
+        color: var(--tv-blue);
+        background: var(--tv-bg-hover);
+    }
+
+    &:first-child {
+        border-right: 1px solid var(--tv-border);
+    }
+}
+
+/* Table Styles */
+.table-responsive {
+    background: var(--tv-bg-panel);
+    border: 1px solid var(--tv-border);
+    border-top: none;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--tv-font-sans);
+}
+
 thead {
-    background: var(--tv-bg-hover);
+    background: var(--tv-bg-panel);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    border-bottom: 1px solid var(--tv-border);
 
     th {
+        padding: 10px 12px;
+        text-align: left;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
         color: var(--tv-text-secondary);
+        white-space: nowrap;
+        border-right: 1px solid var(--tv-border);
+
+        &:last-child {
+            border-right: none;
+        }
     }
 }
 
 tbody {
-    background: var(--tv-bg-panel);
+    tr {
+        border-bottom: 1px solid var(--tv-border);
+        transition: background-color 0.1s;
+        cursor: pointer;
 
-    tr.fund-row {
-        background: var(--tv-bg-panel);
+        &:last-child {
+            border-bottom: none;
+        }
 
         &:hover {
             background: var(--tv-bg-hover);
         }
+
+        &.selected-row {
+            background: var(--tv-bg-active);
+
+            &:hover {
+                background: var(--tv-bg-active);
+            }
+        }
     }
 
     td {
+        padding: 8px 12px;
+        vertical-align: middle;
         color: var(--tv-text-primary);
+        font-size: 13px;
+        border-right: 1px solid var(--tv-border);
+
+        &:last-child {
+            border-right: none;
+        }
     }
 }
 
-/* Form controls */
-select,
-input[type="date"] {
-    background: var(--tv-bg-dark);
-    border-color: var(--tv-border);
+/* Fund Name */
+.fund-name {
     color: var(--tv-text-primary);
-
-    &:focus {
-        outline: none;
-        border-color: var(--tv-blue);
-        box-shadow: 0 0 0 2px rgba(var(--tv-blue-rgb, 41, 98, 255), 0.1);
-    }
+    font-weight: 500;
+    font-size: 13px;
+    display: block;
+    transition: color 0.15s;
 }
 
-/* Pagination */
-.pagination-container {
+/* Pagination Footer */
+.pagination-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 16px;
     background: var(--tv-bg-panel);
     border-top: 1px solid var(--tv-border);
+    position: sticky;
+    bottom: 0;
+    z-index: 20;
 }
 
-/* Text colors */
-.text-primary {
-    color: var(--tv-text-primary) !important;
+.pagination-info {
+    display: flex;
+    align-items: center;
 }
 
-.text-secondary {
-    color: var(--tv-text-secondary) !important;
+.info-text {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--tv-text-secondary);
 }
 
-.text-muted {
-    color: var(--tv-text-muted) !important;
+.info-number {
+    font-family: var(--tv-font-mono);
+    color: var(--tv-text-primary);
+    font-weight: 500;
+}
+
+.info-separator {
+    color: var(--tv-text-muted);
+}
+
+.pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.page-indicator {
+    font-size: 11px;
+    color: var(--tv-text-secondary);
+    font-family: var(--tv-font-mono);
+    padding: 0 8px;
+}
+
+.page-btn {
+    padding: 5px 10px;
+    background: var(--tv-bg-dark);
+    border: 1px solid var(--tv-border);
+    color: var(--tv-text-primary);
+    cursor: pointer;
+    transition: all 0.15s;
+    font-size: 12px;
+    font-weight: 500;
+    font-family: var(--tv-font-sans);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    &:hover:not(:disabled) {
+        background: var(--tv-bg-hover);
+        border-color: var(--tv-border-light);
+    }
+
+    &:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+    }
+
+    svg {
+        width: 14px;
+        height: 14px;
+    }
+}
+
+/* Light theme specific enhancements */
+:host-context(.light-theme) {
+    .table-responsive {
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    thead {
+        border-bottom-color: var(--tv-border);
+
+        th {
+            border-right-color: var(--tv-border);
+        }
+    }
+
+    tbody tr {
+        &:hover {
+            box-shadow: inset 0 0 0 1px var(--tv-border-light);
+        }
+
+        &.selected-row {
+            box-shadow: inset 0 0 0 2px var(--tv-blue);
+        }
+    }
+
+    .date-input:focus,
+    .sort-select:focus {
+        box-shadow: 0 0 0 2px rgba(12, 102, 228, 0.1);
+    }
 }

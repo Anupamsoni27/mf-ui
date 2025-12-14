@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, SimpleChanges} from '@angular/core';
+import {Component, Input, OnInit, OnChanges, SimpleChanges} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { StockService } from '../../../core/services/stock.service';
 import { StockInfo } from '../../../shared/models/stock.model';
@@ -8,7 +8,7 @@ import { StockInfo } from '../../../shared/models/stock.model';
   templateUrl: './stock-detail.component.html',
   styleUrls: ['./stock-detail.component.scss']
 })
-export class StockDetailComponent implements OnInit {
+export class StockDetailComponent implements OnInit, OnChanges {
   stockInfo: StockInfo | null = null;
   loading: boolean = false;
   error: string | null = null;
@@ -22,16 +22,17 @@ export class StockDetailComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // this.route.params.subscribe(params => {
-    //   this.stockId = params['stockId'];
-      if (this.stockId) {
-        this.loadStockDetails();
-      }
-    // });
+    if (this.stockId) {
+      this.loadStockDetails();
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.loadStockDetails()
+    if (changes['stockId'] && !changes['stockId'].firstChange) {
+      if (this.stockId) {
+        this.loadStockDetails();
+      }
+    }
   }
 
 

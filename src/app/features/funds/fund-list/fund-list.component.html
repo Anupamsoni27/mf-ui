@@ -1,172 +1,160 @@
-<main class="flex-1 flex flex-col min-w-0 h-full overflow-y-auto">
-  <div class="container mx-auto px-4 py-8">
-    <div class="mb-8">
-      <h1 class="text-3xl font-bold text-emerald-400 mb-2">Mutual Funds</h1>
-      <p style="color: var(--tv-text-secondary);">Browse and manage your mutual fund investments</p>
-    </div>
+<div class="flex h-full w-full fund-list-wrapper">
+  <!-- Main Area -->
+  <main class="flex-1 flex flex-col min-w-0 h-full relative">
 
-    <!-- Loading State -->
-    <div *ngIf="loading" class="flex justify-center py-12">
-      <app-loading-spinner size="lg" [showText]="true" text="Loading funds..."></app-loading-spinner>
-    </div>
-
-    <!-- Error State -->
-    <div *ngIf="error" class="bg-red-900/20 border border-red-800 rounded-md p-4 mb-6">
-      <div class="flex">
-        <div class="ml-3">
-          <h3 class="text-sm font-medium text-red-400">Error loading funds</h3>
-          <div class="mt-2 text-sm text-red-300">
-            <p>{{ error }}</p>
+    <!-- Content Wrapper (Table + Details) -->
+    <div class="flex flex-1 overflow-hidden relative">
+      <!--Left Section: Controls + Table -->
+      <div class="flex-1 flex flex-col overflow-hidden">
+        <!--Controls Toolbar -->
+       <div class="controls-toolbar">
+          <div class="toolbar-left">
+            <!-- Results Count -->
+            <div class="results-count">
+              <span class="count-number">{{ totalFunds }}</span>
+              <span class="count-label">funds</span>
+            </div>
+            
+            <!-- Date Filter Indicator -->
+            <div *ngIf="selectedDate" class="filter-indicator">
+              <span class="filter-label">Filtered:</span>
+              <span class="filter-value">{{ selectedDate }}</span>
+            </div>
           </div>
-          <div class="mt-4">
-            <app-button variant="outline" size="xs" (clicked)="loadFunds()">
-              Try Again
-            </app-button>
+
+          <div class="toolbar-right">
+            <!-- Date Filter -->
+            <form [formGroup]="filterForm" class="date-filter">
+              <input id="date-filter" type="date" formControlName="date" (change)="onDateChange()"
+                class="date-input" placeholder="Select date">
+              <button *ngIf="selectedDate" type="button" (click)="clearDateFilter()" class="clear-btn" title="Clear filter">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24"
+                  stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </form>
+
+            <!-- Sort By -->
+            <div class="sort-control">
+              <label class="sort-label">Sort by</label>
+              <select [(ngModel)]="sortBy" (change)="onSortChange(sortBy)" class="sort-select">
+                <option value="holding_count">Holding Count</option>
+                <option value="name">Name</option>
+                <option value="added">Added</option>
+                <option value="Removed">Removed</option>
+              </select>
+            </div>
+
+            <!-- Sort Order -->
+            <div class="order-control">
+              <button (click)="onOrderChange('asc')" [class.active]="sortOrder === 'asc'" class="order-btn"
+                title="Ascending">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                  stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+                </svg>
+              </button>
+              <button (click)="onOrderChange('desc')" [class.active]="sortOrder === 'desc'" class="order-btn"
+                title="Descending">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                  stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
 
-    <!-- Funds Table -->
-    <div *ngIf="!loading && !error" class="table-container shadow rounded-lg overflow-hidden">
-      <div class="flex flex-row justify-between items-center px-4 py-3 sm:px-6">
-        <div class="flex items-center gap-6">
-          <h3 class="text-lg font-medium text-primary">Fund List</h3>
-          <p class="text-sm text-secondary">
-            Total: <span class="font-medium text-primary">{{ totalFunds }}</span> funds
-            <span *ngIf="selectedDate" class="ml-2 text-blue-400">
-              • Filtered by: {{ selectedDate }}
+        <!-- Table area -->
+        <div class="flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar">
+          <div class="table-responsive">
+            <table class="min-w-full" tabindex="0" (keydown)="onTableKeydown($event)">
+              <thead>
+                <tr>
+                  <th>Fund</th>
+                  <th>Holdings</th>
+                  <th>Added</th>
+                  <th>Removed</th>
+                  <th>Latest Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let fund of funds" (click)="setSelectedFundId(fund._id)"
+                  [class.selected-row]="fund._id === selectedFundId">
+                  <td>
+                    <div class="flex items-center gap-3">
+                      <app-favorite-button [itemId]="fund._id" [itemName]="fund.name" itemType="fund"
+                        size="small"></app-favorite-button>
+                      <div>
+                        <div class="fund-name">{{ fund.name }}</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="font-mono" style="color: var(--tv-text-primary);">{{ fund.holding_count | number:'1.0-0' }}</span>
+                  </td>
+                  <td>
+                    <span class="font-mono" style="color: var(--tv-text-primary);">{{ fund.added_count | number:'1.0-0' }}</span>
+                  </td>
+                  <td>
+                    <span class="font-mono" style="color: var(--tv-text-primary);">{{ fund.removed_count | number:'1.0-0' }}</span>
+                  </td>
+                  <td>
+                    <span class="text-sm" style="color: var(--tv-text-secondary);">{{ fund.latest_date | date:'yyyy-MM-dd' }}</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Loading/Error States -->
+          <div *ngIf="loading" class="flex justify-center py-12">
+            <app-loading-spinner size="lg" [showText]="true" text="Loading funds..."></app-loading-spinner>
+          </div>
+
+          <div *ngIf="error" class="bg-red-500/10 border border-red-500/20 rounded-xl p-6 text-center">
+            <p class="text-red-400 mb-4">{{ error }}</p>
+            <app-button variant="outline" size="sm" (clicked)="loadFunds()">Try Again</app-button>
+          </div>
+        </div>
+
+        <!-- Footer Pagination -->
+        <div class="pagination-footer">
+          <div class="pagination-info">
+            <span class="info-text">
+              <span class="info-number">{{ (currentPage * pageSize) + 1 }}–{{ Math.min((currentPage + 1) * pageSize,
+                totalFunds) }}</span>
+              <span class="info-separator">of</span>
+              <span class="info-number">{{ totalFunds }}</span>
             </span>
-          </p>
-        </div>
-
-        <div class="flex flex-wrap gap-4 items-center">
-          <!-- Sort Options -->
-          <label class="text-sm font-medium text-secondary">Sort by:</label>
-          <select [(ngModel)]="sortBy" (change)="onSortChange(sortBy)" class="px-3 py-2 border rounded-md text-sm"
-            style="background-color: var(--tv-bg-dark); border-color: var(--tv-border); color: var(--tv-text-primary);">
-            <option value="funds_holding_count">Holding Count</option>
-            <option value="name">Name</option>
-            <option value="holding_count">Holding Count</option>
-            <option value="added">Added</option>
-            <option value="Removed">Removed</option>
-          </select>
-
-          <label class="text-sm font-medium text-secondary">Order:</label>
-          <select [(ngModel)]="sortOrder" (change)="onOrderChange(sortOrder)"
-            class="px-3 py-2 border rounded-md text-sm"
-            style="background-color: var(--tv-bg-dark); border-color: var(--tv-border); color: var(--tv-text-primary);">
-            <option value="desc">Descending</option>
-            <option value="asc">Ascending</option>
-          </select>
-
-          <!-- Date Filter -->
-          <form [formGroup]="filterForm" class="flex gap-3 items-center ml-4">
-            <label for="date-filter" class="text-sm font-medium text-secondary">
-              Select Date:
-            </label>
-            <input id="date-filter" type="date" formControlName="date" (change)="onDateChange()"
-              class="px-3 py-2 border rounded-md shadow-sm text-sm"
-              style="background-color: var(--tv-bg-dark); border-color: var(--tv-border); color: var(--tv-text-primary);"
-              placeholder="Select a date">
-            <app-button variant="outline" size="xs" (clicked)="clearDateFilter()" [disabled]="!selectedDate">
-              Clear Filter
-            </app-button>
-          </form>
-        </div>
-      </div>
-
-      <div class="overflow-x-auto">
-        <table class="min-w-full">
-          <thead style="background-color: var(--tv-bg-hover);">
-            <tr>
-              <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
-                style="color: var(--tv-text-secondary);">Fund ID</th>
-              <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
-                style="color: var(--tv-text-secondary);">Name</th>
-              <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
-                style="color: var(--tv-text-secondary);">Holding Count
-              </th>
-              <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
-                style="color: var(--tv-text-secondary);">Added</th>
-              <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
-                style="color: var(--tv-text-secondary);">Removed</th>
-              <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
-                style="color: var(--tv-text-secondary);">Latest Date
-              </th>
-              <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
-                style="color: var(--tv-text-secondary);">Actions</th>
-            </tr>
-          </thead>
-          <tbody style="background-color: var(--tv-bg-panel);">
-            <tr *ngFor="let fund of funds" class="fund-row cursor-pointer transition-colors duration-150"
-              (click)="viewFund(fund._id)">
-              <td class="px-6 py-4 whitespace-nowrap">
-                <div class="text-sm font-medium text-primary">{{ fund._id }}</div>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <div class="flex items-center gap-2">
-                  <div class="text-sm font-medium text-primary">{{ fund.name }}</div>
-                  <app-favorite-button [itemId]="fund._id" [itemName]="fund.name" itemType="fund"
-                    size="small"></app-favorite-button>
-                </div>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">
-                {{ fund.holding_count | number:'1.0-0' }}
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">
-                {{ fund.added_count | number:'1.0-0' }}
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">
-                {{ fund.removed_count | number:'1.0-0' }}
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">
-                {{ fund.latest_date | date:'yyyy-MM-dd' }}
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                <app-button variant="primaryOutline" size="xs" (clicked)="viewFund(fund._id, $event)">
-                  View Details
-                </app-button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- Pagination -->
-      <div class="pagination-container px-4 py-3 flex items-center justify-between sm:px-6">
-        <div class="flex-1 flex justify-between sm:hidden">
-          <app-button variant="outline" size="xs" [disabled]="currentPage === 0" (clicked)="previousPage()">
-            Previous
-          </app-button>
-          <app-button variant="outline" size="xs" [disabled]="!hasNextPage" (clicked)="nextPage()">
-            Next
-          </app-button>
-        </div>
-        <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-          <div>
-            <p class="text-sm text-secondary">
-              Showing
-              <span class="font-medium text-primary">{{ (currentPage * pageSize) + 1 }}</span>
-              to
-              <span class="font-medium text-primary">{{ Math.min((currentPage + 1) * pageSize, totalFunds) }}</span>
-              of
-              <span class="font-medium text-primary">{{ totalFunds }}</span>
-              results
-            </p>
           </div>
-          <div>
-            <nav class="relative z-0 inline-flex gap-4 rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-              <app-button variant="outline" size="xs" [disabled]="currentPage === 0" (clicked)="previousPage()">
-                Previous
-              </app-button>
-              <app-button variant="primary" size="xs" [disabled]="!hasNextPage" (clicked)="nextPage()">
-                Next
-              </app-button>
-            </nav>
+
+          <div class="pagination-controls">
+            <button [disabled]="currentPage === 0" (click)="previousPage()" class="page-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+              </svg>
+              Previous
+            </button>
+            <span class="page-indicator">Page {{ currentPage + 1 }}</span>
+            <button [disabled]="!hasNextPage" (click)="nextPage()" class="page-btn">
+              Next
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
           </div>
         </div>
       </div>
+
+      <!-- Right Panel -->
+      <aside class="w-[45%] h-full overflow-y-auto backdrop-blur-xl border-l relative z-10"
+        style="background-color: var(--tv-bg-panel); border-color: var(--tv-border);">
+        <app-fund-detail [fundId]="selectedFundId"></app-fund-detail>
+      </aside>
     </div>
-  </div>
-</main>
+  </main>
+</div>
