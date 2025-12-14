@@ -315,7 +315,6 @@
     background: var(--tv-bg-panel);
     border: 1px solid var(--tv-border);
     border-top: none;
-    overflow: hidden;
 }
 
 table {
@@ -496,6 +495,14 @@ tbody {
 :host-context(.light-theme) {
     .table-responsive {
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    thead {
+        border-bottom-color: var(--tv-border);
+
+        th {
+            border-right-color: var(--tv-border);
+        }
     }
 
     tbody tr {
