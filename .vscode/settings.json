@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/dc3003ca-e9eb-4b7d-a506-1ef3fef5be49/resourceGroups/mf-api-rg/providers/Microsoft.Web/sites/stocksdash",
+    "appService.deploySubpath": "."
+}
