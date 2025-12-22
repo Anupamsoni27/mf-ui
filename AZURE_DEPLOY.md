@@ -35,10 +35,10 @@ This creates optimized files in `dist/my-angular17-app/`
 2. Create a new **App Service**
 3. Fill in details:
    - **Resource Group**: Create new or use existing
-   - **Name**: `<your-app-name>` (e.g., `mf-ui-dev`)
-   - **Publish**: Code
-   - **Runtime stack**: Node 18 LTS (or latest)
-   - **Operating System**: Windows
+   - **Name**: `mf-ui-dev` (must be globally unique)
+   - **Publish**: **Code**
+   - **Runtime stack**: **Node 21 LTS**
+   - **Operating System**: **Windows**
    - **Region**: Choose closest to your API
    - **Pricing Plan**: F1 (Free) or B1 (Basic)
 

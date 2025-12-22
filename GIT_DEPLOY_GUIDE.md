@@ -15,7 +15,7 @@ Quick guide to deploy your Angular app to Azure using GitHub integration.
    - **Resource Group**: Create new (e.g., `mf-ui-rg`)
    - **Name**: `mf-ui-dev` (must be globally unique)
    - **Publish**: **Code**
-   - **Runtime stack**: **Node 18 LTS**
+   - **Runtime stack**: **Node 21 LTS (or latest)**
    - **Operating System**: **Windows**
    - **Region**: Choose closest to your API (or same as API)
    - **Pricing Plan**: Free F1 or Basic B1

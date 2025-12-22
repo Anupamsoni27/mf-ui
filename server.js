@@ -5,7 +5,7 @@ const app = express();
 const PORT = process.env.PORT || 8080;
 
 // Serve static files from the dist directory
-app.use(express.static(path.join(__dirname, 'dist/my-angular17-app')));
+app.use(express.static(path.join(__dirname, 'dist/stockdash')));
 
 // Security headers
 app.use((req, res, next) => {
@@ -17,7 +17,7 @@ app.use((req, res, next) => {
 
 // Handle Angular routing - send all requests to index.html
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist/my-angular17-app/index.html'));
+  res.sendFile(path.join(__dirname, 'dist/stockdash/index.html'));
 });
 
 // Start the server
