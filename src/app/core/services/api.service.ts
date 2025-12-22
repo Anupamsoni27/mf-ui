@@ -8,7 +8,7 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root'
 })
 export class ApiService {
-  private baseUrl = environment.apiUrl || 'http://127.0.0.1:5000';
+  private baseUrl = environment.apiUrl || 'https://stockdash.azurewebsites.net';
 
   constructor(private http: HttpClient) { }
 
