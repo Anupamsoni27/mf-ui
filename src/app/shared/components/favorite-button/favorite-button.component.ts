@@ -1,7 +1,9 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { FavoritesService } from '../../../core/services/favorites.service';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
     selector: 'app-favorite-button',
@@ -19,7 +21,11 @@ export class FavoriteButtonComponent implements OnInit, OnDestroy {
     isLoading = false;
     private destroy$ = new Subject<void>();
 
-    constructor(private favoritesService: FavoritesService) { }
+    constructor(
+        private favoritesService: FavoritesService,
+        private authService: AuthService,
+        private router: Router
+    ) { }
 
     ngOnInit(): void {
         // Subscribe to favorites state changes
@@ -38,6 +44,13 @@ export class FavoriteButtonComponent implements OnInit, OnDestroy {
     toggleFavorite(event: MouseEvent): void {
         event.stopPropagation();
         event.preventDefault();
+
+        if (!this.authService.isAuthenticated()) {
+            this.router.navigate(['/login'], {
+                queryParams: { returnUrl: this.router.url }
+            });
+            return;
+        }
 
         this.isLoading = true;
 
