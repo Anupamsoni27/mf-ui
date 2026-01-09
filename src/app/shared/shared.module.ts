@@ -12,6 +12,9 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { NotificationComponent } from './components/notification/notification.component';
 import { FavoriteButtonComponent } from './components/favorite-button/favorite-button.component';
 
+import { InfoIconComponent } from './components/info-icon/info-icon.component';
+import { TooltipComponent } from './components/tooltip/tooltip.component';
+
 @NgModule({
   declarations: [
     ButtonComponent,
@@ -20,7 +23,9 @@ import { FavoriteButtonComponent } from './components/favorite-button/favorite-b
     SparklineComponent,
     SidebarComponent,
     NotificationComponent,
-    FavoriteButtonComponent
+    FavoriteButtonComponent,
+    InfoIconComponent,
+    TooltipComponent
   ],
   imports: [
     CommonModule,
@@ -36,6 +41,8 @@ import { FavoriteButtonComponent } from './components/favorite-button/favorite-b
     SidebarComponent,
     NotificationComponent,
     FavoriteButtonComponent,
+    InfoIconComponent,
+    TooltipComponent,
     ReactiveFormsModule
   ]
 })
