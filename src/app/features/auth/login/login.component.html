@@ -1,4 +1,12 @@
-<div class="flex items-center justify-center min-h-screen" style="background-color: var(--tv-bg-dark);">
+<div class="flex items-center justify-center min-h-screen relative" style="background-color: var(--tv-bg-dark);">
+    <!-- Back Button -->
+    <a [routerLink]="['/']" class="absolute top-6 left-6 flex items-center text-sm transition-colors hover:text-white" style="color: var(--tv-text-secondary);">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        Back to Home
+    </a>
+
     <div class="w-full max-w-md">
         <!-- Login Card -->
         <div class="shadow-2xl rounded-lg overflow-hidden border"
