@@ -1,30 +1,31 @@
 import { Component, Input, OnChanges } from '@angular/core';
-import * as Highcharts from 'highcharts';
+import { AgChartOptions } from 'ag-charts-community';
 
 @Component({
   selector: 'app-fund-timeline-chart',
   template: `
-    <highcharts-chart
-      [Highcharts]="Highcharts"
+    <ag-charts-angular
       [options]="chartOptions"
       style="width: 100%; height: 400px; display: block;"
-    ></highcharts-chart>
+    ></ag-charts-angular>
   `
 })
 export class FundTimelineChartComponent implements OnChanges {
   @Input() timeline: { date: string, value: number }[] = [];
 
-  Highcharts: typeof Highcharts = Highcharts;
-  chartOptions: Highcharts.Options = {
+  chartOptions: AgChartOptions = {
     title: { text: 'Fund Timeline' },
-    xAxis: { type: 'datetime', title: { text: 'Date' } },
-    yAxis: { title: { text: 'Value' } },
+    data: [],
     series: [{
       type: 'line',
-      name: 'Value',
-      data: []
+      xKey: 'date',
+      yKey: 'value',
+      yName: 'Value'
     }],
-    credits: { enabled: false }
+    axes: [
+      { type: 'time', position: 'bottom', title: { text: 'Date' } },
+      { type: 'number', position: 'left', title: { text: 'Value' } }
+    ]
   };
 
   ngOnChanges() {
@@ -34,11 +35,10 @@ export class FundTimelineChartComponent implements OnChanges {
   updateChart() {
     this.chartOptions = {
       ...this.chartOptions,
-      series: [{
-        type: 'line',
-        name: 'Value',
-        data: this.timeline.map(point => [Date.parse(point.date), point.value])
-      }]
+      data: this.timeline.map(point => ({
+        date: new Date(point.date),
+        value: point.value
+      }))
     };
   }
 }

@@ -6,7 +6,7 @@ import { SharedModule } from '../../shared/shared.module';
 import { StockListComponent } from './stock-list/stock-list.component';
 import { StockDetailComponent } from './stock-detail/stock-detail.component';
 import { StockTimelineComponent } from './stock-timeline/stock-timeline.component';
-import {HighchartsChartModule} from "highcharts-angular";
+import { AgChartsAngularModule } from 'ag-charts-angular';
 import {FormsModule} from "@angular/forms";
 
 const routes = [
@@ -30,7 +30,7 @@ const routes = [
         CommonModule,
         SharedModule,
         RouterModule.forChild(routes),
-        HighchartsChartModule,
+        AgChartsAngularModule,
         FormsModule
     ]
 })

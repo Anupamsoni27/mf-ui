@@ -5,7 +5,7 @@ import { FundService } from '../../../core/services/fund.service';
 import { ThemeService } from '../../../core/services/theme.service';
 import { FundInfo, Fund } from '../../../shared/models/fund.model';
 import { Stock } from '../../../shared/models/stock.model';
-import * as Highcharts from 'highcharts';
+import { AgChartOptions } from 'ag-charts-community';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -28,9 +28,8 @@ export class FundDetailComponent implements OnInit, OnChanges, OnDestroy {
   // Search for stocks
   stocksSearchTerm: string = '';
 
-  Highcharts: typeof Highcharts = Highcharts;
-  chartOptions: Highcharts.Options = {};
-  chartOptions2: Highcharts.Options = {};
+  chartOptions: AgChartOptions = {};
+  chartOptions2: AgChartOptions = {};
   
   private themeSubscription?: Subscription;
 
@@ -186,8 +185,8 @@ export class FundDetailComponent implements OnInit, OnChanges, OnDestroy {
     });
 
     const data = Object.entries(sectorCount).map(([sector, count]) => ({
-      name: sector,
-      y: count,
+      sector,
+      count,
     }));
 
     const isDark = this.themeService.isDarkMode();
@@ -204,54 +203,38 @@ export class FundDetailComponent implements OnInit, OnChanges, OnDestroy {
     ];
     
     this.chartOptions = {
-      chart: {
-        type: 'pie',
-        backgroundColor: 'transparent',
-      },
-      colors: colorPalette,
+      data,
+      background: { fill: 'transparent' },
       title: {
         text: 'Sector Distribution',
-        style: { color: textColor, fontSize: '14px', fontWeight: '600' }
-      },
-      tooltip: {
-        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b> ({point.y} stocks)',
-        backgroundColor: backgroundColor,
-        borderColor: this.getCSSVariableColor('--tv-border'),
-        style: { color: textColor }
-      },
-      accessibility: {
-        point: {
-          valueSuffix: '%',
-        },
-      },
-      plotOptions: {
-        pie: {
-          allowPointSelect: true,
-          cursor: 'pointer',
-          dataLabels: {
-            enabled: true,
-            format: '<b>{point.name}</b>: {point.percentage:.1f}%',
-            style: { 
-              color: textColor,
-              fontSize: '11px',
-              textOutline: 'none'
-            }
-          },
-          showInLegend: true,
-          borderWidth: 0,
-        },
+        color: textColor,
+        fontSize: 14,
+        fontWeight: 'bold'
       },
       series: [
         {
           type: 'pie',
-          name: 'Sector Share',
-          data,
+          angleKey: 'count',
+          legendItemKey: 'sector',
+          sectorLabelKey: 'sector',
+          fills: colorPalette,
+          strokes: colorPalette,
+          tooltip: {
+            renderer: (params: any) => ({
+              title: params.datum.sector,
+              content: `${params.datum.count} stocks (${((params.datum.count / data.reduce((sum: number, d: any) => sum + d.count, 0)) * 100).toFixed(1)}%)`
+            })
+          }
         },
       ],
       legend: {
-        itemStyle: { color: textColor, fontSize: '12px' }
-      },
-      credits: { enabled: false }
+        item: {
+          label: {
+            color: textColor,
+            fontSize: 12
+          }
+        }
+      }
     };
   }
 
@@ -265,40 +248,52 @@ export class FundDetailComponent implements OnInit, OnChanges, OnDestroy {
     const gridColor = this.getCSSVariableColor('--tv-border');
     const lineColor = this.getCSSVariableColor('--tv-blue');
     
+    const data = this.fundInfo.fund_count.map(point => ({
+      date: new Date(point.date),
+      holdingCount: point.holding_count
+    }));
+
     this.chartOptions2 = {
-      chart: {
-        backgroundColor: 'transparent',
-      },
+      data,
+      background: { fill: 'transparent' },
       title: {
         text: 'Fund Timeline',
-        style: { color: textColor, fontSize: '14px', fontWeight: '600' }
-      },
-      xAxis: {
-        type: 'datetime',
-        title: { text: 'Date', style: { color: textColor } },
-        labels: { style: { color: textColor } },
-        gridLineColor: gridColor,
-        lineColor: gridColor
-      },
-      yAxis: {
-        title: { text: 'Holding Count', style: { color: textColor } },
-        labels: { style: { color: textColor } },
-        gridLineColor: gridColor
+        color: textColor,
+        fontSize: 14,
+        fontWeight: 'bold'
       },
       series: [{
         type: 'line',
-        name: 'Holding Count',
-        data: this.fundInfo.fund_count.map(point => [Date.parse(point.date), point.holding_count]),
-        color: lineColor
+        xKey: 'date',
+        yKey: 'holdingCount',
+        yName: 'Holding Count',
+        stroke: lineColor,
+        marker: { enabled: false }
       }],
-      credits: { enabled: false },
+      axes: [
+        {
+          type: 'time',
+          position: 'bottom',
+          title: { text: 'Date', color: textColor },
+          label: { color: textColor },
+          gridLine: { style: [{ stroke: gridColor }] },
+          line: { color: gridColor }
+        },
+        {
+          type: 'number',
+          position: 'left',
+          title: { text: 'Holding Count', color: textColor },
+          label: { color: textColor },
+          gridLine: { style: [{ stroke: gridColor }] }
+        }
+      ],
       legend: {
-        itemStyle: { color: textColor }
+        item: {
+          label: { color: textColor }
+        }
       },
       tooltip: {
-        backgroundColor: this.getCSSVariableColor('--tv-bg-panel'),
-        borderColor: this.getCSSVariableColor('--tv-border'),
-        style: { color: textColor }
+        class: 'ag-chart-tooltip'
       }
     };
   }

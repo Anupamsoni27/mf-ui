@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { HighchartsChartModule } from 'highcharts-angular';
+import { AgChartsAngularModule } from 'ag-charts-angular';
 
 import { ButtonComponent } from './components/button/button.component';
 import { LoadingSpinnerComponent } from './components/loading-spinner/loading-spinner.component';
@@ -30,7 +30,7 @@ import { TooltipComponent } from './components/tooltip/tooltip.component';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    HighchartsChartModule,
+    AgChartsAngularModule,
     RouterModule
   ],
   exports: [

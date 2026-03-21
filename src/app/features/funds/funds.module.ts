@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { HighchartsChartModule } from 'highcharts-angular';
+import { AgChartsAngularModule } from 'ag-charts-angular';
 
 import { SharedModule } from '../../shared/shared.module';
 import { FundListComponent } from './fund-list/fund-list.component';
@@ -30,7 +30,7 @@ const routes = [
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
-    HighchartsChartModule,
+    AgChartsAngularModule,
     SharedModule,
     RouterModule.forChild(routes)
   ]

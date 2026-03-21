@@ -38,11 +38,10 @@
     <div *ngIf="fundInfo?.fund_count" class="chart-section">
       <h3 class="section-title">Fund Timeline</h3>
       <div class="chart-wrapper">
-        <highcharts-chart
-          [Highcharts]="Highcharts"
+        <ag-charts-angular
           [options]="chartOptions2"
           class="timeline-chart">
-        </highcharts-chart>
+        </ag-charts-angular>
       </div>
     </div>
 
@@ -50,11 +49,10 @@
     <div *ngIf="fundInfo?.stocks && fundInfo.stocks.length > 0" class="chart-section">
       <h3 class="section-title">Sector Distribution</h3>
       <div class="chart-wrapper">
-        <highcharts-chart
-          [Highcharts]="Highcharts"
+        <ag-charts-angular
           [options]="chartOptions"
           class="sector-chart">
-        </highcharts-chart>
+        </ag-charts-angular>
       </div>
     </div>
 

@@ -1,56 +1,42 @@
 import { Component, Input, OnChanges } from '@angular/core';
-import * as Highcharts from 'highcharts';
+import { AgChartOptions } from 'ag-charts-community';
 import { TimelineDataPoint } from '../../models/stock.model';
 
 @Component({
   selector: 'app-sparkline',
   template: `
-
-    <highcharts-chart
-      [Highcharts]="Highcharts"
+    <ag-charts-angular
       [options]="chartOptions"
       style="width: 100px; height: 30px; display: block;"
-    ></highcharts-chart>
+    ></ag-charts-angular>
   `
 })
 export class SparklineComponent implements OnChanges {
   @Input() timeline: TimelineDataPoint[] = [];
-  Highcharts: typeof Highcharts = Highcharts;
-  chartOptions: Highcharts.Options = {};
+  chartOptions: AgChartOptions = {};
 
   ngOnChanges() {
     this.chartOptions = {
-      chart: {
-        type: 'line',
-        backgroundColor: undefined,
-        borderWidth: 0,
-        margin: [2, 0, 2, 0],
-        height: 30,
-        style: { overflow: 'visible' }
-        // skipClone property removed - not supported in current versions
-      },
-      title: { text: undefined },
-      credits: { enabled: false },
-      xAxis: { visible: false },
-      yAxis: { visible: false, endOnTick: false, startOnTick: false },
-      tooltip: { enabled: false },
-      legend: { enabled: false },
-      plotOptions: {
-        series: {
-          color: '#2962FF', // TradingView blue
-          lineWidth: 1,
-          marker: { enabled: false },
-          states: {
-            hover: {
-              lineWidthPlus: 0
-            }
-          }
-        }
-      },
+      data: this.timeline.map((point, index) => ({
+        index,
+        value: point.fund_count
+      })),
       series: [{
         type: 'line',
-        data: this.timeline.map(point => point.fund_count)
-      }]
+        xKey: 'index',
+        yKey: 'value',
+        stroke: '#2962FF',
+        strokeWidth: 1,
+        marker: { enabled: false }
+      }],
+      axes: [
+        { type: 'number', position: 'bottom', label: { enabled: false }, line: { enabled: false }, tick: { enabled: false }, gridLine: { enabled: false } },
+        { type: 'number', position: 'left', label: { enabled: false }, line: { enabled: false }, tick: { enabled: false }, gridLine: { enabled: false } }
+      ],
+      legend: { enabled: false },
+      padding: { top: 2, right: 0, bottom: 2, left: 0 },
+      background: { visible: false },
+      tooltip: { enabled: false }
     };
   }
 }
