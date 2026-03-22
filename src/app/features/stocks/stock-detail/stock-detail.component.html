@@ -76,29 +76,7 @@
           </span>
         </div>
         <div class="chart-container border p-3">
-          <app-stock-timeline [stockId]="stockId!"></app-stock-timeline>
-        </div>
-      </section>
-
-      <!-- Key Stats Grid -->
-      <section class="grid grid-cols-2 gap-3 stats-section">
-        <div class="stat-card p-3 border transition-colors">
-          <span class="stat-label text-xs block mb-1">Employees</span>
-          <span class="stat-value text-sm font-medium">{{ (stockInfo.employees | number) || 'N/A' }}</span>
-        </div>
-        <div class="stat-card p-3 border transition-colors">
-          <span class="stat-label text-xs block mb-1">Founded</span>
-          <span class="stat-value text-sm font-medium">{{ stockInfo.founded || 'N/A' }}</span>
-        </div>
-        <div class="stat-card p-3 border transition-colors">
-          <span class="stat-label text-xs block mb-1">Market Cap</span>
-          <span class="stat-value text-sm font-medium" *ngIf="stockInfo.stock?.marketCap">{{
-            (stockInfo.stock?.marketCap | number) || '-' }} Cr</span>
-          <span class="stat-value text-sm font-medium" *ngIf="!stockInfo.stock?.marketCap">Hidden</span>
-        </div>
-        <div class="stat-card p-3 border transition-colors">
-          <span class="stat-label text-xs block mb-1">P/E Ratio</span>
-          <span class="stat-value text-sm font-medium">{{ stockInfo.keyMetrics?.peRatio || 'N/A' }}</span>
+          <app-stock-timeline [stockId]="stockId!" [symbol]="stockInfo.symbol || stockInfo.stock?.symbol || ''"></app-stock-timeline>
         </div>
       </section>
 

@@ -20,6 +20,7 @@ export interface StockInfo {
   _id: string;
   instrument_type: string;
   name: string;
+  symbol?: string;
   sector: string;
   url: string;
   stock?: Stock;
@@ -76,4 +77,5 @@ export interface TimelineDataPoint {
   date: string;
   fund_count: number;
   compared_to?: string;
+  price?: number;
 }

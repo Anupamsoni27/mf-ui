@@ -18,9 +18,27 @@
   </div>
 
   <!-- Chart -->
-  <div *ngIf="!loading && !error && timelineData" class="timeline-chart">
-    <ag-charts-angular [options]="chartOptions"
-      style="width: 100%; height: 400px; display: block;"></ag-charts-angular>
+  <div *ngIf="!loading && !error && timelineData" class="timeline-chart-wrapper">
+    <!-- View Toggle Group -->
+    <div class="chart-toggle-group">
+      <button class="chart-toggle-btn" [class.active-classic]="activeChartView === 'classic'" (click)="setChartView('classic')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:5px;"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        Classic Combo
+      </button>
+      <button class="chart-toggle-btn" [class.active-pct]="activeChartView === 'percentage'" (click)="setChartView('percentage')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:5px;"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>
+        % Growth
+      </button>
+    </div>
+
+    <!-- Chart Container -->
+    <div class="timeline-chart">
+      <ag-charts-angular *ngIf="activeChartView === 'classic'" [options]="chartOptions"
+        style="width: 100%; height: 400px; display: block;"></ag-charts-angular>
+        
+      <ag-charts-angular *ngIf="activeChartView === 'percentage'" [options]="chartOptionsPct"
+        style="width: 100%; height: 400px; display: block;"></ag-charts-angular>
+    </div>
   </div>
 
   <!-- Quick Stats -->
@@ -46,30 +64,218 @@
     </div>
   </div>
 
-  <!-- Data Table -->
-  <div *ngIf="!loading && !error && timelineData" class="timeline-table">
-    <table>
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Fund Count</th>
-          <th>Change</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let point of getRecentData()">
-          <td>{{ point.date | date:'MMM d, y' }}</td>
-          <td class="font-mono">{{ point.fund_count }}</td>
-          <td class="muted">{{ point.compared_to || '-' }}</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <!-- Show More/Less -->
-    <div *ngIf="timelineData.timeline.length > 10" class="table-footer">
-      <button class="show-more-btn" (click)="toggleShowAll()">
-        {{ showAll ? 'Show Less' : 'Show All (' + timelineData.timeline.length + ' records)' }}
+  <!-- Detail Tabs (includes History) -->
+  <div *ngIf="!loading && !error && timelineData" class="detail-tabs">
+    <div class="tab-bar">
+      <button *ngFor="let t of [
+        {id:'overview',     label:'Overview'},
+        {id:'history',      label:'Chart Data'},
+        {id:'price',        label:'Price'},
+        {id:'fundamentals', label:'Fundamentals'},
+        {id:'financials',   label:'Financials'},
+        {id:'valuation',    label:'Valuation'},
+        {id:'governance',   label:'Governance'},
+        {id:'analyst',      label:'Analyst'}
+      ]"
+        class="tab-btn" [class.active]="activeDetailTab===t.id"
+        (click)="loadDetailTab(t.id)">
+        {{ t.label }}
       </button>
+    </div>
+    <div class="tab-content">
+      <div *ngIf="detailData?.error" class="tab-error">{{ detailData.error }}</div>
+      <div *ngIf="!detailData" class="tab-empty">Select a tab to load data.</div>
+
+      <!-- HISTORY TAB (local timeline data) -->
+      <ng-container *ngIf="activeDetailTab === 'history'">
+        <div class="timeline-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Price</th>
+                <th>Fund Count</th>
+                <th>Change</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let point of getRecentData()">
+                <td>{{ point.date | date:'MMM d, y' }}</td>
+                <td class="font-mono" style="color: var(--tv-blue); font-weight: 500;">{{ point.price ? (point.price | number:'1.2-2') : '-' }}</td>
+                <td class="font-mono">{{ point.fund_count }}</td>
+                <td class="muted">{{ point.compared_to || '-' }}</td>
+              </tr>
+            </tbody>
+          </table>
+          <div *ngIf="timelineData.timeline.length > 10" class="table-footer">
+            <button class="show-more-btn" (click)="toggleShowAll()">
+              {{ showAll ? 'Show Less' : 'Show All (' + timelineData.timeline.length + ' records)' }}
+            </button>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- OVERVIEW TAB -->
+      <ng-container *ngIf="detailData && !detailData.error && activeDetailTab === 'overview'">
+        <!-- Hero price row -->
+        <div class="tab-header-row">
+          <div class="tab-hero">
+            <span class="tab-hero-price">{{ detailData.regularMarketPrice | number:'1.2-2' }}</span>
+            <span class="tab-hero-change" [ngClass]="detailData.regularMarketChange >= 0 ? 'val-positive' : 'val-negative'">
+              {{ detailData.regularMarketChange >= 0 ? '+' : '' }}{{ detailData.regularMarketChange | number:'1.2-2' }}
+              ({{ detailData.regularMarketChangePercent | number:'1.2-2' }}%)
+            </span>
+          </div>
+          <span class="tab-badge" [ngClass]="detailData.marketState === 'REGULAR' ? 'badge-green' : 'badge-muted'">
+            {{ detailData.marketState }}
+          </span>
+        </div>
+        <!-- Market data -->
+        <div class="detail-section-title">Market</div>
+        <div class="detail-grid">
+          <div class="detail-card"><span class="detail-label">Symbol</span><span class="detail-value">{{ detailData.symbol }}</span></div>
+          <div class="detail-card"><span class="detail-label">Exchange</span><span class="detail-value">{{ detailData.exchange }}</span></div>
+          <div class="detail-card"><span class="detail-label">Currency</span><span class="detail-value">{{ detailData.currency }}</span></div>
+          <div class="detail-card"><span class="detail-label">Previous Close</span><span class="detail-value">{{ detailData.previousClose | number:'1.2-2' }}</span></div>
+          <div class="detail-card"><span class="detail-label">Open</span><span class="detail-value">{{ detailData.open | number:'1.2-2' }}</span></div>
+        </div>
+        <!-- Company info (co-fetched) -->
+        <ng-container *ngIf="companyData">
+          <div class="detail-section-title" style="margin-top:14px;">Company</div>
+          <div class="company-header">
+            <div class="company-meta">
+              <span class="company-sector">{{ companyData.sector }}</span>
+              <span class="company-sep">·</span>
+              <span class="company-industry">{{ companyData.industry }}</span>
+            </div>
+            <a *ngIf="companyData.website" [href]="companyData.website" target="_blank" class="company-link">{{ companyData.website }}</a>
+          </div>
+          <p *ngIf="companyData.longBusinessSummary" class="company-summary">{{ companyData.longBusinessSummary }}</p>
+          <div class="detail-grid">
+            <div class="detail-card"><span class="detail-label">Full Name</span><span class="detail-value">{{ companyData.longName || detailData.longName }}</span></div>
+            <div class="detail-card"><span class="detail-label">Employees</span><span class="detail-value">{{ companyData.fullTimeEmployees | number }}</span></div>
+            <div class="detail-card"><span class="detail-label">Location</span><span class="detail-value">{{ companyData.city }}, {{ companyData.country }}</span></div>
+            <div class="detail-card"><span class="detail-label">Phone</span><span class="detail-value">{{ companyData.phone }}</span></div>
+            <div class="detail-card"><span class="detail-label">Address</span><span class="detail-value">{{ companyData.address1 }}{{ companyData.address2 ? ', ' + companyData.address2 : '' }}</span></div>
+          </div>
+        </ng-container>
+      </ng-container>
+
+      <!-- PRICE TAB -->
+      <ng-container *ngIf="detailData && !detailData.error && activeDetailTab === 'price'">
+        <div class="detail-section-title">Day Range</div>
+        <div class="detail-grid">
+          <div class="detail-card"><span class="detail-label">Day Low</span><span class="detail-value val-negative">{{ detailData.dayLow | number:'1.2-2' }}</span></div>
+          <div class="detail-card"><span class="detail-label">Day High</span><span class="detail-value val-positive">{{ detailData.dayHigh | number:'1.2-2' }}</span></div>
+          <div class="detail-card"><span class="detail-label">Volume</span><span class="detail-value">{{ detailData.volume | number }}</span></div>
+          <div class="detail-card"><span class="detail-label">Avg Volume</span><span class="detail-value">{{ detailData.averageVolume | number }}</span></div>
+          <div class="detail-card"><span class="detail-label">Bid</span><span class="detail-value">{{ detailData.bid | number:'1.2-2' }} × {{ detailData.bidSize }}</span></div>
+          <div class="detail-card"><span class="detail-label">Ask</span><span class="detail-value">{{ detailData.ask | number:'1.2-2' }} × {{ detailData.askSize }}</span></div>
+        </div>
+        <div class="detail-section-title" style="margin-top:12px;">52-Week Range</div>
+        <div class="detail-grid">
+          <div class="detail-card"><span class="detail-label">52W Low</span><span class="detail-value val-negative">{{ detailData.fiftyTwoWeekLow | number:'1.2-2' }}</span></div>
+          <div class="detail-card"><span class="detail-label">52W High</span><span class="detail-value val-positive">{{ detailData.fiftyTwoWeekHigh | number:'1.2-2' }}</span></div>
+          <div class="detail-card"><span class="detail-label">52W Change</span><span class="detail-value" [ngClass]="detailData.fiftyTwoWeekChange >= 0 ? 'val-positive' : 'val-negative'">{{ (detailData.fiftyTwoWeekChange * 100) | number:'1.2-2' }}%</span></div>
+          <div class="detail-card"><span class="detail-label">50D Avg</span><span class="detail-value">{{ detailData.fiftyDayAverage | number:'1.2-2' }}</span></div>
+          <div class="detail-card"><span class="detail-label">200D Avg</span><span class="detail-value">{{ detailData.twoHundredDayAverage | number:'1.2-2' }}</span></div>
+          <div class="detail-card"><span class="detail-label">Avg Vol (10D)</span><span class="detail-value">{{ detailData.averageVolume10days | number }}</span></div>
+        </div>
+      </ng-container>
+
+      <!-- FUNDAMENTALS TAB -->
+      <ng-container *ngIf="detailData && !detailData.error && activeDetailTab === 'fundamentals'">
+        <div class="detail-grid">
+          <div class="detail-card"><span class="detail-label">Market Cap</span><span class="detail-value">{{ formatValue(detailData.marketCap) }}</span></div>
+          <div class="detail-card"><span class="detail-label">Enterprise Value</span><span class="detail-value">{{ formatValue(detailData.enterpriseValue) }}</span></div>
+          <div class="detail-card"><span class="detail-label">Shares Outstanding</span><span class="detail-value">{{ formatValue(detailData.sharesOutstanding) }}</span></div>
+          <div class="detail-card"><span class="detail-label">Float Shares</span><span class="detail-value">{{ formatValue(detailData.floatShares) }}</span></div>
+          <div class="detail-card"><span class="detail-label">Profit Margin</span><span class="detail-value" [ngClass]="detailData.profitMargins >= 0 ? 'val-positive' : 'val-negative'">{{ (detailData.profitMargins * 100) | number:'1.2-2' }}%</span></div>
+          <div class="detail-card"><span class="detail-label">Gross Margin</span><span class="detail-value" [ngClass]="detailData.grossMargins >= 0 ? 'val-positive' : 'val-negative'">{{ (detailData.grossMargins * 100) | number:'1.2-2' }}%</span></div>
+          <div class="detail-card"><span class="detail-label">Operating Margin</span><span class="detail-value" [ngClass]="detailData.operatingMargins >= 0 ? 'val-positive' : 'val-negative'">{{ (detailData.operatingMargins * 100) | number:'1.2-2' }}%</span></div>
+          <div class="detail-card"><span class="detail-label">Return on Assets</span><span class="detail-value" [ngClass]="detailData.returnOnAssets >= 0 ? 'val-positive' : 'val-negative'">{{ (detailData.returnOnAssets * 100) | number:'1.2-2' }}%</span></div>
+          <div class="detail-card"><span class="detail-label">Return on Equity</span><span class="detail-value" [ngClass]="detailData.returnOnEquity >= 0 ? 'val-positive' : 'val-negative'">{{ (detailData.returnOnEquity * 100) | number:'1.2-2' }}%</span></div>
+          <div class="detail-card"><span class="detail-label">Revenue / Share</span><span class="detail-value">{{ detailData.revenuePerShare | number:'1.2-2' }}</span></div>
+          <div class="detail-card"><span class="detail-label">Beta</span><span class="detail-value">{{ detailData.beta | number:'1.2-2' }}</span></div>
+        </div>
+      </ng-container>
+
+      <!-- FINANCIALS TAB -->
+      <ng-container *ngIf="detailData && !detailData.error && activeDetailTab === 'financials'">
+        <div class="detail-grid">
+          <div class="detail-card"><span class="detail-label">Total Revenue</span><span class="detail-value">{{ formatValue(detailData.totalRevenue) }}</span></div>
+          <div class="detail-card"><span class="detail-label">Gross Profit</span><span class="detail-value">{{ formatValue(detailData.grossProfits) }}</span></div>
+          <div class="detail-card"><span class="detail-label">EBITDA</span><span class="detail-value">{{ formatValue(detailData.ebitda) }}</span></div>
+          <div class="detail-card"><span class="detail-label">Net Income</span><span class="detail-value val-positive">{{ formatValue(detailData.netIncomeToCommon) }}</span></div>
+          <div class="detail-card"><span class="detail-label">Free Cash Flow</span><span class="detail-value">{{ formatValue(detailData.freeCashflow) }}</span></div>
+          <div class="detail-card"><span class="detail-label">Operating Cash Flow</span><span class="detail-value">{{ formatValue(detailData.operatingCashflow) }}</span></div>
+          <div class="detail-card"><span class="detail-label">Total Cash</span><span class="detail-value">{{ formatValue(detailData.totalCash) }}</span></div>
+          <div class="detail-card"><span class="detail-label">Cash / Share</span><span class="detail-value">{{ detailData.totalCashPerShare | number:'1.2-2' }}</span></div>
+          <div class="detail-card"><span class="detail-label">Total Debt</span><span class="detail-value">{{ formatValue(detailData.totalDebt) }}</span></div>
+          <div class="detail-card"><span class="detail-label">Debt / Equity</span><span class="detail-value">{{ detailData.debtToEquity | number:'1.2-2' }}</span></div>
+          <div class="detail-card"><span class="detail-label">Earnings Growth</span><span class="detail-value" [ngClass]="detailData.earningsGrowth >= 0 ? 'val-positive' : 'val-negative'">{{ (detailData.earningsGrowth * 100) | number:'1.2-2' }}%</span></div>
+          <div class="detail-card"><span class="detail-label">Revenue Growth</span><span class="detail-value" [ngClass]="detailData.revenueGrowth >= 0 ? 'val-positive' : 'val-negative'">{{ (detailData.revenueGrowth * 100) | number:'1.2-2' }}%</span></div>
+        </div>
+      </ng-container>
+
+      <!-- VALUATION TAB -->
+      <ng-container *ngIf="detailData && !detailData.error && activeDetailTab === 'valuation'">
+        <div class="detail-grid">
+          <div class="detail-card"><span class="detail-label">Trailing P/E</span><span class="detail-value">{{ detailData.trailingPE | number:'1.2-2' }}</span></div>
+          <div class="detail-card"><span class="detail-label">Forward P/E</span><span class="detail-value">{{ detailData.forwardPE | number:'1.2-2' }}</span></div>
+          <div class="detail-card"><span class="detail-label">Price / Book</span><span class="detail-value">{{ detailData.priceToBook | number:'1.2-2' }}</span></div>
+          <div class="detail-card"><span class="detail-label">Price / Sales</span><span class="detail-value">{{ detailData.priceToSalesTrailing12Months | number:'1.2-2' }}</span></div>
+          <div class="detail-card"><span class="detail-label">EV / Revenue</span><span class="detail-value">{{ detailData.enterpriseToRevenue | number:'1.2-2' }}</span></div>
+          <div class="detail-card"><span class="detail-label">EV / EBITDA</span><span class="detail-value">{{ detailData.enterpriseToEbitda | number:'1.2-2' }}</span></div>
+          <div class="detail-card"><span class="detail-label">Trailing PEG</span><span class="detail-value">{{ detailData.trailingPegRatio | number:'1.2-2' }}</span></div>
+          <div class="detail-card"><span class="detail-label">Book Value</span><span class="detail-value">{{ detailData.bookValue | number:'1.2-2' }}</span></div>
+          <div class="detail-card"><span class="detail-label">EPS (Current Year)</span><span class="detail-value">{{ detailData.priceEpsCurrentYear | number:'1.2-2' }}</span></div>
+        </div>
+      </ng-container>
+
+      <!-- GOVERNANCE TAB -->
+      <ng-container *ngIf="detailData && !detailData.error && activeDetailTab === 'governance'">
+        <div class="governance-grid">
+          <div class="risk-card" *ngFor="let r of [
+            {label:'Audit Risk', key:'auditRisk'},
+            {label:'Board Risk', key:'boardRisk'},
+            {label:'Compensation Risk', key:'compensationRisk'},
+            {label:'Shareholder Rights', key:'shareHolderRightsRisk'},
+            {label:'Overall Risk', key:'overallRisk'}
+          ]">
+            <span class="detail-label">{{ r.label }}</span>
+            <span class="risk-score" [ngClass]="detailData[r.key] <= 4 ? 'val-positive' : detailData[r.key] <= 7 ? 'risk-medium' : 'val-negative'">
+              {{ detailData[r.key] }}<span class="risk-denom">/10</span>
+            </span>
+          </div>
+        </div>
+        <div class="detail-grid" style="margin-top:12px;">
+          <div class="detail-card"><span class="detail-label">Insiders Held</span><span class="detail-value">{{ (detailData.heldPercentInsiders * 100) | number:'1.2-2' }}%</span></div>
+          <div class="detail-card"><span class="detail-label">Institutions Held</span><span class="detail-value">{{ (detailData.heldPercentInstitutions * 100) | number:'1.2-2' }}%</span></div>
+        </div>
+      </ng-container>
+
+      <!-- ANALYST TAB -->
+      <ng-container *ngIf="detailData && !detailData.error && activeDetailTab === 'analyst'">
+        <div class="analyst-hero">
+          <span class="analyst-badge" [ngClass]="{
+            'badge-green': detailData.recommendationKey === 'buy' || detailData.recommendationKey === 'strong_buy',
+            'badge-yellow': detailData.recommendationKey === 'hold',
+            'badge-red': detailData.recommendationKey === 'sell' || detailData.recommendationKey === 'underperform'
+          }">{{ detailData.recommendationKey | uppercase }}</span>
+          <span class="analyst-rating">{{ detailData.averageAnalystRating }}</span>
+          <span class="analyst-count">{{ detailData.numberOfAnalystOpinions }} analysts</span>
+        </div>
+        <div class="detail-grid" style="margin-top:12px;">
+          <div class="detail-card"><span class="detail-label">Mean Score</span><span class="detail-value">{{ detailData.recommendationMean | number:'1.1-1' }}</span></div>
+          <div class="detail-card"><span class="detail-label">Target High</span><span class="detail-value val-positive">{{ detailData.targetHighPrice | number:'1.2-2' }}</span></div>
+          <div class="detail-card"><span class="detail-label">Target Low</span><span class="detail-value val-negative">{{ detailData.targetLowPrice | number:'1.2-2' }}</span></div>
+          <div class="detail-card"><span class="detail-label">Target Mean</span><span class="detail-value">{{ detailData.targetMeanPrice | number:'1.2-2' }}</span></div>
+          <div class="detail-card"><span class="detail-label">Target Median</span><span class="detail-value">{{ detailData.targetMedianPrice | number:'1.2-2' }}</span></div>
+        </div>
+      </ng-container>
+
+
     </div>
   </div>
 </div>

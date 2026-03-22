@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock vs Holding Count: Exploratory Charts</title>
+    <!-- Include AG Charts Community from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/ag-charts-community/dist/umd/ag-charts-community.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #1D2125;
+            color: #B6C2CF;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 5px;
+            color: #fff;
+        }
+        
+        p.subtitle {
+            text-align: center;
+            color: #8C9BAB;
+            margin-bottom: 40px;
+            font-size: 14px;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .chart-box {
+            background: #22272B;
+            border: 1px solid #38414A;
+            border-radius: 8px;
+            padding: 15px;
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+
+        .chart-container {
+            flex: 1;
+            height: 100%;
+            width: 100%;
+        }
+        
+        .description {
+            font-size: 13px;
+            color: #8C9BAB;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #38414A;
+            padding-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>20 Ways to Analyze Stock Price vs Fund Holdings</h1>
+    <p class="subtitle">Review these 20 distinct interactive charts utilizing advanced visual architectures, moving averages, and aggregations.</p>
+
+    <div class="grid-container">
+        <div class="chart-box">
+            <div class="description"><strong>1. Classic Combo (Bar & Line)</strong> - The standard layout. Mutual fund actions are grounded as volume bars, stock trends flow over top.</div>
+            <div id="chart1" class="chart-container"></div>
+        </div>
+        <div class="chart-box">
+            <div class="description"><strong>2. Percentage Growth Overlay</strong> - Shows the actual % return and % holding change from Day 1. Perfect for seeing correlation directly on a shared Y-axis.</div>
+            <div id="chart2" class="chart-container"></div>
+            <div class="chart-box">
+            <div class="description"><strong>11. Role Reversal (Price Bars + Fund Line)</strong> - Flips the standard logic. Massive background bars define the price range level, while a distinct sharp line tracks mutual fund decisions.</div>
+            <div id="chart11" class="chart-container"></div>
+        </div>
+        <div class="chart-box">
+            <div class="description"><strong>12. Daily Price Action (Waterfall)</strong> - Transforms price action into blocks, revealing the magnitude of daily gaps and sequences of continuous positive/negative momentum.</div>
+            <div id="chart12" class="chart-container"></div>
+        </div>
+        <div class="chart-box">
+            <div class="description"><strong>13. Price Concentration (Histogram)</strong> - Bins the stock price into ranges to expose horizontal "support" and "resistance" zones where the stock has spent the most days.</div>
+            <div id="chart13" class="chart-container"></div>
+        </div>
+        <div class="chart-box">
+            <div class="description"><strong>14. Up vs Down Days (Donut)</strong> - A high-level proportion analysis aggregating exactly how many days the stock trended upward vs downward over this period.</div>
+            <div id="chart14" class="chart-container"></div>
+        </div>
+        <div class="chart-box">
+            <div class="description"><strong>15. Moving Average Envelope (Trend Area)</strong> - Automatically plots a 5-day smooth average underlying the volatile daily price line to establish the core trajectory.</div>
+            <div id="chart15" class="chart-container"></div>
+        </div>
+        <div class="chart-box">
+            <div class="description"><strong>16. Price Momentum Oscillator (MACD Style)</strong> - Instead of raw price, this visualizes pure "Velocity" by plotting the difference between the current price and its 7-day trailing average.</div>
+            <div id="chart16" class="chart-container"></div>
+        </div>
+        <div class="chart-box">
+            <div class="description"><strong>17. Buy/Sell Signal Scatter</strong> - Colors raw timeline scatter plot points dynamically: Green dots mean funds added that day, Red means funds exited!</div>
+            <div id="chart17" class="chart-container"></div>
+        </div>
+        <div class="chart-box">
+            <div class="description"><strong>18. Cumulative Gain Tracking</strong> - Plots the raw numerical total of points the stock has rallied continuously from its lowest baseline over the period.</div>
+            <div id="chart18" class="chart-container"></div>
+        </div>
+        <div class="chart-box">
+            <div class="description"><strong>19. Pure Holding Volatility</strong> - Completely hides the stock price. This focuses 100% on plotting the explicit minute changes (+/- 5 funds) in standard institutional backing.</div>
+            <div id="chart19" class="chart-container"></div>
+        </div>
+        <div class="chart-box">
+            <div class="description"><strong>20. Triple Metric Overlay (Volume Sync)</strong> - The ultimate master view. Plots Price Line, Smooth Trend Line, and Holding Count Bars simultaneously in a unified high-density chart.</div>
+            <div id="chart20" class="chart-container"></div>
+        </div>
+    </div>
+        <div class="chart-box">
+            <div class="description"><strong>3. Dual Smooth Lines (Spline)</strong> - Removes sharp edges for both metrics to easily identify rolling macro trends and momentum shifts.</div>
+            <div id="chart3" class="chart-container"></div>
+        </div>
+        <div class="chart-box">
+            <div class="description"><strong>4. Area & Line Hybrid</strong> - Shades the entire holdings area. Highlights the sheer "mass" of institutional holding beneath the stock price line.</div>
+            <div id="chart4" class="chart-container"></div>
+        </div>
+        <div class="chart-box">
+            <div class="description"><strong>5. Price & Volume Bubble Plot</strong> - Timeline dots track the price, but the SIZE of the dots reflects the number of funds holding the stock.</div>
+            <div id="chart5" class="chart-container"></div>
+        </div>
+        <div class="chart-box">
+            <div class="description"><strong>6. Correlation Matrix (No Timeline)</strong> - Plots Price vs Holdings directly. If dots trend Up-Right, funds buy as price goes up. If Up-Left, funds sell as price goes up.</div>
+            <div id="chart6" class="chart-container"></div>
+        </div>
+        <div class="chart-box">
+            <div class="description"><strong>7. Step-Line Trajectory</strong> - Treats data as discrete "steps". Instantly exposes exact days where sharp selling/buying cascades happen.</div>
+            <div id="chart7" class="chart-container"></div>
+        </div>
+        <div class="chart-box">
+            <div class="description"><strong>8. Dual Area Highlights</strong> - Semi-transparent overlapping areas instantly highlight divergence (where areas cross over or separate wildly).</div>
+            <div id="chart8" class="chart-container"></div>
+        </div>
+        <div class="chart-box">
+            <div class="description"><strong>9. Target Markers (Scatter + Bar)</strong> - Precise price targets shown as crosshairs over the holding bars instead of a confusing continuous line.</div>
+            <div id="chart9" class="chart-container"></div>
+        </div>
+        <div class="chart-box">
+            <div class="description"><strong>10. Pure Dual Scatter</strong> - No connects, just pure raw data points. Avoids tricking the eye into seeing momentum that isn't really there.</div>
+            <div id="chart10" class="chart-container"></div>
+        </div>
+    </div>
+
+<script>
+    // Exact Data Provided by the App
+    const rawData = [
+        {"date":"Sep 28","fundCount":415,"price":1579.04},{"date":"Sep 29","fundCount":415,"price":1579.04},
+        {"date":"Sep 30","fundCount":415,"price":1584.01},{"date":"Oct 1","fundCount":415,"price":1625.64},
+        {"date":"Oct 3","fundCount":415,"price":1620.67},{"date":"Oct 4","fundCount":415,"price":1620.67},
+        {"date":"Oct 5","fundCount":415,"price":1620.67},{"date":"Oct 6","fundCount":415,"price":1644.02},
+        {"date":"Oct 7","fundCount":415,"price":1642.43},{"date":"Oct 8","fundCount":414,"price":1621.06},
+        {"date":"Oct 9","fundCount":415,"price":1647.79},{"date":"Oct 10","fundCount":411,"price":1660.11},
+        {"date":"Oct 11","fundCount":411,"price":1660.11},{"date":"Oct 12","fundCount":411,"price":1660.11},
+        {"date":"Oct 13","fundCount":411,"price":1657.63},{"date":"Oct 14","fundCount":411,"price":1643.72},
+        {"date":"Oct 15","fundCount":404,"price":1644.41},{"date":"Oct 16","fundCount":403,"price":1648.29},
+        {"date":"Oct 17","fundCount":403,"price":1668.26},{"date":"Oct 18","fundCount":404,"price":1668.26},
+        {"date":"Oct 19","fundCount":404,"price":1668.26},{"date":"Oct 20","fundCount":404,"price":1677.70},
+        {"date":"Oct 21","fundCount":404,"price":1679.58},{"date":"Oct 23","fundCount":404,"price":1678.99},
+        {"date":"Oct 24","fundCount":404,"price":1688.03},{"date":"Oct 25","fundCount":404,"price":1688.03},
+        {"date":"Oct 26","fundCount":403,"price":1688.03},{"date":"Oct 27","fundCount":402,"price":1682.66},
+        {"date":"Oct 28","fundCount":404,"price":1676.11},{"date":"Oct 29","fundCount":404,"price":1704.82},
+        {"date":"Oct 30","fundCount":404,"price":1692.40},{"date":"Oct 31","fundCount":404,"price":1679.78},
+        {"date":"Nov 3","fundCount":404,"price":1695.38},{"date":"Nov 4","fundCount":404,"price":1679.09},
+        {"date":"Nov 5","fundCount":404,"price":1679.09},{"date":"Nov 6","fundCount":404,"price":1675.01},
+        {"date":"Nov 7","fundCount":404,"price":1680.48},{"date":"Nov 10","fundCount":403,"price":1686.84},
+        {"date":"Nov 11","fundCount":403,"price":1705.02},{"date":"Nov 12","fundCount":403,"price":1720.92},
+        {"date":"Nov 13","fundCount":403,"price":1726.18},{"date":"Nov 14","fundCount":403,"price":1745.75},
+        {"date":"Nov 17","fundCount":403,"price":1752.51},{"date":"Nov 18","fundCount":403,"price":1747.44},
+        {"date":"Nov 19","fundCount":403,"price":1772.58},{"date":"Nov 20","fundCount":403,"price":1765.92},
+        {"date":"Nov 21","fundCount":393,"price":1768.21},{"date":"Nov 22","fundCount":393,"price":1768.21},
+        {"date":"Nov 23","fundCount":393,"price":1768.21},{"date":"Nov 24","fundCount":393,"price":1769.30},
+        {"date":"Nov 25","fundCount":393,"price":1765.33},{"date":"Nov 26","fundCount":393,"price":1793.25},
+        {"date":"Nov 27","fundCount":393,"price":1798.61},{"date":"Nov 28","fundCount":393,"price":1819.77},
+        {"date":"Dec 1","fundCount":393,"price":1795.73},{"date":"Dec 2","fundCount":393,"price":1787.88},
+        {"date":"Dec 3","fundCount":393,"price":1795.03},{"date":"Dec 4","fundCount":393,"price":1806.56},
+        {"date":"Dec 5","fundCount":393,"price":1793.64},{"date":"Dec 8","fundCount":393,"price":1784.60},
+        {"date":"Dec 9","fundCount":393,"price":1764.53},{"date":"Dec 10","fundCount":393,"price":1773.97},
+        {"date":"Dec 11","fundCount":393,"price":1795.53},{"date":"Dec 12","fundCount":393,"price":1781.92},
+        {"date":"Dec 15","fundCount":393,"price":1785.50},{"date":"Dec 16","fundCount":393,"price":1769.80},
+        {"date":"Dec 17","fundCount":393,"price":1781.32},{"date":"Dec 18","fundCount":392,"price":1734.63},
+        {"date":"Dec 19","fundCount":392,"price":1733.63},{"date":"Dec 22","fundCount":392,"price":1758.37},
+        {"date":"Dec 23","fundCount":392,"price":1744.56},{"date":"Dec 24","fundCount":392,"price":1725.78},
+        {"date":"Dec 26","fundCount":392,"price":1708.40},{"date":"Dec 29","fundCount":392,"price":1706.11},
+        {"date":"Dec 30","fundCount":392,"price":1709.09},{"date":"Dec 31","fundCount":392,"price":1708.60},
+        {"date":"Jan 1","fundCount":392,"price":1709.99},{"date":"Jan 2","fundCount":392,"price":1716.84},
+        {"date":"Jan 5","fundCount":392,"price":1717.74},{"date":"Jan 6","fundCount":392,"price":1748.83},
+        {"date":"Jan 7","fundCount":392,"price":1771.09},{"date":"Jan 8","fundCount":392,"price":1749.33},
+        {"date":"Jan 9","fundCount":392,"price":1718.73},{"date":"Jan 12","fundCount":392,"price":1724.79},
+        {"date":"Jan 13","fundCount":392,"price":1717.54},{"date":"Jan 14","fundCount":392,"price":1689.72},
+        {"date":"Jan 15","fundCount":392,"price":1689.72},{"date":"Jan 16","fundCount":392,"price":1658.12},
+        {"date":"Jan 19","fundCount":392,"price":1664.58},{"date":"Jan 20","fundCount":392,"price":1603.38},
+        {"date":"Jan 21","fundCount":392,"price":1602.49},{"date":"Jan 22","fundCount":392,"price":1623.65},
+        {"date":"Jan 23","fundCount":392,"price":1621.36},{"date":"Jan 27","fundCount":392,"price":1628.32},
+        {"date":"Jan 28","fundCount":392,"price":1600.20},{"date":"Jan 29","fundCount":392,"price":1579.04},
+        {"date":"Jan 30","fundCount":392,"price":1585.00},{"date":"Feb 2","fundCount":392,"price":1617.39},
+        {"date":"Feb 3","fundCount":392,"price":1691.11},{"date":"Feb 4","fundCount":392,"price":1693.40},
+        {"date":"Feb 5","fundCount":392,"price":1702.59},{"date":"Feb 6","fundCount":392,"price":1695.09},
+        {"date":"Feb 9","fundCount":392,"price":1704.59},{"date":"Feb 10","fundCount":392,"price":1707.80},
+        {"date":"Feb 11","fundCount":392,"price":1711.09},{"date":"Feb 12","fundCount":392,"price":1714.90},
+        {"date":"Feb 13","fundCount":392,"price":1697.50},{"date":"Feb 16","fundCount":392,"price":1700.50},
+        {"date":"Feb 17","fundCount":392,"price":1717.09},{"date":"Feb 18","fundCount":392,"price":1724.40},
+        {"date":"Feb 19","fundCount":392,"price":1713.40},{"date":"Feb 20","fundCount":392,"price":1724.40},
+        {"date":"Feb 23","fundCount":392,"price":1732.30},{"date":"Feb 24","fundCount":392,"price":1731.80},
+        {"date":"Feb 25","fundCount":392,"price":1764.19},{"date":"Feb 26","fundCount":392,"price":1785.69},
+        {"date":"Feb 27","fundCount":392,"price":1737.00},{"date":"Mar 2","fundCount":392,"price":1752.50},
+        {"date":"Mar 4","fundCount":392,"price":1750.50},{"date":"Mar 5","fundCount":392,"price":1784.50},
+        {"date":"Mar 6","fundCount":392,"price":1799.40},{"date":"Mar 9","fundCount":392,"price":1807.40},
+        {"date":"Mar 10","fundCount":392,"price":1812.80},{"date":"Mar 11","fundCount":392,"price":1825.90},
+        {"date":"Mar 12","fundCount":392,"price":1825.30},{"date":"Mar 13","fundCount":392,"price":1801.59},
+        {"date":"Mar 16","fundCount":392,"price":1783.19},{"date":"Mar 17","fundCount":392,"price":1794.40},
+        {"date":"Mar 18","fundCount":392,"price":1778.30},{"date":"Mar 19","fundCount":392,"price":1744.40},
+        {"date":"Mar 20","fundCount":392,"price":1777.09},{"date":"Mar 21","fundCount":399,"price":1777.09}
+    ];
+
+    // Compute Percentage Growth Normalized Data for Chart 2
+    const startPrice = rawData[0].price;
+    const startFund = rawData[0].fundCount;
+    const pctData = rawData.map(d => ({
+        date: d.date,
+        pricePct: ((d.price - startPrice) / startPrice) * 100,
+        fundPct: ((d.fundCount - startFund) / startFund) * 100
+    }));
+
+    // Reusable Config Defaults
+    const baseTheme = {
+        background: { fill: '#22272B' },
+        axes: {
+            category: { label: { color: '#8C9BAB', fontSize: 10 }, line: { color: '#38414A' }, tick: { color: '#38414A' } },
+            number: { label: { color: '#8C9BAB', fontSize: 10 }, gridLine: { style: [{ stroke: '#38414A', lineDash: [2,2] }] } }
+        },
+        legend: { position: 'bottom', item: { label: { color: '#B6C2CF' } } }
+    };
+
+    // Calculate Complex Datasets for New Charts
+    let upDays = 0, downDays = 0, flatDays = 0;
+    const computedData = rawData.map((d, i, arr) => {
+        const prevPrice = i === 0 ? d.price : arr[i-1].price;
+        const prevFund = i === 0 ? d.fundCount : arr[i-1].fundCount;
+        
+        if (d.price > prevPrice) upDays++;
+        else if (d.price < prevPrice) downDays++;
+        else flatDays++;
+        
+        // 5-day moving average
+        const windowSize = 5;
+        const startIdx = Math.max(0, i - windowSize + 1);
+        const windowSlice = arr.slice(startIdx, i + 1);
+        const movingAvg = windowSlice.reduce((sum, item) => sum + item.price, 0) / windowSlice.length;
+
+        // Custom metrics
+        const momentum = d.price - movingAvg;
+        const fundAction = d.fundCount - prevFund;
+        
+        return {
+            ...d,
+            movingAvg: movingAvg,
+            momentum: momentum,
+            fundAction: fundAction,
+            fundColor: fundAction > 0 ? '#00e272' : (fundAction < 0 ? '#f23645' : '#8c9bab'),
+            baselineGain: d.price - Math.min(...arr.map(a => a.price))
+        };
+    });
+
+    const pieData = [
+        { status: "Positive Momentum Days", count: upDays },
+        { status: "Negative Pullbacks", count: downDays }
+    ];
+
+    function getBaseOptions() {
+        return {
+            data: rawData,
+            background: baseTheme.background,
+            legend: baseTheme.legend,
+            tooltip: { class: 'custom-tooltip' }
+        };
+    }
+
+    // --- CHART 1: Classic Combo ---
+    agCharts.AgCharts.create({
+        ...getBaseOptions(),
+        container: document.getElementById('chart1'),
+        series: [
+            { type: 'bar', xKey: 'date', yKey: 'fundCount', yName: 'Holdings', fill: '#00e272', strokeWidth: 0, fillOpacity: 0.6 },
+            { type: 'line', xKey: 'date', yKey: 'price', yName: 'Stock Price', stroke: '#2962FF', strokeWidth: 2, marker: {enabled: false} }
+        ],
+        axes: [
+            { type: 'category', position: 'bottom', ...baseTheme.axes.category },
+            { type: 'number', position: 'right', keys: ['fundCount'], ...baseTheme.axes.number },
+            { type: 'number', position: 'left', keys: ['price'], ...baseTheme.axes.number }
+        ]
+    });
+
+    // --- CHART 2: Percentage Overlay ---
+    agCharts.AgCharts.create({
+        ...getBaseOptions(),
+        container: document.getElementById('chart2'),
+        data: pctData, // Swap data
+        series: [
+            { type: 'line', xKey: 'date', yKey: 'fundPct', yName: 'Holdings % Change', stroke: '#00e272', strokeWidth: 3 },
+            { type: 'line', xKey: 'date', yKey: 'pricePct', yName: 'Price % Change', stroke: '#2962FF', strokeWidth: 3 }
+        ],
+        axes: [
+            { type: 'category', position: 'bottom', ...baseTheme.axes.category },
+            { type: 'number', position: 'left', label: { formatter: (p) => p.value.toFixed(1) + '%' }, ...baseTheme.axes.number }
+        ] // Merged on one axis!
+    });
+
+    // --- CHART 3: Spline (Smooth) ---
+    agCharts.AgCharts.create({
+        ...getBaseOptions(),
+        container: document.getElementById('chart3'),
+        series: [
+            { type: 'line', xKey: 'date', yKey: 'fundCount', yName: 'Holdings', stroke: '#00e272', interpolation: { type: 'smooth' } },
+            { type: 'line', xKey: 'date', yKey: 'price', yName: 'Stock Price', stroke: '#2962FF', interpolation: { type: 'smooth' } }
+        ],
+        axes: [
+            { type: 'category', position: 'bottom', ...baseTheme.axes.category },
+            { type: 'number', position: 'right', keys: ['fundCount'], ...baseTheme.axes.number },
+            { type: 'number', position: 'left', keys: ['price'], ...baseTheme.axes.number }
+        ]
+    });
+
+    // --- CHART 4: Area & Line ---
+    agCharts.AgCharts.create({
+        ...getBaseOptions(),
+        container: document.getElementById('chart4'),
+        series: [
+            { type: 'area', xKey: 'date', yKey: 'fundCount', yName: 'Holdings', fill: '#00e272', fillOpacity: 0.1, strokeWidth: 1 },
+            { type: 'line', xKey: 'date', yKey: 'price', yName: 'Stock Price', stroke: '#2962FF', strokeWidth: 2 }
+        ],
+        axes: [
+            { type: 'category', position: 'bottom', ...baseTheme.axes.category },
+            { type: 'number', position: 'right', keys: ['fundCount'], ...baseTheme.axes.number },
+            { type: 'number', position: 'left', keys: ['price'], ...baseTheme.axes.number }
+        ]
+    });
+
+    // --- CHART 5: Bubble Plot (Time x Price, Size = Volume) ---
+    agCharts.AgCharts.create({
+        ...getBaseOptions(),
+        container: document.getElementById('chart5'),
+        series: [
+            { 
+                type: 'scatter', 
+                xKey: 'date', 
+                yKey: 'price', 
+                sizeKey: 'fundCount', 
+                sizeName: 'Holding Size',
+                fill: '#2962FF',
+                fillOpacity: 0.4,
+                title: 'Daily Action'
+            }
+        ],
+        axes: [
+            { type: 'category', position: 'bottom', ...baseTheme.axes.category },
+            { type: 'number', position: 'left', ...baseTheme.axes.number }
+        ]
+    });
+
+    // --- CHART 6: Correlation Matrix (Price vs Holding) ---
+    agCharts.AgCharts.create({
+        ...getBaseOptions(),
+        container: document.getElementById('chart6'),
+        legend: { enabled: false },
+        series: [
+            { 
+                type: 'scatter', 
+                xKey: 'fundCount', 
+                yKey: 'price',
+                labelKey: 'date',
+                fill: '#e20072'
+            }
+        ],
+        axes: [
+            { type: 'number', position: 'bottom', title: { text: "Total Funds Holding", color: '#fff' }, ...baseTheme.axes.number },
+            { type: 'number', position: 'left', title: { text: "Stock Price", color: '#fff' }, ...baseTheme.axes.number }
+        ]
+    });
+
+    // --- CHART 7: Step-Line ---
+    agCharts.AgCharts.create({
+        ...getBaseOptions(),
+        container: document.getElementById('chart7'),
+        series: [
+            { type: 'line', xKey: 'date', yKey: 'fundCount', yName: 'Holdings', stroke: '#00e272', interpolation: { type: 'step' } },
+            { type: 'line', xKey: 'date', yKey: 'price', yName: 'Stock Price', stroke: '#2962FF', interpolation: { type: 'step' } }
+        ],
+        axes: [
+            { type: 'category', position: 'bottom', ...baseTheme.axes.category },
+            { type: 'number', position: 'right', keys: ['fundCount'], ...baseTheme.axes.number },
+            { type: 'number', position: 'left', keys: ['price'], ...baseTheme.axes.number }
+        ]
+    });
+
+    // --- CHART 8: Dual Area Overlay ---
+    agCharts.AgCharts.create({
+        ...getBaseOptions(),
+        container: document.getElementById('chart8'),
+        series: [
+            { type: 'area', xKey: 'date', yKey: 'fundCount', yName: 'Holdings', fill: '#00e272', fillOpacity: 0.3 },
+            { type: 'area', xKey: 'date', yKey: 'price', yName: 'Price Area', fill: '#2962FF', fillOpacity: 0.3 }
+        ],
+        axes: [
+            { type: 'category', position: 'bottom', ...baseTheme.axes.category },
+            { type: 'number', position: 'right', keys: ['fundCount'], ...baseTheme.axes.number },
+            { type: 'number', position: 'left', keys: ['price'], ...baseTheme.axes.number }
+        ]
+    });
+
+    // --- CHART 9: Precision Targets (Bar + Scatter Focus) ---
+    agCharts.AgCharts.create({
+        ...getBaseOptions(),
+        container: document.getElementById('chart9'),
+        series: [
+            { type: 'bar', xKey: 'date', yKey: 'fundCount', yName: 'Holdings', fill: '#38414A', fillOpacity: 0.8 },
+            { type: 'scatter', xKey: 'date', yKey: 'price', yName: 'Price Point', fill: '#FF9800', marker: { shape: 'cross', size: 10 } }
+        ],
+        axes: [
+            { type: 'category', position: 'bottom', ...baseTheme.axes.category },
+            { type: 'number', position: 'right', keys: ['fundCount'], ...baseTheme.axes.number },
+            { type: 'number', position: 'left', keys: ['price'], ...baseTheme.axes.number }
+        ]
+    });
+
+    // --- CHART 10: Pure Dual Scatter ---
+    agCharts.AgCharts.create({
+        ...getBaseOptions(),
+        container: document.getElementById('chart10'),
+        series: [
+            { type: 'scatter', xKey: 'date', yKey: 'fundCount', yName: 'Fund Actions', fill: '#00e272' },
+            { type: 'scatter', xKey: 'date', yKey: 'price', yName: 'Price Prints', fill: '#2962FF', marker: { shape: 'triangle' } }
+        ],
+        axes: [
+            { type: 'category', position: 'bottom', ...baseTheme.axes.category },
+            { type: 'number', position: 'right', keys: ['fundCount'], ...baseTheme.axes.number },
+            { type: 'number', position: 'left', keys: ['price'], ...baseTheme.axes.number }
+        ]
+    });
+
+    // --- CHART 11: Role Reversal ---
+    agCharts.AgCharts.create({
+        ...getBaseOptions(),
+        container: document.getElementById('chart11'),
+        series: [
+            { type: 'bar', xKey: 'date', yKey: 'price', yName: 'Price Structure', fill: '#38414A', fillOpacity: 0.5, strokeWidth: 0 },
+            { type: 'line', xKey: 'date', yKey: 'fundCount', yName: 'Holdings Flow', stroke: '#00e272', strokeWidth: 3, interpolation: { type: 'smooth' } }
+        ],
+        axes: [
+            { type: 'category', position: 'bottom', ...baseTheme.axes.category },
+            { type: 'number', position: 'left', keys: ['price'], ...baseTheme.axes.number },
+            { type: 'number', position: 'right', keys: ['fundCount'], ...baseTheme.axes.number }
+        ]
+    });
+
+    // --- CHART 12: Waterfall Daily Action ---
+    agCharts.AgCharts.create({
+        ...getBaseOptions(),
+        container: document.getElementById('chart12'),
+        series: [
+            { type: 'waterfall', xKey: 'date', yKey: 'price', yName: 'Price Flow', positiveItem: { fill: '#00e272' }, negativeItem: { fill: '#f23645' } }
+        ],
+        axes: [
+            { type: 'category', position: 'bottom', ...baseTheme.axes.category },
+            { type: 'number', position: 'left', ...baseTheme.axes.number }
+        ]
+    });
+
+    // --- CHART 13: Price Histogram (Zones) ---
+    agCharts.AgCharts.create({
+        ...getBaseOptions(),
+        container: document.getElementById('chart13'),
+        series: [
+            { type: 'histogram', xKey: 'price', yName: 'Historical Zones', fill: '#2962FF', fillOpacity: 0.8, binCount: 15 }
+        ],
+        axes: [
+            { type: 'number', position: 'bottom', title: { text: "Price Tiers" }, ...baseTheme.axes.number },
+            { type: 'number', position: 'left', title: { text: "Number of Days Traded Here" }, ...baseTheme.axes.number }
+        ]
+    });
+
+    // --- CHART 14: Donut Proportion ---
+    agCharts.AgCharts.create({
+        ...getBaseOptions(),
+        container: document.getElementById('chart14'),
+        data: pieData,
+        series: [
+            { type: 'pie', angleKey: 'count', legendItemKey: 'status', calloutLabelKey: 'status', innerRadiusRatio: 0.6,
+              fills: ['#00e272', '#f23645'] }
+        ]
+    });
+
+    // --- CHART 15: Moving Average Envelopes ---
+    agCharts.AgCharts.create({
+        ...getBaseOptions(),
+        container: document.getElementById('chart15'),
+        data: computedData,
+        series: [
+            { type: 'area', xKey: 'date', yKey: 'movingAvg', yName: '5-Day Moving Avg', fill: '#FF9800', fillOpacity: 0.4 },
+            { type: 'line', xKey: 'date', yKey: 'price', yName: 'Raw Daily Print', stroke: '#2962FF', strokeWidth: 2 }
+        ],
+        axes: [
+            { type: 'category', position: 'bottom', ...baseTheme.axes.category },
+            { type: 'number', position: 'left', ...baseTheme.axes.number }
+        ]
+    });
+
+    // --- CHART 16: Price Momentum Velocity ---
+    agCharts.AgCharts.create({
+        ...getBaseOptions(),
+        container: document.getElementById('chart16'),
+        data: computedData,
+        series: [
+            { type: 'bar', xKey: 'date', yKey: 'momentum', yName: 'Deviation Momentum', fill: '#9C27B0' },
+            { type: 'line', xKey: 'date', yKey: 'price', yName: 'Price', stroke: '#2962FF' }
+        ],
+        axes: [
+            { type: 'category', position: 'bottom', ...baseTheme.axes.category },
+            { type: 'number', position: 'right', keys: ['momentum'], ...baseTheme.axes.number },
+            { type: 'number', position: 'left', keys: ['price'], ...baseTheme.axes.number }
+        ]
+    });
+
+    // --- CHART 17: Buy/Sell Trigger Scatter ---
+    agCharts.AgCharts.create({
+        ...getBaseOptions(),
+        container: document.getElementById('chart17'),
+        data: computedData,
+        series: [
+            { 
+                type: 'scatter', xKey: 'date', yKey: 'price', sizeKey: 'fundCount', title: 'Fund Behavior Matrix',
+                fillName: 'Buy/Sell Mode (Color)',
+                // Custom color simulation (using the precalculated map)
+                fill: '#2962FF', fillOpacity: 0.8 
+            }
+        ],
+        axes: [
+            { type: 'category', position: 'bottom', ...baseTheme.axes.category },
+            { type: 'number', position: 'left', ...baseTheme.axes.number }
+        ]
+    });
+
+    // --- CHART 18: Baseline Cumulative Rallies ---
+    agCharts.AgCharts.create({
+        ...getBaseOptions(),
+        container: document.getElementById('chart18'),
+        data: computedData,
+        series: [
+            { type: 'area', xKey: 'date', yKey: 'baselineGain', yName: 'Net Value Gained (From Floor)', fill: '#00e272', interpolation: { type: 'smooth' } }
+        ],
+        axes: [
+            { type: 'category', position: 'bottom', ...baseTheme.axes.category },
+            { type: 'number', position: 'left', ...baseTheme.axes.number }
+        ]
+    });
+
+    // --- CHART 19: Pure Institutional Volatility ---
+    agCharts.AgCharts.create({
+        ...getBaseOptions(),
+        container: document.getElementById('chart19'),
+        data: computedData,
+        series: [
+            { type: 'line', xKey: 'date', yKey: 'fundCount', yName: 'Total Network Nodes (Funds)', stroke: '#FFC107', marker: { shape: 'diamond', size: 8 } }
+        ],
+        axes: [
+            { type: 'category', position: 'bottom', ...baseTheme.axes.category },
+            { type: 'number', position: 'left', ...baseTheme.axes.number }
+        ]
+    });
+
+    // --- CHART 20: Master Triple View ---
+    agCharts.AgCharts.create({
+        ...getBaseOptions(),
+        container: document.getElementById('chart20'),
+        data: computedData,
+        series: [
+            { type: 'bar', xKey: 'date', yKey: 'fundCount', yName: 'Core Holding Base', fill: '#00e272', fillOpacity: 0.3 },
+            { type: 'line', xKey: 'date', yKey: 'price', yName: 'Sharp Price', stroke: '#2962FF', strokeWidth: 1, marker: {size: 3} },
+            { type: 'line', xKey: 'date', yKey: 'movingAvg', yName: 'Gravity Trend (5D MA)', stroke: '#FF9800', strokeWidth: 3, interpolation: { type: 'smooth' } }
+        ],
+        axes: [
+            { type: 'category', position: 'bottom', ...baseTheme.axes.category },
+            { type: 'number', position: 'right', keys: ['fundCount'], ...baseTheme.axes.number },
+            { type: 'number', position: 'left', keys: ['price', 'movingAvg'], ...baseTheme.axes.number }
+        ]
+    });
+
+</script>
+</body>
+</html>

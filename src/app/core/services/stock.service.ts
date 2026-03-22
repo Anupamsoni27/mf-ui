@@ -40,4 +40,61 @@ export class StockService {
       })
     );
   }
+
+  getYfinanceStockData(symbol: string, startDate: string, endDate: string): Observable<any> {
+    const params = new HttpParams()
+      .set('symbol', symbol + '.NS')
+      .set('start_date', startDate)
+      .set('end_date', endDate);
+    
+    return this.apiService.get<any>('/getYfinanceStockData', params);
+  }
+  // Generic helper for YFinance modular endpoint
+  private getYfinanceStocksDetails(tab: string, symbol: string, extraParams?: HttpParams): Observable<any> {
+    const url = `/getYfinanceStocksDetails/${tab}`;
+    let params = new HttpParams().set('symbol', symbol + '.NS');
+    if (extraParams) {
+      // Merge extra parameters
+      extraParams.keys().forEach(key => {
+        params = params.set(key, extraParams.get(key) as string);
+      });
+    }
+    return this.apiService.get<any>(url, params);
+  }
+
+  // Specific tab methods
+  getOverview(symbol: string): Observable<any> {
+    return this.getYfinanceStocksDetails('overview', symbol);
+  }
+
+  getPrice(symbol: string, range?: string): Observable<any> {
+    const extra = range ? new HttpParams().set('range', range) : undefined;
+    return this.getYfinanceStocksDetails('price', symbol, extra);
+  }
+
+  getFundamentals(symbol: string): Observable<any> {
+    return this.getYfinanceStocksDetails('fundamentals', symbol);
+  }
+
+  getFinancials(symbol: string): Observable<any> {
+    return this.getYfinanceStocksDetails('financials', symbol);
+  }
+
+  getValuation(symbol: string): Observable<any> {
+    return this.getYfinanceStocksDetails('valuation', symbol);
+  }
+
+  getGovernance(symbol: string): Observable<any> {
+    return this.getYfinanceStocksDetails('governance', symbol);
+  }
+
+  getAnalyst(symbol: string): Observable<any> {
+    return this.getYfinanceStocksDetails('analyst', symbol);
+  }
+
+  getCompany(symbol: string): Observable<any> {
+    return this.getYfinanceStocksDetails('company', symbol);
+  }
+
 }
+
